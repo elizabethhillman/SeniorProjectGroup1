@@ -6,38 +6,6 @@ import 'package:fitlife/database.dart';
 
 bool foundUser = false;
 
-Future<List<User>> addUser(String email, String password) async
-{
-  var db = Database();
-
-  final List<User> myList = [];
-  await db.getConnection().then((conn) async
-  {
-    await conn.query('insert into fitlife.user :email, :password', {"email": email,"password" : password}).then((results)
-    {
-      for(var res in results){
-        final User newUser = User(
-            email: res['email'].toString(),
-            password: res['password'].toString());
-
-        myList.add(newUser);
-
-      }
-
-    }).onError((error, stackTrace) {
-
-      print(error);
-
-      return null;
-
-    });
-
-    conn.close();
-
-  });
-  return myList;
-      }
-
 
 void main() {
   runApp(const App());
@@ -152,19 +120,22 @@ class _MyAppState extends State<MyApp> {
               ),
             ),
             ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomePage()));
-                },
-              style: ElevatedButton.styleFrom(shape: RoundedRectangleBorder( borderRadius: BorderRadius.circular(20.0))),
-                child: const Text("Submit", style: TextStyle(fontSize: 25, color: Colors.black)),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const HomePage()));
+              },
+              style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.0))),
+              child: const Text("Submit",
+                  style: TextStyle(fontSize: 25, color: Colors.black)),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Don't have an account?",),
+                const Text(
+                  "Don't have an account?",
+                ),
                 TextButton(
                     onPressed: () {
                       Navigator.push(

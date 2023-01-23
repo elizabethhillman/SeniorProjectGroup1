@@ -1,6 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:fitlife/pages/homePage.dart';
 import 'package:fitlife/main.dart';
+import 'package:fitlife/models/user.dart';
+import 'package:fitlife/database.dart';
+
+
+Future<List<User>> addUser(String email, String password) async {
+  var db = Database();
+
+  final List<User> myList = [];
+  final conn = await db.getConnection();
+
+  var results = await conn.query(
+      'insert into fitlife.user (email, password) values (?,?)',
+      [email, password]);
+
+  for (var res in results) {
+    final User newUser = User(
+        email: res['email'].toString(), password: res['password'].toString());
+
+    myList.add(newUser);
+  }
+  conn.close();
+
+
+  return myList;
+}
 
 class CreateAccount extends StatefulWidget
 {
@@ -82,6 +107,7 @@ class _CreateAccountState extends State<CreateAccount>
               ),
             ),
             ElevatedButton(
+              //https://docs.flutter.dev/cookbook/forms/retrieve-input
               onPressed: () {
                 Navigator.push(
                     context,
