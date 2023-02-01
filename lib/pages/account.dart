@@ -1,3 +1,4 @@
+import 'package:fitlife/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/pages/workouts.dart';
 import 'package:fitlife/pages/calorie.dart';
@@ -54,6 +55,11 @@ class _AccountsState extends State<Accounts>
           ),
         ],
       ),
+      body: TextButton(child: const Text("Log out"), onPressed: (){Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+              const MyApp(title: "FITLIFE")));},)
     );
   }
 }
