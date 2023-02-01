@@ -2,27 +2,29 @@ import 'dart:developer';
 
 import 'package:fitlife/pages/homePage.dart';
 import 'package:fitlife/main.dart';
+import 'package:fitlife/pages/user.dart';
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
-import 'dart:async';
-
-//https://pub.dev/packages/mysql1/example
-Future addUser(String name, String email, String pass) async {
-  final conn = await MySqlConnection.connect(ConnectionSettings(
-      host: 'localhost',
-      port: 3306,
-      user: 'root',
-      password: 'fitlife',
-      db: 'fitlife'));
-
-  await conn.query(
-      'CREATE TABLE IF NOT EXISTS user (email varchar(255) NOT NULL PRIMARY KEY, password varchar(255) NOT NULL, name varchar(255) NOT NULL)');
-
-  await conn.query('insert into user (email, password, name) values (?, ?, ?)',
-      [email, pass, name]);
-  // log(result.first.toString());
-  await conn.close();
-}
+import 'package:fitlife/database.dart';
+// import 'package:mysql1/mysql1.dart';
+// import 'dart:async';
+//
+// //https://pub.dev/packages/mysql1/example
+// Future addUser(String name, String email, String pass) async {
+//   final conn = await MySqlConnection.connect(ConnectionSettings(
+//       host: 'localhost',
+//       port: 3306,
+//       user: 'root',
+//       password: 'fitlife',
+//       db: 'fitlife'));
+//
+//   await conn.query(
+//       'CREATE TABLE IF NOT EXISTS user (email varchar(255) NOT NULL PRIMARY KEY, password varchar(255) NOT NULL, name varchar(255) NOT NULL)');
+//
+//   await conn.query('insert into user (email, password, name) values (?, ?, ?)',
+//       [email, pass, name]);
+//   // log(result.first.toString());
+//   await conn.close();
+// }
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -146,8 +148,19 @@ class _CreateAccountState extends State<CreateAccount> {
               } else {
                 addUser(nameController.text, emailController.text,
                     passwordController.text);
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const HomePage()));
+
+                  final User newUser = User(email: emailController.text, password: passwordController.text, name: nameController.text);
+
+                if(myList.contains(newUser)) {
+                  Navigator.push(context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomePage()));
+                }
+                else
+                {
+                  clearControllers();
+                  alertMessage(context, "Invalid Email", "User already exists");
+                }
               }
             },
             style: ElevatedButton.styleFrom(
