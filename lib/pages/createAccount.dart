@@ -123,9 +123,12 @@ class _CreateAccountState extends State<CreateAccount> {
                 alertMessage(context, "Error", "Missing information");
               } else {
                 addUser(emailController.text, passwordController.text,nameController.text );
-                bool userInserted = false;
-                if(DB.insertId > 0) userInserted = true;
-                if(userInserted) {
+                User newUser = User(email: emailController.text, password: passwordController.text, name: nameController.text);
+                if(DB.insertId > 0)
+                {
+                  myList.add(newUser);
+                }
+                if(myList.contains(newUser)) {
                   Navigator.push(context,
                       MaterialPageRoute(
                           builder: (context) => const HomePage()));
