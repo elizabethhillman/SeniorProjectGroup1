@@ -146,8 +146,8 @@ class _CreateAccountState extends State<CreateAccount> {
                 clearControllers();
                 alertMessage(context, "Error", "Missing information");
               } else {
-                addUser(nameController.text, emailController.text,
-                    passwordController.text);
+                addUser(emailController.text,
+                    passwordController.text, nameController.text);
 
                   final User newUser = User(email: emailController.text, password: passwordController.text, name: nameController.text);
 

@@ -1,3 +1,4 @@
+import 'package:fitlife/pages/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/pages/createAccount.dart';
 import 'package:fitlife/pages/homePage.dart';
@@ -30,6 +31,35 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+
+  void clearLogInControllers()
+  {
+    emailController.clear();
+    passwordController.clear();
+  }
+  //https://stackoverflow.com/questions/53844052/how-to-make-an-alertdialog-in-flutter
+  alertMessageLogIn(BuildContext context) {
+    AlertDialog popUp = const AlertDialog(
+      title: Text("Error"),
+      content: Text("Incorrect Credentials"),
+      // actions: [
+      //   TextButton(
+      //       onPressed: () {
+      //         Navigator.pop(context, false);
+      //       },
+      //       child: const Text("okay"))
+      // ],
+    );
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return popUp;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,21 +72,23 @@ class _MyAppState extends State<MyApp> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           const Text("Login", style: TextStyle(fontSize: 40),),
-          const Padding(
-            padding: EdgeInsets.all(10),
+           Padding(
+            padding: const EdgeInsets.all(10),
             child: TextField(
+              controller: emailController,
               obscureText: false,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Email",
                   hintText: "Enter email"),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.all(10),
+           Padding(
+            padding: const EdgeInsets.all(10),
             child: TextField(
+              controller: passwordController,
               obscureText: true,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: "Password",
                   hintText: "Enter Password"),
@@ -64,8 +96,19 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const HomePage()));
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => const HomePage()));
+              if(myList.contains(User(email: emailController.text, password: passwordController.text, name: "")))
+              {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const HomePage()));
+              }
+              else
+              {
+                clearLogInControllers();
+                alertMessageLogIn(context);
+              }
+
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
