@@ -1,30 +1,8 @@
-import 'dart:developer';
-
 import 'package:fitlife/pages/homePage.dart';
 import 'package:fitlife/main.dart';
 import 'package:fitlife/pages/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/database.dart';
-// import 'package:mysql1/mysql1.dart';
-// import 'dart:async';
-//
-// //https://pub.dev/packages/mysql1/example
-// Future addUser(String name, String email, String pass) async {
-//   final conn = await MySqlConnection.connect(ConnectionSettings(
-//       host: 'localhost',
-//       port: 3306,
-//       user: 'root',
-//       password: 'fitlife',
-//       db: 'fitlife'));
-//
-//   await conn.query(
-//       'CREATE TABLE IF NOT EXISTS user (email varchar(255) NOT NULL PRIMARY KEY, password varchar(255) NOT NULL, name varchar(255) NOT NULL)');
-//
-//   await conn.query('insert into user (email, password, name) values (?, ?, ?)',
-//       [email, pass, name]);
-//   // log(result.first.toString());
-//   await conn.close();
-// }
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -51,6 +29,7 @@ class _CreateAccountState extends State<CreateAccount> {
     AlertDialog popUp = AlertDialog(
       title: Text(title),
       content: Text(content),
+      ///wrote what was going on with this in main.dart
       // actions: [
       //   TextButton(
       //       onPressed: () {
@@ -71,9 +50,6 @@ class _CreateAccountState extends State<CreateAccount> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        // title: Text(widget.title),
         title: const Text(
           "FITLIFE",
           style: TextStyle(fontSize: 40, color: Colors.black),
@@ -146,12 +122,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 clearControllers();
                 alertMessage(context, "Error", "Missing information");
               } else {
-                addUser(emailController.text,
-                    passwordController.text, nameController.text);
-
-                  final User newUser = User(email: emailController.text, password: passwordController.text, name: nameController.text);
-
-                if(myList.contains(newUser)) {
+                addUser(emailController.text, passwordController.text,nameController.text );
+                bool userInserted = false;
+                if(DB.insertId > 0) userInserted = true;
+                if(userInserted) {
                   Navigator.push(context,
                       MaterialPageRoute(
                           builder: (context) => const HomePage()));

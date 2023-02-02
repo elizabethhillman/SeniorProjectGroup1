@@ -44,6 +44,7 @@ class _MyAppState extends State<MyApp> {
     AlertDialog popUp = const AlertDialog(
       title: Text("Error"),
       content: Text("Incorrect Credentials"),
+      ///this doesn't work right if you log in and then log out and go to sign up (goes back to log in)
       // actions: [
       //   TextButton(
       //       onPressed: () {
@@ -96,8 +97,6 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () {
-              // Navigator.push(context,
-              //     MaterialPageRoute(builder: (context) => const HomePage()));
               if(myList.contains(User(email: emailController.text, password: passwordController.text, name: "")))
               {
                 Navigator.push(context,

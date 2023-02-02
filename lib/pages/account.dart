@@ -5,7 +5,6 @@ import 'package:fitlife/pages/calorie.dart';
 import 'package:fitlife/pages/socialMedia.dart';
 import 'package:fitlife/pages/homePage.dart';
 
-
 class Accounts extends StatefulWidget
 {
   const Accounts({Key? key}) : super(key: key);
