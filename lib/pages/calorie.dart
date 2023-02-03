@@ -4,49 +4,52 @@ import 'package:fitlife/pages/socialMedia.dart';
 import 'package:fitlife/pages/account.dart';
 import 'package:fitlife/pages/homePage.dart';
 
-
-class Calorie extends StatefulWidget
-{
+class Calorie extends StatefulWidget {
   const Calorie({Key? key}) : super(key: key);
 
   @override
-  _CalorieState createState() => _CalorieState();
+  State<Calorie> createState() => _CalorieState();
 }
 
-class _CalorieState extends State<Calorie>
-{
+class _CalorieState extends State<Calorie> {
   @override
-  Widget build(BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar
-        (
+      appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.home, color: Colors.black,),
+          icon: const Icon(
+            Icons.home,
+            color: Colors.black,
+          ),
           onPressed: () {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => const HomePage()));
           },
         ),
-        title: const Text("Calories", style: TextStyle(fontSize: 30, color: Colors.black),),
+        title: const Text(
+          "Calories",
+          style: TextStyle(fontSize: 30, color: Colors.black),
+        ),
         actions: <Widget>[
-
           IconButton(
-            icon: const Icon(Icons.fitness_center), color: Colors.black,
+            icon: const Icon(Icons.fitness_center),
+            color: Colors.black,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Workouts()));
             },
           ),
           IconButton(
-            icon: const Icon(Icons.group), color: Colors.black,
+            icon: const Icon(Icons.group),
+            color: Colors.black,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const SocialMedia()));
             },
           ),
           IconButton(
-            icon: const Icon(Icons.account_circle), color: Colors.black,
+            icon: const Icon(Icons.account_circle),
+            color: Colors.black,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Accounts()));

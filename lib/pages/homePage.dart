@@ -4,7 +4,6 @@ import 'package:fitlife/pages/account.dart';
 import 'package:fitlife/pages/calorie.dart';
 import 'package:fitlife/pages/socialMedia.dart';
 
-
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -62,31 +61,38 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         // title: Text(widget.title),
-        title: const Text("FITLIFE", style: TextStyle(fontSize: 40, color: Colors.black),),
+        title: const Text(
+          "FITLIFE",
+          style: TextStyle(fontSize: 40, color: Colors.black),
+        ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.fitness_center), color: Colors.black,
+            icon: const Icon(Icons.fitness_center),
+            color: Colors.black,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Workouts()));
             },
           ),
           IconButton(
-            icon: const Icon(Icons.restaurant), color: Colors.black,
+            icon: const Icon(Icons.restaurant),
+            color: Colors.black,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Calorie()));
             },
           ),
           IconButton(
-            icon: const Icon(Icons.group), color: Colors.black,
+            icon: const Icon(Icons.group),
+            color: Colors.black,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const SocialMedia()));
             },
           ),
           IconButton(
-            icon: const Icon(Icons.account_circle), color: Colors.black,
+            icon: const Icon(Icons.account_circle),
+            color: Colors.black,
             onPressed: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Accounts()));

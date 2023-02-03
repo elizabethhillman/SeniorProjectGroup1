@@ -8,8 +8,47 @@ class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
 
   @override
-  _CreateAccountState createState() => _CreateAccountState();
+  State<CreateAccount> createState() => _CreateAccountState();
 }
+
+//https://pub.dev/packages/mysql1/example
+Future addUser(String email, String password, String name) async {
+  var db =  TestData();
+  //var conn = await db.connectDB();
+
+  String sql = 'INSERT INTO user (email, password, name) VALUES (?, ?, ?)';
+  String table =
+      'CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(45) NOT NULL, password varchar(45) NOT NULL, name varchar(45) NOT NULL)';
+  await db.getConnection().then((conn) async {
+    // Future.delayed(const Duration(seconds: 3));
+    await conn.query(table);
+    // Future.delayed(const Duration(seconds: 3));
+    await conn.query(sql, [email, password, name]);
+    await conn.close();
+    myList.add(User(email: email, password: password, name: name));
+  });
+}
+
+// Future findUser(String email, String password) async {
+//   var db = TestData();
+//
+//   String sql = 'select * fitlife.user where email = ? and password = ?';
+//   await db.connectDB().then((conn) async {
+//     await conn.query(
+//         'CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(45), password varchar(45), name varchar(45))');
+//     await conn.query(sql, [email, password]).then((results) {
+//       for (var res in results) {
+//         final User myuser = User(
+//             password: res['password'].toString(),
+//             email: res['email'].toString(),
+//             name: res['name'].toString());
+//
+//         thislist.add(myuser);
+//       }
+//     });
+//     conn.close();
+//   });
+// }
 
 class _CreateAccountState extends State<CreateAccount> {
   final emailController = TextEditingController();
@@ -29,6 +68,7 @@ class _CreateAccountState extends State<CreateAccount> {
     AlertDialog popUp = AlertDialog(
       title: Text(title),
       content: Text(content),
+
       ///wrote what was going on with this in main.dart
       // actions: [
       //   TextButton(
@@ -45,6 +85,19 @@ class _CreateAccountState extends State<CreateAccount> {
       },
     );
   }
+
+  // futureFind(String email, String password) {
+  //   return FutureBuilder(
+  //       future: findUser(email, password),
+  //       builder: (BuildContext context, snapshot) {
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return const CircularProgressIndicator();
+  //         } else if (snapshot.hasError) {
+  //           return Text(snapshot.error.toString());
+  //         }
+  //         return const Text("err");
+  //       });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -122,19 +175,23 @@ class _CreateAccountState extends State<CreateAccount> {
                 clearControllers();
                 alertMessage(context, "Error", "Missing information");
               } else {
-                addUser(emailController.text, passwordController.text,nameController.text );
-                User newUser = User(email: emailController.text, password: passwordController.text, name: nameController.text);
-                if(DB.insertId > 0)
-                {
-                  myList.add(newUser);
-                }
-                if(myList.contains(newUser)) {
-                  Navigator.push(context,
+                addUser(emailController.text, passwordController.text,
+                    nameController.text);
+                User newUser = User(
+                    email: emailController.text,
+                    password: passwordController.text,
+                    name: nameController.text);
+                // futureFind(emailController.text, passwordController.text);
+                // if (thislist.isNotEmpty &&thislist.elementAt(0).toString().compareTo(emailController.text) == 0 &&
+                //     thislist.elementAt(1).toString().compareTo(passwordController.text) == 0) {
+                //   myList.add(newUser);
+                // }
+                if (myList.contains(newUser)) {
+                  Navigator.push(
+                      context,
                       MaterialPageRoute(
                           builder: (context) => const HomePage()));
-                }
-                else
-                {
+                } else {
                   clearControllers();
                   alertMessage(context, "Invalid Email", "User already exists");
                 }
@@ -168,3 +225,16 @@ class _CreateAccountState extends State<CreateAccount> {
     );
   }
 }
+
+// futureAdd(String email, String password, String name) {
+//   return FutureBuilder(
+//       future: addUser(email, password, name),
+//       builder: (BuildContext context, snapshot) {
+//         if (snapshot.connectionState == ConnectionState.waiting) {
+//           return const CircularProgressIndicator();
+//         } else if (snapshot.hasError) {
+//           return Text(snapshot.error.toString());
+//         }
+//         return const Text("err");
+//       });
+// }

@@ -14,7 +14,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Senior Project',
-      theme: ThemeData(primarySwatch: Colors.blue,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
       ),
       home: const MyApp(title: 'FITLIFE'),
     );
@@ -34,16 +35,17 @@ class _MyAppState extends State<MyApp> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void clearLogInControllers()
-  {
+  void clearLogInControllers() {
     emailController.clear();
     passwordController.clear();
   }
+
   //https://stackoverflow.com/questions/53844052/how-to-make-an-alertdialog-in-flutter
   alertMessageLogIn(BuildContext context) {
     AlertDialog popUp = const AlertDialog(
       title: Text("Error"),
       content: Text("Incorrect Credentials"),
+
       ///this doesn't work right if you log in and then log out and go to sign up (goes back to log in)
       // actions: [
       //   TextButton(
@@ -65,15 +67,20 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("FITLIFE", style: TextStyle(fontSize: 40, color: Colors.black),
+        title: const Text(
+          "FITLIFE",
+          style: TextStyle(fontSize: 40, color: Colors.black),
         ),
       ),
       body: Column(
         //https://levelup.gitconnected.com/login-page-ui-in-flutter-65210e7a6c90
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const Text("Login", style: TextStyle(fontSize: 40),),
-           Padding(
+          const Text(
+            "Login",
+            style: TextStyle(fontSize: 40),
+          ),
+          Padding(
             padding: const EdgeInsets.all(10),
             child: TextField(
               controller: emailController,
@@ -84,7 +91,7 @@ class _MyAppState extends State<MyApp> {
                   hintText: "Enter email"),
             ),
           ),
-           Padding(
+          Padding(
             padding: const EdgeInsets.all(10),
             child: TextField(
               controller: passwordController,
@@ -97,17 +104,16 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () {
-              if(myList.contains(User(email: emailController.text, password: passwordController.text, name: "")))
-              {
+              if (myList.contains(User(
+                  email: emailController.text,
+                  password: passwordController.text,
+                  name: ""))) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomePage()));
-              }
-              else
-              {
+              } else {
                 clearLogInControllers();
                 alertMessageLogIn(context);
               }
-
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -118,7 +124,9 @@ class _MyAppState extends State<MyApp> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text("Don't have an account?",),
+              const Text(
+                "Don't have an account?",
+              ),
               TextButton(
                   onPressed: () {
                     Navigator.push(
