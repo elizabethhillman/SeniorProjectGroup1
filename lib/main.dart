@@ -2,8 +2,13 @@ import 'package:fitlife/pages/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/pages/createAccount.dart';
 import 'package:fitlife/pages/homePage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  //don't know if param options: is required
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform,);
   runApp(const App());
 }
 
@@ -21,6 +26,7 @@ class App extends StatelessWidget {
     );
   }
 }
+
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key, required this.title}) : super(key: key);

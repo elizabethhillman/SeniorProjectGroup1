@@ -1,68 +1,45 @@
-import 'package:mysql1/mysql1.dart';
-// import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+
+
+// class Database
+// {
+//   static const db = Firebase.database;
+//   static const users = db.ref().child("users");
+//   static const newUser = "newUser";
 //
-// // class DB {
-// //   static int insertId = -1;
-// // }
+//   users.child(newUser).set({
+//     "name" :
+// })
 //
-// //https://pub.dev/packages/mysql1/example
-// Future addUser(String email, String password, String name) async {
-//   var conn = await MySqlConnection.connect(ConnectionSettings(
-//       host: 'localhost',
-//       port: 3306,
-//       user: 'root',
-//       db: 'fitlife',
-//       password: 'fitlife'));
+//   static Future<void> createUser(FirebaseUser fbuser) async {
+//     bool alreadyInDB = await doesUserExist(fbuser);
+//     if (!alreadyInDB) {
+//       DatabaseReference ref = FirebaseDatabase.instance.reference();
 //
-//   // Future.delayed(const Duration(seconds: 1));
+//       var user = <String, dynamic>{
+//         'name' : fbuser.displayName,
+//         'email' : fbuser.email,
+//         'password' : fbuser.password
+//       };
 //
-//   await conn.query(
-//       'CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(45), password varchar(45), name varchar(45))');
+//       ref.child("users").child(fbuser.uid).set(user);
+//     } else {
+//       print(fbuser.displayName + " already exists in Realtime Database");
+//     }
+//   }
 //
-//   ///google said someone had same issue so added delays but that no worked for me
-//   // Future.delayed(const Duration(seconds: 1));
+//   static Future<bool> doesUserExist(FirebaseUser fbuser) async {
+//     DatabaseReference ref = FirebaseDatabase.instance.reference();
+//     String name = await ref.child('users').child(fbuser.uid).once().then((DataSnapshot snap) {
+//       return snap.value["name"];
+//     });
 //
-//   ///the range error(byteOffset) issue is with the , [e,p,n] but its required by conn.query so idk
-//   ///i also tried just like insert into user (e,p,n) values ($email, $pass, $name) and there's no errors but doesn't add it
-//   await conn.query(
-//       'insert into user (email, password, name) values (?,?,?)',
-//       [email, password, name]);
-//   //DB.insertId = result.insertId!;
-//   return await conn.close();
+//     if (name == fbuser.displayName)
+//       return true;
+//     else
+//       return false;
+//   }
 // }
-//
-// // //https://pub.dev/packages/mysql1/example
-// // Future addUser(String email, String password, String name) async {
-// //   var db = TestData();
-// //
-// //   String sql = 'insert into fitlife.user (email, password, name) values (?,?,?)';
-// //   await db.connectDB().then((conn) async
-// //   {
-// //     await conn.query('CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(45), password varchar(45), name varchar(45))');
-// //     await conn.query(sql, [email, password, name]);
-// //     conn.close();
-// //   });
-// // }
-
-class TestData {
-  static String host = 'localhost',
-
-      user = 'root',
-
-      password = 'fitlife',
-
-      db = 'fitlife';
-
-  static int port = 3306;
-
-  TestData();
-
-  Future<MySqlConnection> getConnection() async {
-    var settings = new ConnectionSettings(host: host,
-        port: port,
-        user: user,
-        db: db,
-        password: password);
-    return await MySqlConnection.connect(settings);
-  }
-}
