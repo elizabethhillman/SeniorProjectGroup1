@@ -1,7 +1,7 @@
-import 'package:fitlife/pages/user.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/pages/createAccount.dart';
 import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/database.dart';
 
 void main() {
   runApp(const App());
@@ -103,11 +103,8 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              if (myList.contains(User(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  name: ""))) {
+            onPressed: () async {
+              if (await foundUser(emailController.text, passwordController.text)) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomePage()));
               } else {
