@@ -1,4 +1,5 @@
 import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/pages/User.dart';
 import 'package:fitlife/main.dart';
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
@@ -123,6 +124,7 @@ class _CreateAccountState extends State<CreateAccount> {
               } else {
                 addUser(emailController.text, passwordController.text,
                     nameController.text);
+                setCurrentUser(nameController.text, emailController.text, passwordController.text);
 
                 // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);
 
