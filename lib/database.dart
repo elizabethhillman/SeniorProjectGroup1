@@ -15,7 +15,6 @@ class Database {
   }
 }
 
-
 void addUser(var email, var password, var name) async {
   Database db = Database();
   var conn = await db.getSettings();
@@ -31,25 +30,57 @@ void deleteUser(var email) async
   await conn.close();
 }
 
-Future<bool> foundUser(var email, var password) async
+//need to test this with edit button when UI gets pushed
+void updateUser(var email, var password, var name) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  await conn.query("UPDATE `fitlife`.`user` SET `name` = '$name', `password` = '$password' WHERE (`email` = '$email');");
+  await conn.close();
+}
+
+Future<bool> logIn(var email, var password) async
 {
   Database db = Database();
   var conn = await db.getSettings();
 
   var result = await conn.query("SELECT `password` FROM `fitlife`.`user` WHERE (`email` = '$email');");
-  log("password $password");
-  log("email $email");
-  log("result ${result.first}" );
+  // log("password $password");
+  // log("email $email");
+  // log("result ${result.first}" );
   // log("result ${result.first.toString()}");
-  for(var res in result)
-  {
-    log("res: ${res['password']}");
-    if(password == res['password'])
-    {
-        return true;
-    }
+  // if(result == password)
+  // {
+  //   return true;
+  // }
+  // for(var res in result)
+  // {
+  //   log("res: ${res['password']}");
+  //   if(password == res['password'])
+  //   {
+  //       return true;
+  //   }
+  // }
+  for (var i = 0; i < result.length; i++) {
+    // log(result.first);
+    print(result.first);
+    // Do something with each result
   }
+
   await conn.close();
 
+  return false;
+}
+
+Future<bool> emailExists(var email) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+
+  var result = await conn.query("SELECT * FROM `fitlife`.`user` WHERE (`email` = '$email');");
+
+  //something like if result returns something --> return true
+
+  await conn.close();
   return false;
 }

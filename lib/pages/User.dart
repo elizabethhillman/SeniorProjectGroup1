@@ -14,6 +14,7 @@ class User {
 }
 
 User currentUser = User(name: "", email: "", password: "");
+List<User> allUsers = <User>[];
 void setCurrentUser(String name, String email, String password)
 {
   currentUser.email = email;
