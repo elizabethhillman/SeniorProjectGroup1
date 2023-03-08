@@ -1,68 +1,86 @@
+import 'dart:developer';
+
 import 'package:mysql1/mysql1.dart';
-// import 'dart:async';
-//
-// // class DB {
-// //   static int insertId = -1;
-// // }
-//
-// //https://pub.dev/packages/mysql1/example
-// Future addUser(String email, String password, String name) async {
-//   var conn = await MySqlConnection.connect(ConnectionSettings(
-//       host: 'localhost',
-//       port: 3306,
-//       user: 'root',
-//       db: 'fitlife',
-//       password: 'fitlife'));
-//
-//   // Future.delayed(const Duration(seconds: 1));
-//
-//   await conn.query(
-//       'CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(45), password varchar(45), name varchar(45))');
-//
-//   ///google said someone had same issue so added delays but that no worked for me
-//   // Future.delayed(const Duration(seconds: 1));
-//
-//   ///the range error(byteOffset) issue is with the , [e,p,n] but its required by conn.query so idk
-//   ///i also tried just like insert into user (e,p,n) values ($email, $pass, $name) and there's no errors but doesn't add it
-//   await conn.query(
-//       'insert into user (email, password, name) values (?,?,?)',
-//       [email, password, name]);
-//   //DB.insertId = result.insertId!;
-//   return await conn.close();
-// }
-//
-// // //https://pub.dev/packages/mysql1/example
-// // Future addUser(String email, String password, String name) async {
-// //   var db = TestData();
-// //
-// //   String sql = 'insert into fitlife.user (email, password, name) values (?,?,?)';
-// //   await db.connectDB().then((conn) async
-// //   {
-// //     await conn.query('CREATE TABLE IF NOT EXISTS user (id int NOT NULL AUTO_INCREMENT PRIMARY KEY, email varchar(45), password varchar(45), name varchar(45))');
-// //     await conn.query(sql, [email, password, name]);
-// //     conn.close();
-// //   });
-// // }
+import 'dart:async';
 
-class TestData {
-  static String host = 'localhost',
-
-      user = 'root',
-
-      password = 'fitlife',
-
-      db = 'fitlife';
-
-  static int port = 3306;
-
-  TestData();
-
-  Future<MySqlConnection> getConnection() async {
-    var settings = new ConnectionSettings(host: host,
-        port: port,
-        user: user,
-        db: db,
-        password: password);
-    return await MySqlConnection.connect(settings);
+class Database {
+  Future<MySqlConnection> getSettings() async
+  {
+    return await MySqlConnection.connect(ConnectionSettings(
+        host: 'localhost',
+        port: 3306,
+        user: 'root',
+        db: 'fitlife',
+        password: 'fitlife'));
   }
+}
+
+void addUser(var email, var password, var name) async {
+  Database db = Database();
+  var conn = await db.getSettings();
+  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `email`, `password`) VALUES ('$name', '$email', '$password');");
+  await conn.close();
+}
+
+void deleteUser(var email) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  await conn.query("DELETE FROM `fitlife`.`user` WHERE (`email` = '$email');");
+  await conn.close();
+}
+
+//need to test this with edit button when UI gets pushed
+void updateUser(var email, var password, var name) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  await conn.query("UPDATE `fitlife`.`user` SET `name` = '$name', `password` = '$password' WHERE (`email` = '$email');");
+  await conn.close();
+}
+
+Future<bool> logIn(var email, var password) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+
+  var result = await conn.query("SELECT `password` FROM `fitlife`.`user` WHERE (`email` = '$email');");
+  // log("password $password");
+  // log("email $email");
+  // log("result ${result.first}" );
+  // log("result ${result.first.toString()}");
+  // if(result == password)
+  // {
+  //   return true;
+  // }
+  // for(var res in result)
+  // {
+  //   log("res: ${res['password']}");
+  //   if(password == res['password'])
+  //   {
+  //       return true;
+  //   }
+  // }
+  for (var i = 0; i < result.length; i++) {
+    // log(result.first);
+    print(result.first);
+    // Do something with each result
+  }
+
+  await conn.close();
+
+  return false;
+}
+
+Future<bool> emailExists(var email) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+
+  var result = await conn.query("SELECT * FROM `fitlife`.`user` WHERE (`email` = '$email');");
+
+  //something like if result returns something --> return true
+
+  await conn.close();
+  return false;
 }

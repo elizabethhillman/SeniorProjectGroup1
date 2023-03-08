@@ -1,7 +1,9 @@
-import 'package:fitlife/pages/user.dart';
+
+import 'package:fitlife/pages/User.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/pages/createAccount.dart';
 import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/database.dart';
 
 void main() {
   runApp(const App());
@@ -103,20 +105,22 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           ElevatedButton(
-            onPressed: () {
-              /*
-              if (myList.contains(User(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  name: ""))) {
-               */
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const HomePage()));
-              /*} else {
-                clearLogInControllers();
-                alertMessageLogIn(context);
-              }
-              */
+            onPressed: () async {
+              bool loggedIn = false;
+              logIn(emailController.text, passwordController.text);
+              // if (await foundUser(emailController.text, passwordController.text)) {
+      // for(int i = 0; i < allUsers.length; i++){
+      //   if(allUsers[i].email == emailController.text && allUsers[i].password == passwordController.text){
+      //     loggedIn = true;
+      //           Navigator.push(context,
+      //               MaterialPageRoute(builder: (context) => const HomePage()));
+      //         }
+      // }
+      // if(loggedIn == false)
+      // {
+      //   clearLogInControllers();
+      //   alertMessageLogIn(context);
+      // }
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
