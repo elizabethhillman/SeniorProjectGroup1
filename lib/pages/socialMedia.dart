@@ -3,6 +3,9 @@ import 'package:fitlife/pages/account.dart';
 import 'package:fitlife/pages/calorie.dart';
 import 'package:fitlife/pages/workouts.dart';
 import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/pages/post.dart';
+import 'package:fitlife/pages/searchFriends.dart';
+import 'package:fitlife/pages/searchTrainers.dart';
 
 class SocialMedia extends StatefulWidget {
   const SocialMedia({Key? key}) : super(key: key);
@@ -36,7 +39,7 @@ class _SocialMediaState extends State<SocialMedia> {
             color: Colors.black,
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Workouts()));
+                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
             },
           ),
           IconButton(
@@ -54,6 +57,158 @@ class _SocialMediaState extends State<SocialMedia> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Accounts()));
             },
+          ),
+        ],
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 20),
+          Row(
+            children: const [
+              Text(
+                '@username',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(width: 60),
+              Text(
+                'Followers',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(width: 60),
+              Text(
+                'Following',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: const [
+              Icon(
+                Icons.account_circle_outlined,
+                size: 100,
+                color: Colors.grey,
+              ),
+              SizedBox(width: 75),
+              Text(
+                '#',
+                style: TextStyle(
+                  fontSize: 60,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(width: 100),
+              Text(
+                '#',
+                style: TextStyle(
+                  fontSize: 60,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Post()));
+                },
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      side: BorderSide(color: Colors.black),
+                    ),
+                  ),
+                ),
+                child: const Text('Make a Post'),
+              ),
+              const SizedBox(width: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchFriends()));
+                },
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      side: BorderSide(color: Colors.black),
+                    ),
+                  ),
+                ),
+                child: const Text('Find Friends'),
+              ),
+              const SizedBox(width: 20),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchTrainers()));
+                },
+                style: ButtonStyle(
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  shape: MaterialStateProperty.all<OutlinedBorder>(
+                    const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(5)),
+                      side: BorderSide(color: Colors.black),
+                    ),
+                  ),
+                ),
+                child: const Text('Find Trainers'),
+              ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: const [
+              Expanded(
+                child: Divider(
+                  color: Colors.black,
+                  thickness: 2,
+                ),
+              ),
+              SizedBox(width: 10),
+              Text(
+                'Feed',
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                child: Divider(
+                  color: Colors.black,
+                  thickness: 2,
+                ),
+              ),
+            ],
+          ),
+          Expanded(
+            child: ListView(
+              children: const [
+                // Add scrollable posts here
+              ],
+            ),
           ),
         ],
       ),

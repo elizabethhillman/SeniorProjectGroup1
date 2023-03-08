@@ -4,14 +4,16 @@ import 'package:fitlife/pages/account.dart';
 import 'package:fitlife/pages/socialMedia.dart';
 import 'package:fitlife/pages/homePage.dart';
 
-class Workouts extends StatefulWidget {
-  const Workouts({Key? key}) : super(key: key);
+import 'exercises.dart';
+
+class MyWorkouts extends StatefulWidget {
+  const MyWorkouts({Key? key}) : super(key: key);
 
   @override
-  State<Workouts> createState() => _WorkoutsState();
+  State<MyWorkouts> createState() => _MyWorkoutsState();
 }
 
-class _WorkoutsState extends State<Workouts> {
+class _MyWorkoutsState extends State<MyWorkouts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,8 +29,8 @@ class _WorkoutsState extends State<Workouts> {
           },
         ),
         title: const Text(
-          "Workouts",
-          style: TextStyle(fontSize: 30, color: Colors.black),
+          "MyWorkouts",
+          style: TextStyle(fontSize: 28, color: Colors.black),
         ),
         actions: <Widget>[
           IconButton(
@@ -54,6 +56,41 @@ class _WorkoutsState extends State<Workouts> {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => const Accounts()));
             },
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Exercises()));
+                },
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.black, backgroundColor: Colors.white,
+                  side: const BorderSide(color: Colors.black),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                ),
+                child: const Text(
+                  "Add an Exercise",
+                  style: TextStyle(fontSize: 15, color: Colors.black),
+                ),
+              ),
+            ],
+          ),
+          Row(  //temporary, replace with exercises that users select from database
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: const [
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "Workout 1",
+                  style: TextStyle(fontSize: 24, color: Colors.black),
+                ),
+              ),
+            ],
           ),
         ],
       ),
