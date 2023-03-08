@@ -28,7 +28,7 @@ class _WorkoutsState extends State<Workouts> {
         ),
         title: const Text(
           "Workouts",
-          style: TextStyle(fontSize: 30, color: Colors.black),
+          style: TextStyle(fontSize: 29.5, color: Colors.black),
         ),
         actions: <Widget>[
           IconButton(

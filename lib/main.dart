@@ -104,16 +104,16 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () {
-              if (myList.contains(User(
-                  email: emailController.text,
-                  password: passwordController.text,
-                  name: ""))) {
+             // if (myList.contains(User(
+               //   email: emailController.text,
+                 // password: passwordController.text,
+                 // name: ""))) {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const HomePage()));
-              } else {
-                clearLogInControllers();
-                alertMessageLogIn(context);
-              }
+              //} else {
+              //  clearLogInControllers();
+              //  alertMessageLogIn(context);
+             // }
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

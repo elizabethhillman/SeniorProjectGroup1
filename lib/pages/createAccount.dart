@@ -164,7 +164,7 @@ class _CreateAccountState extends State<CreateAccount> {
           ElevatedButton(
             //https://docs.flutter.dev/cookbook/forms/retrieve-input
             onPressed: () {
-              if (passwordController.text.compareTo(reEnterController.text) !=
+           /*   if (passwordController.text.compareTo(reEnterController.text) !=
                   0) {
                 clearControllers();
                 alertMessage(context, "Error", "Passwords do not match");
@@ -185,17 +185,17 @@ class _CreateAccountState extends State<CreateAccount> {
                 // if (thislist.isNotEmpty &&thislist.elementAt(0).toString().compareTo(emailController.text) == 0 &&
                 //     thislist.elementAt(1).toString().compareTo(passwordController.text) == 0) {
                 //   myList.add(newUser);
-                // }
-                if (myList.contains(newUser)) {
+          */      // }
+          //      if (myList.contains(newUser)) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HomePage()));
-                } else {
-                  clearControllers();
-                  alertMessage(context, "Invalid Email", "User already exists");
-                }
-              }
+           //     } else {
+           //       clearControllers();
+             //     alertMessage(context, "Invalid Email", "User already exists");
+         //       }
+          //    }
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
