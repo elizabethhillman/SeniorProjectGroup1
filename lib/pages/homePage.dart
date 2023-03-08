@@ -96,13 +96,46 @@ class _MyHomePageState extends State<MyHomePage> {
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
     return Scaffold(
-        appBar: AppBar(
-          // Here we take the value from the MyHomePage object that was created by
-          // the App.build method, and use it to set our appbar title.
-          // title: Text(widget.title),
-          title: const Text(
-            "FITLIFE",
-            style: TextStyle(fontSize: 40, color: Colors.black),
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        // title: Text(widget.title),
+        title: const Text(
+          "FITLIFE",
+          style: TextStyle(fontSize: 40, color: Colors.black),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.fitness_center),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.restaurant),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Calorie()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.group),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const SocialMedia()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Accounts()));
+            },
           ),
           actions: <Widget>[
             IconButton(

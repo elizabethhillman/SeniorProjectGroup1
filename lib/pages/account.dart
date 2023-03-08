@@ -5,6 +5,7 @@ import 'package:fitlife/pages/workouts.dart';
 import 'package:flutter/material.dart';
 
 import '../main.dart';
+import '../database.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -57,30 +58,14 @@ class _AccountsState extends State<Accounts> {
                   MaterialPageRoute(builder: (context) => const SocialMedia()));
             },
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Name',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('Luka Doncic'),
-              ),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.fitness_center),
+              color: Colors.black,
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const MyWorkouts()));
+              },
             ),
             SizedBox(height: 16),
             Text(
@@ -178,7 +163,35 @@ class _AccountsState extends State<Accounts> {
             ),
           ],
         ),
-      ),
-    );
+
+      ),//unsure if needed
+    );//unsure
+
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton(
+                child: const Text("Log out"),
+                onPressed: () {
+                  setCurrentUser("", "", "");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MyApp(title: "FITLIFE")));
+                },
+              ),
+              TextButton(
+                  child: const Text("Delete Account"),
+                  onPressed: () {
+                    String email = getCurrentUser().email;
+                    deleteUser(email);
+                    setCurrentUser("", "", "");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MyApp(title: "FITLIFE")));
+                  }),
+            ]));
   }
 }
