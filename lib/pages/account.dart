@@ -4,6 +4,9 @@ import 'package:fitlife/pages/workouts.dart';
 import 'package:fitlife/pages/calorie.dart';
 import 'package:fitlife/pages/socialMedia.dart';
 import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/pages/User.dart';
+
+import '../database.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -60,14 +63,31 @@ class _AccountsState extends State<Accounts> {
             ),
           ],
         ),
-        body: TextButton(
-          child: const Text("Log out"),
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const MyApp(title: "FITLIFE")));
-          },
-        ));
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              TextButton(
+                child: const Text("Log out"),
+                onPressed: () {
+                  setCurrentUser("", "", "");
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const MyApp(title: "FITLIFE")));
+                },
+              ),
+              TextButton(
+                  child: const Text("Delete Account"),
+                  onPressed: () {
+                    String email = getCurrentUser().email;
+                    deleteUser(email);
+                    setCurrentUser("", "", "");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const MyApp(title: "FITLIFE")));
+                  }),
+            ]));
   }
 }

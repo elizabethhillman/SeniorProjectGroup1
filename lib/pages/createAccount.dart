@@ -1,4 +1,6 @@
+
 import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/pages/User.dart';
 import 'package:fitlife/main.dart';
 import 'package:flutter/material.dart';
 import 'package:mysql1/mysql1.dart';
@@ -120,9 +122,15 @@ class _CreateAccountState extends State<CreateAccount> {
                   nameController.text.compareTo("") == 0) {
                 clearControllers();
                 alertMessage(context, "Error", "Missing information");
+              } else if(await emailExists(emailController.text) == true)
+              {
+                alertMessage(context, "Error", "Email already exists");
               } else {
                 addUser(emailController.text, passwordController.text,
                     nameController.text);
+                User u =  User(name: nameController.text, email: emailController.text, password: passwordController.text);
+                setCurrentUser(nameController.text, emailController.text, passwordController.text);
+                allUsers.add(u);
 
                 // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);
 
