@@ -71,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
             color: Colors.black,
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Workouts()));
+                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
             },
           ),
           IconButton(

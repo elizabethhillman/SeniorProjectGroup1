@@ -164,6 +164,7 @@ class _CreateAccountState extends State<CreateAccount> {
           ElevatedButton(
             //https://docs.flutter.dev/cookbook/forms/retrieve-input
             onPressed: () {
+              /*
               if (passwordController.text.compareTo(reEnterController.text) !=
                   0) {
                 clearControllers();
@@ -187,15 +188,18 @@ class _CreateAccountState extends State<CreateAccount> {
                 //   myList.add(newUser);
                 // }
                 if (myList.contains(newUser)) {
+               */
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HomePage()));
+                  /*
                 } else {
                   clearControllers();
                   alertMessage(context, "Invalid Email", "User already exists");
                 }
               }
+                  */
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

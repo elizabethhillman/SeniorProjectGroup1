@@ -36,7 +36,7 @@ class _CalorieState extends State<Calorie> {
             color: Colors.black,
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Workouts()));
+                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
             },
           ),
           IconButton(
