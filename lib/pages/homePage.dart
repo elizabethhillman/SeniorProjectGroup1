@@ -129,39 +129,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => const SocialMedia()));
             },
           ),
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Accounts()));
-            },
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.fitness_center),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Workouts()));
-              },
-            ),
             IconButton(
               icon: const Icon(Icons.restaurant),
               color: Colors.black,
               onPressed: () {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => const Calorie()));
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.group),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const SocialMedia()));
               },
             ),
             IconButton(
