@@ -128,6 +128,7 @@ class _CreateAccountState extends State<CreateAccount> {
               } else {
                 addUser(emailController.text, passwordController.text,
                     nameController.text);
+
                 User u =  User(name: nameController.text, email: emailController.text, password: passwordController.text);
                 setCurrentUser(nameController.text, emailController.text, passwordController.text);
                 allUsers.add(u);
@@ -139,6 +140,7 @@ class _CreateAccountState extends State<CreateAccount> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HomePage()));
+
                 // } else {
                 //   clearControllers();
                 //   alertMessage(context, "Invalid Email", "User already exists");
