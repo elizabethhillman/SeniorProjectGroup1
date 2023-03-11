@@ -105,7 +105,11 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           ElevatedButton(
-            onPressed: () async {
+            onPressed: () async {//bypass login with database
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const HomePage()));
               bool loggedIn = false;
               logIn(emailController.text, passwordController.text);
               // if (await foundUser(emailController.text, passwordController.text)) {

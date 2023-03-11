@@ -130,14 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
             IconButton(
-              icon: const Icon(Icons.restaurant),
-              color: Colors.black,
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const Calorie()));
-              },
-            ),
-            IconButton(
               icon: const Icon(Icons.account_circle),
               color: Colors.black,
               onPressed: () {

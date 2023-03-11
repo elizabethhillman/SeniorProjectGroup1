@@ -8,7 +8,7 @@ class Results extends StatefulWidget {
 }
 
 class _ResultsState extends State<Results> {
-  List<String> _foodList =
+  final List<String> _foodList =
       []; //list of the foods that were calculated AFTEr selection
   Map<String, int> foodCalories = {
     //List of foods (fake backend)
@@ -29,7 +29,6 @@ class _ResultsState extends State<Results> {
     'Peanut Butter': (190),
     'Oatmeal': (150),
     'Greek Yogurt': (120),
-    'Banana': (105),
   };
 
   String _searchText = '';
@@ -65,7 +64,7 @@ class _ResultsState extends State<Results> {
     if (quantity > 0) {
       setState(() {
         _foodList.add(
-            '${date}          ${_selectedFood!}:            ${_totalCalories} calories'); //adds selectedfood to list
+            '$date          ${_selectedFood!}:            $_totalCalories calories');
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
@@ -97,7 +96,7 @@ class _ResultsState extends State<Results> {
             child: TextField(
               //autofocus: true, //page opens  up with keyboard open
               onChanged: _onSearchTextChanged,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 hintText: 'Search for food to log',
                 border: OutlineInputBorder(),
               ),
@@ -109,9 +108,8 @@ class _ResultsState extends State<Results> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    _selectedFood!
-                    +" serving size:",
-                    style: TextStyle(fontSize: 20.0),
+                    "${_selectedFood!} serving size:",
+                    style: const TextStyle(fontSize: 20.0),
                   ),
                 ),
                 Padding(
@@ -119,7 +117,7 @@ class _ResultsState extends State<Results> {
                   child: TextField(
                     controller: _quantityController,
                     keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Enter Quantity',
                       border: OutlineInputBorder(),
                     ),
@@ -144,7 +142,7 @@ class _ResultsState extends State<Results> {
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
                           'Total Calories: $_totalCalories',
-                          style: TextStyle(fontSize: 24.0),
+                          style: const TextStyle(fontSize: 24.0),
                         ),
                       ),
                     ],
@@ -175,8 +173,8 @@ class _ResultsState extends State<Results> {
               ),
             ),
           if (_searchText.isEmpty && _selectedFood == null && _foodList.isEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 150.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 150.0),
               child: Text(
                 "Search for a meal to log!",
                 style: TextStyle(
@@ -186,8 +184,8 @@ class _ResultsState extends State<Results> {
               ),
             ),
           if (_foodList.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 150.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 150.0),
               child: Text(
                 "Food(s) to be logged:",
                 style: TextStyle(
@@ -198,7 +196,7 @@ class _ResultsState extends State<Results> {
             ),
           Expanded(
               child: ListView.builder(
-                itemCount: _foodList.length, //list after food is selected
+                itemCount: _foodList.length,
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(_foodList[index]),
@@ -206,13 +204,13 @@ class _ResultsState extends State<Results> {
                 },
               ),
           ),
-          SizedBox(height: 100.0),
+          const SizedBox(height: 100.0),
           if (_foodList.isNotEmpty)
             TextButton(
               onPressed: () {
                 Navigator.pop(context, _foodList);
               },
-              child: Text('Add to Tracker'),
+              child: const Text('Add to Tracker'),
             ),
         ],
       ),
