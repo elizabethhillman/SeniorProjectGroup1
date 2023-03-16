@@ -7,15 +7,17 @@ class User {
     required this.email,
     required this.password,
     required this.handle,
+    required this.id,
   });
 
   String name;
   String email;
   String password;
   String handle;
+  int id;
 }
 
-User currentUser = User(name: "", handle: "", email: "", password: "");
+User currentUser = User(id: -1, name: "", handle: "", email: "", password: "");
 List<User> allUsers = <User>[];
 void setCurrentUser(String name, String handle, String email, String password)
 {
@@ -28,4 +30,9 @@ void setCurrentUser(String name, String handle, String email, String password)
 User getCurrentUser()
 {
   return currentUser;
+}
+
+void setId(var num)
+{
+  currentUser.id = num;
 }

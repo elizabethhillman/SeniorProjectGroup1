@@ -143,7 +143,7 @@ class _CreateAccountState extends State<CreateAccount> {
                 addUser(emailController.text, passwordController.text,
                     nameController.text, handleController.text);
 
-                User u =  User(name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
+                User u =  User(id: 0, name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
                 setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text);
                 allUsers.add(u);
 

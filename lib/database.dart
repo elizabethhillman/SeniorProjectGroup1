@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:fitlife/pages/User.dart';
 import 'package:mysql1/mysql1.dart';
 import 'dart:async';
 
@@ -19,8 +20,16 @@ void addUser(var email, var password, var name, var handle) async {
   Database db = Database();
   var conn = await db.getSettings();
   await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`) VALUES ('$name', '$handle', '$email', '$password');");
+  //idk why this works but needs both select statements
+  var id = await conn.query("SELECT MAX(id) from fitlife.user;");
+  var result = await conn.query('SELECT id FROM fitlife.user;');
+  for(var res in result)
+  {
+    currentUser.id = res['MAX(id)'];
+  }
   await conn.close();
 }
+
 
 void deleteUser(var email) async
 {
@@ -31,11 +40,11 @@ void deleteUser(var email) async
 }
 
 //need to test this with edit button when UI gets pushed
-void updateUser(var email, var handle, var password, var name) async
+void updateUser(int id, var email, var handle, var password, var name) async
 {
   Database db = Database();
   var conn = await db.getSettings();
-  await conn.query("UPDATE `fitlife`.`user` SET `name` = '$name', `handle` = '$handle',  `password` = '$password' WHERE (`email` = '$email');");
+  await conn.query("UPDATE `fitlife`.`user` SET `name` = '$name', `handle` = '$handle',  `password` = '$password' WHERE (`id` = '$id');");
   await conn.close();
 }
 
@@ -43,14 +52,12 @@ void logIn(var email, var password) async
 {
   Database db = Database();
   var conn = await db.getSettings();
-
-  var result = await conn.query('SELECT id FROM user;');
-  print(result);
-  // log("res: ${result['password']}");
-  // print("len: ${result.toList()}");
-  print("empty: ${result.isEmpty}");
-  print("toS: ${result.toString()}");
-  print("aff: ${result.affectedRows}");
+  var id = await conn.query("SELECT MAX(id) from fitlife.user;");
+  var result = await conn.query('SELECT id FROM fitlife.user;');
+  for(var res in result)
+  {
+    print(res['MAX(id)']);
+  }
 
 
 
@@ -65,14 +72,14 @@ void logIn(var email, var password) async
   // {
   //   return true;
   // }
-  for(var res in result)
-  {
-    print("res: ${res['password']}");
-    print(res.toString());
-  //   if(password == res['password'])
-  //   {
-  //       return true;
-    }
+  // for(var res in result)
+  // {
+  //   print("res: ${res['password']}");
+  //   print(res.toString());
+  // //   if(password == res['password'])
+  // //   {
+  // //       return true;
+  //   }
 
   // }
   // for (var i = 0; i < result.length; i++) {
