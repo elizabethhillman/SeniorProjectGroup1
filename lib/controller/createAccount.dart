@@ -1,8 +1,8 @@
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/pages/User.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/model/User.dart';
 import 'package:fitlife/main.dart';
 import 'package:flutter/material.dart';
-import 'package:fitlife/database.dart';
+import 'package:fitlife/model/user_database.dart';
 
 class CreateAccount extends StatefulWidget {
   const CreateAccount({Key? key}) : super(key: key);
@@ -137,13 +137,16 @@ class _CreateAccountState extends State<CreateAccount> {
               } else if(await emailExists(emailController.text) == true)
               {
                 alertMessage(context, "Error", "Email already exists");
+              } else if(await handleExists(handleController.text) == true)
+              {
+                alertMessage(context, "Error", "Social Media Handle already exists");
               } else {
                 addUser(emailController.text, passwordController.text,
                     nameController.text, handleController.text);
 
-                User u =  User(id: 0, name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
-                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text);
-                allUsers.add(u);
+                // User u =  User(id: 0, name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
+                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, await getBio(emailController.text), await getFollowers(emailController.text), await getFollowing(emailController.text));
+                // allUsers.add(u);
 
                 // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);
 

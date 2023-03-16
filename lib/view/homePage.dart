@@ -1,11 +1,11 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:fitlife/pages/User.dart';
-import 'package:fitlife/pages/account.dart';
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/enterWeight.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/workouts.dart';
+import 'package:fitlife/model/User.dart';
+import 'package:fitlife/view/account.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/controller/enterWeight.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 

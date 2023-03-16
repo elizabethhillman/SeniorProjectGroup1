@@ -1,11 +1,11 @@
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/workouts.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
-import 'package:fitlife/pages/account.dart';
-import '../database.dart';
-import 'User.dart';
+import 'package:fitlife/view/account.dart';
+import '../model/user_database.dart';
+import '../model/User.dart';
 
 class UpdateAcct extends StatefulWidget {
   const UpdateAcct({Key? key}) : super(key: key);
@@ -19,6 +19,8 @@ class _UpdateAcctState extends State<UpdateAcct> {
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
   final handleController = TextEditingController();
+  final bioController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +140,22 @@ class _UpdateAcctState extends State<UpdateAcct> {
                   labelText: currentUser.password,),
               ),
             ),
+            const Text(
+              '  Bio',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: TextField(
+                controller: bioController,
+                decoration:  InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: currentUser.bio,),
+              ),
+            ),
             const Spacer(),
             Center(
               child: Column(
@@ -148,7 +166,7 @@ class _UpdateAcctState extends State<UpdateAcct> {
                     children: [
                       ElevatedButton(
                         //add something where user can edit info and either save or cancel
-                        onPressed: () {
+                        onPressed: () async {
                           if(handleController.text.compareTo("")== 0)
                           {
                             handleController.text = currentUser.handle;
@@ -161,8 +179,12 @@ class _UpdateAcctState extends State<UpdateAcct> {
                           {
                             nameController.text = currentUser.name;
                           }
-                          updateUser(currentUser.id,emailController.text, handleController.text, passwordController.text, nameController.text);
-                          setCurrentUser(nameController.text, handleController.text, currentUser.email, passwordController.text);
+                          if(bioController.text.compareTo("")== 0)
+                          {
+                            bioController.text = currentUser.bio;
+                          }
+                          updateUser(currentUser.id,emailController.text, handleController.text, passwordController.text, nameController.text, bioController.text);
+                          setCurrentUser(nameController.text, handleController.text, currentUser.email, passwordController.text, bioController.text, currentUser.followers, currentUser.following);
                           Navigator.push(
                               context,
                               MaterialPageRoute(

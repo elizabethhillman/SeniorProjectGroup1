@@ -1,13 +1,13 @@
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/workouts.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
-import 'package:fitlife/pages/updateAccount.dart';
+import 'package:fitlife/controller/updateAccount.dart';
 
-import '../database.dart';
+import '../model/user_database.dart';
 import '../main.dart';
-import 'User.dart';
+import '../model/User.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -21,6 +21,7 @@ class _AccountsState extends State<Accounts> {
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
   final handleController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -149,6 +150,25 @@ class _AccountsState extends State<Accounts> {
                 child: Text("*********"),
               ),
             ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Bio',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(currentUser.bio),
+                  ),
+                ),
             const Spacer(),
             Center(
               child: Column(
@@ -171,7 +191,7 @@ class _AccountsState extends State<Accounts> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          setCurrentUser("", "", "","");
+                          setCurrentUser("", "", "","", "",0,0);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -185,7 +205,7 @@ class _AccountsState extends State<Accounts> {
                         onPressed: () {
                           String email = getCurrentUser().email;
                           deleteUser(email);
-                          setCurrentUser("", "", "", "");
+                          setCurrentUser("", "", "","", "",0,0);
                           Navigator.push(
                               context,
                               MaterialPageRoute(

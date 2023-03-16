@@ -1,12 +1,13 @@
+import 'package:fitlife/model/user_database.dart';
 import 'package:flutter/material.dart';
-import 'package:fitlife/pages/account.dart';
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/workouts.dart';
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/pages/post.dart';
-import 'package:fitlife/pages/searchFriends.dart';
-import 'package:fitlife/pages/searchTrainers.dart';
-import 'package:fitlife/pages/User.dart';
+import 'package:fitlife/view/account.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/workouts.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/controller/post.dart';
+import 'package:fitlife/controller/searchFriends.dart';
+import 'package:fitlife/controller/searchTrainers.dart';
+import 'package:fitlife/model/User.dart';
 
 class SocialMedia extends StatefulWidget {
   const SocialMedia({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class SocialMedia extends StatefulWidget {
 }
 
 class _SocialMediaState extends State<SocialMedia> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,30 +99,48 @@ class _SocialMediaState extends State<SocialMedia> {
           ),
           const SizedBox(height: 20),
           Row(
-            children: const [
-              Icon(
+            children:  [
+              const Icon(
                 Icons.account_circle_outlined,
                 size: 100,
                 color: Colors.grey,
               ),
-              SizedBox(width: 75),
+              const SizedBox(width: 75),
               Text(
-                '#',
-                style: TextStyle(
+                currentUser.followers.toString(),
+                style: const TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(width: 100),
+              const SizedBox(width: 100),
               Text(
-                '#',
-                style: TextStyle(
+                currentUser.following.toString(),
+                style: const TextStyle(
                   fontSize: 60,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:
+              [
+              const Text("Bio", style: TextStyle(color: Colors.black, fontSize: 15,
+                fontWeight: FontWeight.bold,),),
+              TextField(
+                readOnly: true,
+                enabled: false,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  labelText: currentUser.bio,
+                  )
+              )
             ],
           ),
           const SizedBox(height: 20),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/account.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/account.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/homePage.dart';
 import 'package:google_fonts/google_fonts.dart';
 class enterWeight extends StatefulWidget {
   const enterWeight({Key? key}) : super(key: key);

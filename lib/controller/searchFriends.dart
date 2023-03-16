@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fitlife/pages/account.dart';
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/workouts.dart';
-import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/view/account.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/workouts.dart';
+import 'package:fitlife/view/homePage.dart';
 
 class SearchFriends extends StatefulWidget {
   const SearchFriends({Key? key}) : super(key: key);

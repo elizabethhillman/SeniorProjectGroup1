@@ -1,9 +1,9 @@
-import 'package:fitlife/pages/Results.dart';
-import 'package:fitlife/pages/account.dart';
-import 'package:fitlife/pages/editCalorie.dart';
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/workouts.dart';
+import 'package:fitlife/view/Results.dart';
+import 'package:fitlife/view/account.dart';
+import 'package:fitlife/controller/editCalorie.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 
 class Calorie extends StatefulWidget {
