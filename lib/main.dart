@@ -115,6 +115,11 @@ class _MyAppState extends State<MyApp> {
                     MaterialPageRoute(
                         builder: (context) => const HomePage()));
               }
+              else
+              {
+                clearLogInControllers();
+                alertMessageLogIn(context);
+              }
               // logIn(emailController.text, passwordController.text);
               // Navigator.push(
               //     context,
