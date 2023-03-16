@@ -6,6 +6,7 @@ import 'package:fitlife/pages/homePage.dart';
 import 'package:fitlife/pages/post.dart';
 import 'package:fitlife/pages/searchFriends.dart';
 import 'package:fitlife/pages/searchTrainers.dart';
+import 'package:fitlife/pages/User.dart';
 
 class SocialMedia extends StatefulWidget {
   const SocialMedia({Key? key}) : super(key: key);
@@ -66,9 +67,8 @@ class _SocialMediaState extends State<SocialMedia> {
         children: [
           const SizedBox(height: 20),
           Row(
-            children: const [
-              Text(
-                '@username',
+            children:  [
+              Text("@${currentUser.handle}",
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,

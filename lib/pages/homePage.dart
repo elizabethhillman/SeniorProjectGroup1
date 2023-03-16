@@ -1,5 +1,6 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:fitlife/pages/User.dart';
 import 'package:fitlife/pages/account.dart';
 import 'package:fitlife/pages/calorie.dart';
 import 'package:fitlife/pages/enterWeight.dart';
@@ -148,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Padding(
                 padding: EdgeInsets.only(left: 15.0),
                 child: Text(
-                  "Welcome Back, User",
+                  "Welcome Back, ${currentUser.name}",
                   style: GoogleFonts.montserrat(
                     fontSize: 30,
                   ),

@@ -16,6 +16,11 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final handleController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,7 +88,7 @@ class _AccountsState extends State<Accounts> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Luka Doncic'),
+                child: Text(currentUser.name),
               ),
             ),
             SizedBox(height: 16),
@@ -102,7 +107,7 @@ class _AccountsState extends State<Accounts> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('@dog55385'),
+                child: Text(currentUser.handle),
               ),
             ),
             SizedBox(height: 16),
@@ -121,7 +126,7 @@ class _AccountsState extends State<Accounts> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('test@example.com'),
+                child: Text(currentUser.email),
               ),
             ),
             SizedBox(height: 16),
@@ -140,7 +145,7 @@ class _AccountsState extends State<Accounts> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('******************'),
+                child: Text(currentUser.password),
               ),
             ),
             Spacer(),
@@ -152,7 +157,8 @@ class _AccountsState extends State<Accounts> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        //add something where user can edit info and either save or cancel
+                        onPressed: () {updateUser(emailController.text, handleController.text, passwordController.text, nameController.text);},
                         child: Text('Edit'),
                       ),
                     ],
@@ -162,7 +168,7 @@ class _AccountsState extends State<Accounts> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          setCurrentUser("", "", "");
+                          setCurrentUser("", "", "","");
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -176,7 +182,7 @@ class _AccountsState extends State<Accounts> {
                         onPressed: () {
                           String email = getCurrentUser().email;
                           deleteUser(email);
-                          setCurrentUser("", "", "");
+                          setCurrentUser("", "", "", "");
                           Navigator.push(
                               context,
                               MaterialPageRoute(

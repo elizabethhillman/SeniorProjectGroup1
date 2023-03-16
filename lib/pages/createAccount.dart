@@ -18,12 +18,15 @@ class _CreateAccountState extends State<CreateAccount> {
   final passwordController = TextEditingController();
   final reEnterController = TextEditingController();
   final nameController = TextEditingController();
+  final handleController = TextEditingController();
+
 
   void clearControllers() {
     emailController.clear();
     passwordController.clear();
     reEnterController.clear();
     nameController.clear();
+    handleController.clear();
   }
 
   //https://stackoverflow.com/questions/53844052/how-to-make-an-alertdialog-in-flutter
@@ -79,6 +82,17 @@ class _CreateAccountState extends State<CreateAccount> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: TextField(
+              controller: handleController,
+              obscureText: false,
+              decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: "Social Media Handle",
+                  hintText: "Enter your Social Media Handle"),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: TextField(
               controller: emailController,
               obscureText: false,
               decoration: const InputDecoration(
@@ -127,10 +141,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 alertMessage(context, "Error", "Email already exists");
               } else {
                 addUser(emailController.text, passwordController.text,
-                    nameController.text);
+                    nameController.text, handleController.text);
 
-                User u =  User(name: nameController.text, email: emailController.text, password: passwordController.text);
-                setCurrentUser(nameController.text, emailController.text, passwordController.text);
+                User u =  User(name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
+                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text);
                 allUsers.add(u);
 
                 // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);
