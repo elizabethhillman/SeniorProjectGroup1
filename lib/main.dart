@@ -1,9 +1,9 @@
 
-import 'package:fitlife/pages/User.dart';
+import 'package:fitlife/model/User.dart';
 import 'package:flutter/material.dart';
-import 'package:fitlife/pages/createAccount.dart';
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/database.dart';
+import 'package:fitlife/controller/createAccount.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/model/user_database.dart';
 
 void main() {
   runApp(const App());
@@ -106,12 +106,27 @@ class _MyAppState extends State<MyApp> {
           ),
           ElevatedButton(
             onPressed: () async {//bypass login with database
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const HomePage()));
-              bool loggedIn = false;
-              logIn(emailController.text, passwordController.text);
+              if(await logIn(emailController.text, passwordController.text) == true)
+              {
+                setCurrentUser(await getName(emailController.text, passwordController.text), await getHandle(emailController.text, passwordController.text), emailController.text, passwordController.text, await getBio(emailController.text), 0,0);
+                setId(await getID(emailController.text, passwordController.text));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const HomePage()));
+              }
+              else
+              {
+                clearLogInControllers();
+                alertMessageLogIn(context);
+              }
+              // logIn(emailController.text, passwordController.text);
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => const HomePage()));
+              // bool loggedIn = false;
+
               // if (await foundUser(emailController.text, passwordController.text)) {
       // for(int i = 0; i < allUsers.length; i++){
       //   if(allUsers[i].email == emailController.text && allUsers[i].password == passwordController.text){

@@ -1,12 +1,13 @@
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/workouts.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
+import 'package:fitlife/controller/updateAccount.dart';
 
-import '../database.dart';
+import '../model/user_database.dart';
 import '../main.dart';
-import 'User.dart';
+import '../model/User.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -16,6 +17,12 @@ class Accounts extends StatefulWidget {
 }
 
 class _AccountsState extends State<Accounts> {
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final nameController = TextEditingController();
+  final handleController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,14 +75,14 @@ class _AccountsState extends State<Accounts> {
           padding: const EdgeInsets.all(16.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
+            const Text(
               'Name',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -83,18 +90,18 @@ class _AccountsState extends State<Accounts> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('Luka Doncic'),
+                child: Text(currentUser.name),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Social Username',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -102,18 +109,18 @@ class _AccountsState extends State<Accounts> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('@dog55385'),
+                child: Text(currentUser.handle),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+                const SizedBox(height: 16),
+            const Text(
               'Email',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+                const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -121,29 +128,48 @@ class _AccountsState extends State<Accounts> {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text('test@example.com'),
+                child: Text(currentUser.email),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Password',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text('******************'),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("*********"),
               ),
             ),
-            Spacer(),
+                const SizedBox(height: 16),
+                const Text(
+                  'Bio',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(currentUser.bio),
+                  ),
+                ),
+            const Spacer(),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -152,38 +178,41 @@ class _AccountsState extends State<Accounts> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
-                        child: Text('Edit'),
+                        onPressed: () {Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const UpdateAcct()));},
+                        child: const Text('Edit'),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Column(
                     children: [
                       TextButton(
                         onPressed: () {
-                          setCurrentUser("", "", "");
+                          setCurrentUser("", "", "","", "",0,0);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const MyApp(title: "FITLIFE")));
                         },
-                        child: Text('Logout'),
+                        child: const Text('Logout'),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextButton(
                         onPressed: () {
                           String email = getCurrentUser().email;
                           deleteUser(email);
-                          setCurrentUser("", "", "");
+                          setCurrentUser("", "", "","", "",0,0);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
                                       const MyApp(title: "FITLIFE")));
                         },
-                        child: Text('Delete account'),
+                        child: const Text('Delete account'),
                       ),
                     ],
                   ),

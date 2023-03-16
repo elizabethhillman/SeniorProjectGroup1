@@ -1,9 +1,9 @@
-import 'package:fitlife/pages/Results.dart';
-import 'package:fitlife/pages/account.dart';
-import 'package:fitlife/pages/editCalorie.dart';
-import 'package:fitlife/pages/homePage.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/workouts.dart';
+import 'package:fitlife/view/Results.dart';
+import 'package:fitlife/view/account.dart';
+import 'package:fitlife/controller/editCalorie.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 
 class Calorie extends StatefulWidget {
@@ -64,7 +64,7 @@ class _CalorieState extends State<Calorie> {
       ),
       body: Column(
         children: [
-          SizedBox(
+          const SizedBox(
               height: 10,
           ),
              Container(
@@ -106,7 +106,7 @@ class _CalorieState extends State<Calorie> {
                   ),
                 ), child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                children: const [
                   Text(
                     'Log foods',
                     style: TextStyle(fontSize: 18),
@@ -119,7 +119,7 @@ class _CalorieState extends State<Calorie> {
             ),
 
           if(_foodList.isEmpty)
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 175.0),
                 child: Text(
                   "No meals logged for today",
@@ -130,10 +130,10 @@ class _CalorieState extends State<Calorie> {
                 ),
             ),
           if(_foodList.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.only(top: 175.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 175.0),
               child: Text(
-                "Todays Meals",
+                "Today's Meals",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24.0,

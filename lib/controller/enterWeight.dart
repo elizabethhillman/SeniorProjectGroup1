@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fitlife/pages/calorie.dart';
-import 'package:fitlife/pages/account.dart';
-import 'package:fitlife/pages/socialMedia.dart';
-import 'package:fitlife/pages/homePage.dart';
+import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/account.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/homePage.dart';
 import 'package:google_fonts/google_fonts.dart';
 class enterWeight extends StatefulWidget {
   const enterWeight({Key? key}) : super(key: key);
@@ -72,14 +72,14 @@ class _enterWeightState extends State<enterWeight> {
             fontWeight: FontWeight.bold,
           )
               ),
-            SizedBox(height: 100.0),
+            const SizedBox(height: 100.0),
             TextField(
               decoration: InputDecoration(
                 hintText: 'Enter weight',
-                contentPadding: EdgeInsets.all(16.0),
-                  suffixIcon: Icon(Icons.monitor_weight_outlined),
+                contentPadding: const EdgeInsets.all(16.0),
+                  suffixIcon: const Icon(Icons.monitor_weight_outlined),
                   border: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.grey),
+                    borderSide: const BorderSide(color: Colors.grey),
                     borderRadius: BorderRadius.circular(13.0),
                   )
               ),
@@ -89,14 +89,14 @@ class _enterWeightState extends State<enterWeight> {
                 });
               },
             ),
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             TextField(
               decoration: InputDecoration(
                 hintText: 'Enter date',
-                contentPadding: EdgeInsets.all(16.0),
-                suffixIcon: Icon(Icons.calendar_today),
+                contentPadding: const EdgeInsets.all(16.0),
+                suffixIcon: const Icon(Icons.calendar_today),
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
+                  borderSide: const BorderSide(color: Colors.grey),
                   borderRadius: BorderRadius.circular(13.0),
                 ),
             ),
@@ -107,12 +107,12 @@ class _enterWeightState extends State<enterWeight> {
               },
             ),
 
-            SizedBox(height: 16.0),
+            const SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
               Navigator.pop(context);
               },
-              child: Text('Save Weight'),
+              child: const Text('Save Weight'),
             ),
           ],
         ),
