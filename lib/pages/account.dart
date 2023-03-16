@@ -74,14 +74,14 @@ class _AccountsState extends State<Accounts> {
           padding: const EdgeInsets.all(16.0),
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(
+            const Text(
               'Name',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -92,15 +92,15 @@ class _AccountsState extends State<Accounts> {
                 child: Text(currentUser.name),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Social Username',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -111,15 +111,15 @@ class _AccountsState extends State<Accounts> {
                 child: Text(currentUser.handle),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+                const SizedBox(height: 16),
+            const Text(
               'Email',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+                const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -130,26 +130,26 @@ class _AccountsState extends State<Accounts> {
                 child: Text(currentUser.email),
               ),
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Password',
               style: TextStyle(
                 fontSize: 18,
                 color: Colors.grey,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(currentUser.password),
+              child: const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text("*********"),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -162,11 +162,11 @@ class _AccountsState extends State<Accounts> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => const UpdateAcct()));},
-                        child: Text('Edit'),
+                        child: const Text('Edit'),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Column(
                     children: [
                       TextButton(
@@ -178,9 +178,9 @@ class _AccountsState extends State<Accounts> {
                                   builder: (context) =>
                                       const MyApp(title: "FITLIFE")));
                         },
-                        child: Text('Logout'),
+                        child: const Text('Logout'),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       TextButton(
                         onPressed: () {
                           String email = getCurrentUser().email;
@@ -192,7 +192,7 @@ class _AccountsState extends State<Accounts> {
                                   builder: (context) =>
                                       const MyApp(title: "FITLIFE")));
                         },
-                        child: Text('Delete account'),
+                        child: const Text('Delete account'),
                       ),
                     ],
                   ),

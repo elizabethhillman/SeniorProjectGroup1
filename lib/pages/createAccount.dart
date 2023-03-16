@@ -1,9 +1,7 @@
-
 import 'package:fitlife/pages/homePage.dart';
 import 'package:fitlife/pages/User.dart';
 import 'package:fitlife/main.dart';
 import 'package:flutter/material.dart';
-import 'package:mysql1/mysql1.dart';
 import 'package:fitlife/database.dart';
 
 class CreateAccount extends StatefulWidget {

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fitlife/pages/User.dart';
 import 'package:mysql1/mysql1.dart';
 import 'dart:async';
@@ -48,60 +46,97 @@ void updateUser(int id, var email, var handle, var password, var name) async
   await conn.close();
 }
 
-void logIn(var email, var password) async
+Future<bool> logIn(String email, var password) async
 {
   Database db = Database();
   var conn = await db.getSettings();
-  var id = await conn.query("SELECT MAX(id) from fitlife.user;");
-  var result = await conn.query('SELECT id FROM fitlife.user;');
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT email, password FROM fitlife.user;');
   for(var res in result)
   {
-    print(res['MAX(id)']);
+    if(email.compareTo(res['email'])==0 && password.compareTo(res['password'])==0)
+    {
+      return true;
+    }
   }
-
-
-
-
-
-  // log(result.first.toString());
-  // log("password $password");
-  // log("email $email");
-  // log("result ${result.first}" );
-  // log("result ${result.first.toString()}");
-  // if(result == password)
-  // {
-  //   return true;
-  // }
-  // for(var res in result)
-  // {
-  //   print("res: ${res['password']}");
-  //   print(res.toString());
-  // //   if(password == res['password'])
-  // //   {
-  // //       return true;
-  //   }
-
-  // }
-  // for (var i = 0; i < result.length; i++) {
-  //   // log(result.first);
-  //   print(result.first);
-  //   // Do something with each result
-  // }
 
   await conn.close();
 
-  // return false;
+  return false;
+}
+
+Future<String> getName(String email, var password) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT name, email, password FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(email.compareTo(res['email'])==0 && password.compareTo(res['password'])==0)
+    {
+      return res['name'];
+    }
+  }
+
+  await conn.close();
+
+  return "";
+}
+
+Future<String> getHandle(String email, var password) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT handle, email, password FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(email.compareTo(res['email'])==0 && password.compareTo(res['password'])==0)
+    {
+      return res['handle'];
+    }
+  }
+
+  await conn.close();
+
+  return "";
+}
+
+Future<int> getID(String email, var password) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT id, email, password FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(email.compareTo(res['email'])==0 && password.compareTo(res['password'])==0)
+    {
+      return res['id'];
+    }
+  }
+
+  await conn.close();
+
+  return -2;
 }
 
 Future<bool> emailExists(var email) async
 {
   Database db = Database();
   var conn = await db.getSettings();
-
-  var result = await conn.query("SELECT * FROM `fitlife`.`user` WHERE (`email` = '$email');");
-
-  //something like if result returns something --> return true
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT email FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(email.compareTo(res['email'])==0)
+    {
+      return true;
+    }
+  }
 
   await conn.close();
+
   return false;
 }

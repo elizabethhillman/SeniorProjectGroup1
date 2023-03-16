@@ -32,7 +32,7 @@ User getCurrentUser()
   return currentUser;
 }
 
-void setId(var num)
+void setId(int num)
 {
   currentUser.id = num;
 }

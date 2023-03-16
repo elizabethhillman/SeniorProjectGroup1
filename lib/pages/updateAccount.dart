@@ -4,9 +4,7 @@ import 'package:fitlife/pages/socialMedia.dart';
 import 'package:fitlife/pages/workouts.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/pages/account.dart';
-
 import '../database.dart';
-import '../main.dart';
 import 'User.dart';
 
 class UpdateAcct extends StatefulWidget {
@@ -140,7 +138,7 @@ class _UpdateAcctState extends State<UpdateAcct> {
                   labelText: currentUser.password,),
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -171,11 +169,11 @@ class _UpdateAcctState extends State<UpdateAcct> {
                                   builder: (context) =>
                                   const Accounts()));
             },
-                        child: Text('Save'),
+                        child: const Text('Save'),
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Column(
                     children: [
                       TextButton(
@@ -186,9 +184,9 @@ class _UpdateAcctState extends State<UpdateAcct> {
                                   builder: (context) =>
                                   const Accounts()));
                         },
-                        child: Text('Cancel'),
+                        child: const Text('Cancel'),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
 
                     ],
                   ),

@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 25),
               //spacer
               Padding(
-                padding: EdgeInsets.only(left: 15.0),
+                padding: const EdgeInsets.only(left: 15.0),
                 child: Text(
                   "Welcome Back, ${currentUser.name}",
                   style: GoogleFonts.montserrat(
@@ -155,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              SizedBox(height: 25),
+              const SizedBox(height: 25),
               Row(
                 children: [
                   const SizedBox(height: 35),
@@ -165,7 +165,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding: const EdgeInsets.all(4),
                     child: Column(
                       children: [
-                        Padding(
+                        const Padding(
                           padding: EdgeInsets.all(10),
                           child: Text(
                             "GO TO",
@@ -181,7 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             onPressed: () {},
                             icon: const Icon(Icons.favorite,
                                 color: homePageIconColor),
-                            label: Text("Favorite Workouts",
+                            label: const Text("Favorite Workouts",
                                 style: TextStyle(color: Colors.black)),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
@@ -202,7 +202,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             },
                             icon: const Icon(Icons.monitor_weight,
                                 color: homePageIconColor),
-                            label: Text("Enter Weight",
+                            label: const Text("Enter Weight",
                                 style: TextStyle(color: Colors.black)),
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.transparent,
@@ -259,13 +259,13 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              SizedBox(height: 35),
+              const SizedBox(height: 35),
        AnimatedTextKit(
         isRepeatingAnimation: true,
         repeatForever: true,
         animatedTexts: [
-          RotateAnimatedText('YOU HAVE BURNED 700 CALORIES TODAY',duration: Duration(seconds:7)),
-          RotateAnimatedText('YOU STILL NEED 32g PROTEIN FOR THE DAY',duration: Duration(seconds:7)),
+          RotateAnimatedText('YOU HAVE BURNED 700 CALORIES TODAY',duration: const Duration(seconds:7)),
+          RotateAnimatedText('YOU STILL NEED 32g PROTEIN FOR THE DAY',duration: const Duration(seconds:7)),
         ],
       ),
      ])

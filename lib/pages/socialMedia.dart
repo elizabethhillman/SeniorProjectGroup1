@@ -69,14 +69,14 @@ class _SocialMediaState extends State<SocialMedia> {
           Row(
             children:  [
               Text("@${currentUser.handle}",
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
               ),
-              SizedBox(width: 60),
-              Text(
+              const SizedBox(width: 60),
+              const Text(
                 'Followers',
                 style: TextStyle(
                   fontSize: 18,
@@ -84,8 +84,8 @@ class _SocialMediaState extends State<SocialMedia> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(width: 60),
-              Text(
+              const SizedBox(width: 60),
+              const Text(
                 'Following',
                 style: TextStyle(
                   fontSize: 18,
