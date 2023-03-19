@@ -7,9 +7,21 @@ class Results extends StatefulWidget {
   State<Results> createState() => _ResultsState();
 }
 
+class Food{ //this go in model view or controler? or keep here
+  String foodName ;
+  int calorie;
+  // int value1;//nutrition i.e. protein value
+  // int value2;
+
+
+  Food(this.foodName,this.calorie);
+}
+
 class _ResultsState extends State<Results> {
-  final List<String> _foodList =
-      []; //list of the foods that were calculated AFTEr selection
+  List<Food> _foodList =
+  []; //list of the foods that were calc
+
+
   Map<String, int> foodCalories = {
     //List of foods (fake backend)
     'Apple': 52,
@@ -64,7 +76,7 @@ class _ResultsState extends State<Results> {
     if (quantity > 0) {
       setState(() {
         _foodList.add(
-            '$date          ${_selectedFood!}:            $_totalCalories calories');
+            Food('${_selectedFood!}', _totalCalories));
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
@@ -195,14 +207,15 @@ class _ResultsState extends State<Results> {
               ),
             ),
           Expanded(
-              child: ListView.builder(
-                itemCount: _foodList.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(_foodList[index]),
-                  );
-                },
-              ),
+            child: ListView.builder(
+              itemCount: _foodList.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(_foodList[index].foodName),
+                  subtitle: Text('Calories: ${_foodList[index].calorie}'),
+                );
+              },
+            ),
           ),
           const SizedBox(height: 100.0),
           if (_foodList.isNotEmpty)
