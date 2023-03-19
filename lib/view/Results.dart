@@ -10,11 +10,14 @@ class Results extends StatefulWidget {
 class Food{ //this go in model view or controler? or keep here
   String foodName ;
   int calorie;
-  // int value1;//nutrition i.e. protein value
-  // int value2;
+  int quantity;
+  //TODO int protein;
+  //TODO int carbs;
+  //TODO int fat;
 
 
-  Food(this.foodName,this.calorie);
+
+  Food(this.foodName,this.calorie,this.quantity);
 }
 
 class _ResultsState extends State<Results> {
@@ -76,7 +79,7 @@ class _ResultsState extends State<Results> {
     if (quantity > 0) {
       setState(() {
         _foodList.add(
-            Food('${_selectedFood!}', _totalCalories));
+            Food('${_selectedFood!}', _totalCalories, quantity));
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
@@ -211,7 +214,7 @@ class _ResultsState extends State<Results> {
               itemCount: _foodList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(_foodList[index].foodName),
+                  title: Text('${_foodList[index].foodName} x ${_foodList[index].quantity}'),
                   subtitle: Text('Calories: ${_foodList[index].calorie}'),
                 );
               },

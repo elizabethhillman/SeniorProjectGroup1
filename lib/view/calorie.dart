@@ -15,6 +15,9 @@ class Calorie extends StatefulWidget {
 class CalorieTile extends StatelessWidget {
   final String tileFoodName;
   final int tileCalorie;
+  final int tileQuantity;
+  //TODO final int tileProtein
+  //TODO final int tileCarbs
   final void Function(BuildContext)? editTap; //not implemented yet
   final void Function(BuildContext)? deleteTap;//not implemented yet
 
@@ -22,6 +25,7 @@ class CalorieTile extends StatelessWidget {
     Key? key,
     required this.tileFoodName,
     required this.tileCalorie,
+    required this.tileQuantity,
     this.editTap,
     this.deleteTap,
   }) : super(key: key);
@@ -49,7 +53,7 @@ class CalorieTile extends StatelessWidget {
           ],
         ),
         child: Container(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.grey[200],
             borderRadius: BorderRadius.circular(12),
@@ -61,21 +65,46 @@ class CalorieTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    tileFoodName,
+                    '$tileFoodName x $tileQuantity',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 19,
                     ),
                   ),
+                  SizedBox(height: 1),
                   Text(
                     '$tileCalorie calories',
                     style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 12,
+                      color: Colors.grey[700],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
                     ),
-                  )
+                  ),
+                  Text("50g of protein",
+                    style: TextStyle(
+                      color: Colors.brown[400],
+                      fontSize: 13,
+                    ),
+                  ),
+                  Text("30g of carbs",
+                    style: TextStyle(
+                      color: Colors.brown[400],
+                      fontSize: 13,
+                    ),
+                  ),
+
                 ],
+              ),
+              SizedBox(width: 30),
+              Text(
+                'Slide to edit',
+                style: TextStyle(
+                  color: Colors.grey[350],
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
               ),
               Icon(Icons.arrow_forward_ios_sharp)
             ],
@@ -209,7 +238,7 @@ class _CalorieState extends State<Calorie> {
               ),
             ),
           if(_foodList.isNotEmpty)
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(top: 175.0),
               child: Text(
                 'Todays Meals',
@@ -238,7 +267,8 @@ class _CalorieState extends State<Calorie> {
                 return CalorieTile(
                   // add current food's calorie count to totalCalories
                     tileFoodName: _foodList[index].foodName,
-                    tileCalorie: _foodList[index].calorie
+                    tileCalorie: _foodList[index].calorie,
+                    tileQuantity: _foodList[index].quantity
                 );
               },
             ),
