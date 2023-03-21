@@ -18,8 +18,8 @@ class CalorieTile extends StatelessWidget {
   final int tileQuantity;
   //TODO final int tileProtein
   //TODO final int tileCarbs
-  final void Function(BuildContext)? editTap; //not implemented yet
-  final void Function(BuildContext)? deleteTap;//not implemented yet
+  final void Function(BuildContext)? editTap; //TODO implement method
+  final void Function(BuildContext)? deleteTap;//TODO  implement method
 
   const CalorieTile({
     Key? key,
@@ -53,9 +53,14 @@ class CalorieTile extends StatelessWidget {
           ],
         ),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.only(
+            top: 15.0,
+            bottom: 1.0,
+            left: 15.0,
+            right: 15.0,
+          ),
           decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Colors.grey[300],
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
@@ -66,10 +71,10 @@ class CalorieTile extends StatelessWidget {
                 children: [
                   Text(
                     '$tileFoodName x $tileQuantity',
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 19,
+                      fontSize: 17,
                     ),
                   ),
                   SizedBox(height: 1),
@@ -78,35 +83,52 @@ class CalorieTile extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.grey[700],
                       fontWeight: FontWeight.bold,
-                      fontSize: 15,
+                      fontSize: 14,
                     ),
                   ),
-                  Text("50g of protein",
-                    style: TextStyle(
-                      color: Colors.brown[400],
-                      fontSize: 13,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Chip(
+                        backgroundColor: Colors.brown[100],
+                        label: Text("50g protein",
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                      Chip(
+                        backgroundColor: Colors.orange[100],
+                        label: Text("50g carb",
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 10,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text("30g of carbs",
-                    style: TextStyle(
-                      color: Colors.brown[400],
-                      fontSize: 13,
-                    ),
-                  ),
-
                 ],
               ),
-              SizedBox(width: 30),
-              Text(
-                'Slide to edit',
-                style: TextStyle(
-                  color: Colors.grey[350],
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+              Transform.translate(
+                offset: Offset(0,-7.0),
+                child:  Text(
+                  'Slide to edit',
+                  style: TextStyle(
+                    color: Colors.grey[400],
+                    fontStyle: FontStyle.italic,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
                 ),
               ),
-              Icon(Icons.arrow_forward_ios_sharp)
+              Transform.translate(
+                offset: Offset(0, -7.0),
+                child: Icon(Icons.arrow_forward_ios_sharp),
+              ),
+              // SizedBox(width: 30),
             ],
           ),
         ),
@@ -122,9 +144,8 @@ class _CalorieState extends State<Calorie> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[800],
+      //backgroundColor: Colors.blue[100],
       appBar: AppBar(
-        backgroundColor: Colors.grey[200],
         leading: IconButton(
           icon: const Icon(
             Icons.home,
@@ -166,114 +187,108 @@ class _CalorieState extends State<Calorie> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Container(
-            alignment: Alignment.center,
-            child: ElevatedButton(
-              onPressed: () {
-                {
-                  Navigator.push(
-                    context,
-                    PageRouteBuilder(
-                      pageBuilder: (_, __, ___) => const Results(),
-                      transitionDuration: const Duration(milliseconds: 1000),//page transition animation
-                      transitionsBuilder: (context, animation, secondaryAnimation, child) {//page transition animation
-                        var begin = const Offset(0.0, 2.0);//page transition animation
-                        var end = Offset.zero;//page transition animation
-                        var curve = Curves.ease;//page transition animation
-                        var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));//page transition animation
-                        var offsetAnimation = animation.drive(tween);//page transition animation
-                        return SlideTransition(//page transition animation
-                          position: offsetAnimation,//page transition animation
-                          child: child,
-                        );
-                      },
-                    ),
-                  )
-                      .then((dataFromResults) {
-                    if (dataFromResults != null){
-                      setState(() {
-                        _foodList = dataFromResults;
-                      });//data from returned selected food
-                    }
-                  });
-                }
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[200],
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(100.0),
-                ),
-              ), child: Row(
-              //   mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                Icon(Icons.search, size: 36,color: Colors.black,),
-                SizedBox(width: 80),
-                Text(
-                  'Log foods',
+      body: Center(
+        child: Column(
+          children: [
+            if(_foodList.isEmpty)
+              Padding(
+                padding: EdgeInsets.only(top: 125.0),
+                child: Text(
+                  "No meals logged for today",
                   style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18
+                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
                   ),
                 ),
-              ],
+              ),
+            const SizedBox(
+              height: 45,
             ),
+            GestureDetector(
+              onTap: ()=> Navigator.push(
+                context,
+                PageRouteBuilder(
+                  pageBuilder: (_, __, ___) => const Results(),
+                  transitionDuration: const Duration(milliseconds: 1000),//page transition animation
+                  transitionsBuilder: (context, animation, secondaryAnimation, child) {//page transition animation
+                    var begin = const Offset(0.0, 2.0);//page transition animation
+                    var end = Offset.zero;//page transition animation
+                    var curve = Curves.ease;//page transition animation
+                    var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: curve));//page transition animation
+                    var offsetAnimation = animation.drive(tween);//page transition animation
+                    return SlideTransition(//page transition animation
+                      position: offsetAnimation,//page transition animation
+                      child: child,
+                    );
+                  },
+                ),
+              )
+                  .then((dataFromResults) {
+                if (dataFromResults != null) {
+                  setState(() {
+                    _foodList = dataFromResults;
+                  });
+                }
+              }
+              ),
+              child: Container(
+                  width: 225,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[700],
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.all(25),
+                  child: const Center(
+                      child: Text(
+                        'Log Foods',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                  )
+              ),
             ),
-          ),
 
-          if(_foodList.isEmpty)
-            const Padding(
-              padding: EdgeInsets.only(top: 175.0),
-              child: Text(
-                "No meals logged for today",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
+            if(_foodList.isNotEmpty)
+              const Padding(
+                padding: EdgeInsets.only(top: 175.0),
+                child: Text(
+                  'Todays Meals',
+                  style: TextStyle(
+                    //  color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                  ),
                 ),
               ),
-            ),
-          if(_foodList.isNotEmpty)
-            const Padding(
-              padding: EdgeInsets.only(top: 175.0),
-              child: Text(
-                'Todays Meals',
-                style: TextStyle(
-                  color: Colors.white,
+            if(_foodList.isNotEmpty)
+              Text(
+                'Total calories for the day: $totalCalories',
+                style: const TextStyle(
+                  // color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
+                  fontSize: 14.0,
                 ),
               ),
-            ),
-          if(_foodList.isNotEmpty)
-            Text(
-              'Total calories for the day: $totalCalories',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14.0,
+            SizedBox(height: 25,),
+            Expanded(
+              child: ListView.builder(
+                itemCount: _foodList.length,//list after selected
+                itemBuilder: (context, index) {
+                  totalCalories += _foodList[index].calorie;
+                  return CalorieTile(
+                    // add current food's calorie count to totalCalories
+                      tileFoodName: _foodList[index].foodName,
+                      tileCalorie: _foodList[index].calorie,
+                      tileQuantity: _foodList[index].quantity
+                  );
+                },
               ),
             ),
-          SizedBox(height: 25,),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _foodList.length,//list after selected
-              itemBuilder: (context, index) {
-                totalCalories += _foodList[index].calorie;
-                return CalorieTile(
-                  // add current food's calorie count to totalCalories
-                    tileFoodName: _foodList[index].foodName,
-                    tileCalorie: _foodList[index].calorie,
-                    tileQuantity: _foodList[index].quantity
-                );
-              },
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
