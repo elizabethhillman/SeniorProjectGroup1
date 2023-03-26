@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../model/Food.dart';
+import '../model/user_database.dart';
+
 class Results extends StatefulWidget {
   const Results({Key? key}) : super(key: key);
 
@@ -7,44 +10,36 @@ class Results extends StatefulWidget {
   State<Results> createState() => _ResultsState();
 }
 
-class Food{ //this go in model view or controler? or keep here
-  String foodName ;
-  int calorie;
-  int quantity;
-  //TODO int protein;
-  //TODO int carbs;
-  //TODO int fat;
-
-
-
-  Food(this.foodName,this.calorie,this.quantity);
-}
-
 class _ResultsState extends State<Results> {
-  List<Food> _foodList =
-  []; //list of the foods that were calc
+  List<Food> _foodList = []; //list of the foods that were calc
 
+  List<Food> foodCalories = [];
 
-  Map<String, int> foodCalories = {
-    //List of foods (fake backend)
-    'Apple': 52,
-    'Banana': 89,
-    'Orange': 47,
-    'Pear': 57,
-    'Pineapple': 82,
-    'Mango': 135,
-    'Grapes': 62,
-    'Steak': 90,
-    'Avocado': (160),
-    'Grilled Chicken Breast': (165),
-    'White Rice': (205),
-    'Salmon': (206),
-    'Almonds': (164),
-    'Broccoli': (55),
-    'Peanut Butter': (190),
-    'Oatmeal': (150),
-    'Greek Yogurt': (120),
-  };
+  @override
+  void initState() {
+    super.initState();
+    _getFood(); // add call to get exercises on initialization
+  }
+
+  Future<void> _getFood() async {
+    //idk how to add to model
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT * from fitlife.food ORDER BY foodName");
+      var result = await conn
+          .query('SELECT foodName, calorie, quantity FROM fitlife.food;');
+
+      setState(() {
+        for (var row in result) {
+          foodCalories.add(Food(row[1], row[2], row[3]));
+        }
+      });
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }
 
   String _searchText = '';
   String? _selectedFood;
@@ -69,8 +64,8 @@ class _ResultsState extends State<Results> {
   }
 
   void _calculateCalories() {
-    //calculates calories during search only not after
-    int calories = foodCalories[_selectedFood!] ?? 0;
+    Food food = foodCalories.firstWhere((f) => f.foodName == _selectedFood);
+    int calories = food.calorie;
     int quantity = int.tryParse(_quantityController.text) ?? 0;
     _totalCalories = calories * quantity;
     DateTime dateToday = DateTime.now();
@@ -78,8 +73,7 @@ class _ResultsState extends State<Results> {
 
     if (quantity > 0) {
       setState(() {
-        _foodList.add(
-            Food('${_selectedFood!}', _totalCalories, quantity));
+        _foodList.add(Food(_selectedFood!, _totalCalories, quantity));
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
@@ -93,11 +87,14 @@ class _ResultsState extends State<Results> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Log Food'),
+        title: Text(
+          'Log Food',
+          style: TextStyle(color: Colors.grey[800]),
+        ),
         leading: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.arrow_back,
-            color: Colors.white,
+            color: Colors.grey[800],
           ),
           onPressed: () {
             Navigator.pop(context);
@@ -107,15 +104,32 @@ class _ResultsState extends State<Results> {
       body: Column(
         children: <Widget>[
           Padding(
-            padding: const EdgeInsets.only(top: 5.0),
-            child: TextField(
-              //autofocus: true, //page opens  up with keyboard open
-              onChanged: _onSearchTextChanged,
-              decoration: const InputDecoration(
-                hintText: 'Search for food to log',
-                border: OutlineInputBorder(),
-              ),
-            ),
+            padding: const EdgeInsets.only(top: 20.0),
+            child: Container(
+                padding: const EdgeInsets.all(10),
+                margin: const EdgeInsets.symmetric(horizontal: 30),
+                decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        //autofocus: true, //page opens up with keyboard open
+                        onChanged: _onSearchTextChanged,
+                        decoration: const InputDecoration(
+                          hintText: 'Search',
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                    )
+                  ],
+                )),
           ),
           if (_selectedFood != null)
             Column(
@@ -124,44 +138,44 @@ class _ResultsState extends State<Results> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     "${_selectedFood!} serving size:",
-                    style: const TextStyle(fontSize: 20.0),
+                    style: TextStyle(fontSize: 20.0, color: Colors.grey[700]),
                   ),
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
-                  child: TextField(
-                    controller: _quantityController,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Enter Quantity',
-                      border: OutlineInputBorder(),
-                    ),
-                    onChanged: (text) {
-                      setState(() {
-                        _calculateCalories();
-                      });
-                    },
-                  ),
+                  child: Container(
+                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.symmetric(horizontal: 50),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(10)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: TextField(
+                              controller: _quantityController,
+                              keyboardType: TextInputType.number,
+                              autofocus: true,
+                              //page opens up with keyboard open
+                              onChanged: (text) {
+                                setState(() {
+                                  _calculateCalories();
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Input Serving Size',
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          const Icon(
+                            Icons.fastfood_outlined,
+                            color: Colors.grey,
+                          )
+                        ],
+                      )),
                 ),
-                if (_totalCalories > 0)
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ElevatedButton(
-                          onPressed: _calculateCalories,
-                          child: const Text('Add to list'),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Text(
-                          'Total Calories: $_totalCalories',
-                          style: const TextStyle(fontSize: 24.0),
-                        ),
-                      ),
-                    ],
-                  ),
               ],
             ),
           if (_searchText.isNotEmpty && _selectedFood == null)
@@ -169,16 +183,15 @@ class _ResultsState extends State<Results> {
               child: ListView.builder(
                 itemCount: foodCalories.length,
                 itemBuilder: (context, index) {
-                  String food = foodCalories.keys.toList()[index].toLowerCase();
+                  Food food = foodCalories[index];
+                  String foodName = food.foodName.toLowerCase();
                   String query = _searchText.toLowerCase();
-                  if (food.contains(query)) {
+                  if (foodName.contains(query)) {
                     return GestureDetector(
-                      onTap: () =>
-                          _onFoodSelected(foodCalories.keys.toList()[index]),
+                      onTap: () => _onFoodSelected(food.foodName),
                       child: ListTile(
-                        title: Text(foodCalories.keys.toList()[index]),
-                        subtitle: Text(
-                            '${foodCalories.values.toList()[index]} calories'),
+                        title: Text(food.foodName),
+                        subtitle: Text('${food.calorie} calories'),
                       ),
                     );
                   } else {
@@ -188,25 +201,25 @@ class _ResultsState extends State<Results> {
               ),
             ),
           if (_searchText.isEmpty && _selectedFood == null && _foodList.isEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 150.0),
               child: Text(
                 "Search for a meal to log!",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18.0,
-                ),
+                    //fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    color: Colors.grey[700]),
               ),
             ),
           if (_foodList.isNotEmpty)
-            const Padding(
+            Padding(
               padding: EdgeInsets.only(top: 150.0),
               child: Text(
-                "Food(s) to be logged:",
+                "Food to be logged:",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0,
-                ),
+                    //fontWeight: FontWeight.bold,
+                    fontSize: 24.0,
+                    color: Colors.grey[800]),
               ),
             ),
           Expanded(
@@ -214,13 +227,13 @@ class _ResultsState extends State<Results> {
               itemCount: _foodList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text('${_foodList[index].foodName} x ${_foodList[index].quantity}'),
+                  title: Text(
+                      '${_foodList[index].foodName} x ${_foodList[index].quantity}'),
                   subtitle: Text('Calories: ${_foodList[index].calorie}'),
                 );
               },
             ),
           ),
-          const SizedBox(height: 100.0),
           if (_foodList.isNotEmpty)
             TextButton(
               onPressed: () {
@@ -228,6 +241,7 @@ class _ResultsState extends State<Results> {
               },
               child: const Text('Add to Tracker'),
             ),
+          const SizedBox(height: 100.0),
         ],
       ),
     );

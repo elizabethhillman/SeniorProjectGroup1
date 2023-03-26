@@ -30,7 +30,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
         ),
         title: const Text(
           "MyWorkouts",
-          style: TextStyle(fontSize: 28, color: Colors.black),
+          style: TextStyle(fontSize: 22, color: Colors.black),
         ),
         actions: <Widget>[
           IconButton(
@@ -61,6 +61,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       ),
       body: Column(
         children: [
+          const SizedBox(height: 15,),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

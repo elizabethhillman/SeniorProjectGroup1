@@ -34,40 +34,6 @@ class _AddExerciseState extends State<AddExercise> {
           "Add Exercise",
           style: TextStyle(fontSize: 19, color: Colors.black),
         ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.fitness_center),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.restaurant),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Calorie()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.group),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SocialMedia()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Accounts()));
-            },
-          ),
-        ],
       ),
       body: Center(
         child: Column(
