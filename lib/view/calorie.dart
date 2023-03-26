@@ -4,138 +4,17 @@ import 'package:fitlife/controller/editCalorie.dart';
 import 'package:fitlife/view/homePage.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
+import '../model/Food.dart';
+import '../Widgets/FoodWidgets.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+
 class Calorie extends StatefulWidget {
   const Calorie({Key? key}) : super(key: key);
 
   @override
   State<Calorie> createState() => _CalorieState();
 }
-class CalorieTile extends StatelessWidget {
-  final String tileFoodName;
-  final int tileCalorie;
-  final int tileQuantity;
-  //TODO final int tileProtein
-  //TODO final int tileCarbs
-  final void Function(BuildContext)? editTap; //TODO implement method
-  final void Function(BuildContext)? deleteTap;//TODO  implement method
 
-  const CalorieTile({
-    Key? key,
-    required this.tileFoodName,
-    required this.tileCalorie,
-    required this.tileQuantity,
-    this.editTap,
-    this.deleteTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Slidable(
-        endActionPane: ActionPane(
-          motion: StretchMotion(),
-          children: [
-            SlidableAction(
-              onPressed: editTap,
-              backgroundColor: Colors.greenAccent,
-              icon: Icons.edit,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            SlidableAction(
-              onPressed: deleteTap,
-              backgroundColor: Colors.redAccent,
-              icon: Icons.delete,
-              borderRadius: BorderRadius.circular(12),
-            )
-          ],
-        ),
-        child: Container(
-          padding: EdgeInsets.only(
-            top: 15.0,
-            bottom: 1.0,
-            left: 15.0,
-            right: 15.0,
-          ),
-          decoration: BoxDecoration(
-            color: Colors.grey[300],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '$tileFoodName x $tileQuantity',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-                  SizedBox(height: 1),
-                  Text(
-                    '$tileCalorie calories',
-                    style: TextStyle(
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Chip(
-                        backgroundColor: Colors.brown[100],
-                        label: Text("50g protein",
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.bold,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                      Chip(
-                        backgroundColor: Colors.orange[100],
-                        label: Text("50g carb",
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 10,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Transform.translate(
-                offset: Offset(0,-7.0),
-                child:  Text(
-                  'Slide to edit',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              Transform.translate(
-                offset: Offset(0, -7.0),
-                child: Icon(Icons.arrow_forward_ios_sharp),
-              ),
-              // SizedBox(width: 30),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _CalorieState extends State<Calorie> {
   List<Food> _foodList = [];
@@ -189,21 +68,22 @@ class _CalorieState extends State<Calorie> {
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if(_foodList.isEmpty)
               Padding(
-                padding: EdgeInsets.only(top: 125.0),
+                padding: EdgeInsets.all(20),
                 child: Text(
                   "No meals logged for today",
                   style: TextStyle(
                     color: Colors.grey[600],
-                    fontWeight: FontWeight.bold,
+                    //fontWeight: FontWeight.bold,
                     fontSize: 24.0,
                   ),
                 ),
               ),
             const SizedBox(
-              height: 45,
+              height: 20,
             ),
             GestureDetector(
               onTap: ()=> Navigator.push(
@@ -235,15 +115,15 @@ class _CalorieState extends State<Calorie> {
               child: Container(
                   width: 225,
                   decoration: BoxDecoration(
-                    color: Colors.grey[700],
+                    color: Colors.grey[600],
                     borderRadius: BorderRadius.circular(12),
                   ),
                   padding: const EdgeInsets.all(25),
-                  child: const Center(
+                  child: Center(
                       child: Text(
                         'Log Foods',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.grey[200],
                           fontWeight: FontWeight.bold,
                         ),
                       )
@@ -252,22 +132,23 @@ class _CalorieState extends State<Calorie> {
             ),
 
             if(_foodList.isNotEmpty)
-              const Padding(
+              Padding(
                 padding: EdgeInsets.only(top: 175.0),
                 child: Text(
                   'Todays Meals',
                   style: TextStyle(
                     //  color: Colors.white,
-                    fontWeight: FontWeight.bold,
+                   // fontWeight: FontWeight.bold,
                     fontSize: 24.0,
+                    color: Colors.grey[600]
                   ),
                 ),
               ),
             if(_foodList.isNotEmpty)
               Text(
                 'Total calories for the day: $totalCalories',
-                style: const TextStyle(
-                  // color: Colors.white,
+                style: TextStyle(
+                   color: Colors.grey[600],
                   fontWeight: FontWeight.bold,
                   fontSize: 14.0,
                 ),

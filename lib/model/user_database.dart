@@ -6,7 +6,8 @@ class Database {
   Future<MySqlConnection> getSettings() async
   {
     return await MySqlConnection.connect(ConnectionSettings(
-        host: 'localhost',
+        host: '10.0.2.2',//android emulator
+        //host: 'localhost',//ios emulator
         port: 3306,
         user: 'root',
         db: 'fitlife',
@@ -215,3 +216,5 @@ Future<bool> handleExists(var handle) async
 
   return false;
 }
+
+

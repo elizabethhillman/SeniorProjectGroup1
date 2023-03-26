@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:fitlife/view/workouts.dart';
-import 'package:fitlife/view/calorie.dart';
-import 'package:fitlife/view/account.dart';
-import 'package:fitlife/view/socialMedia.dart';
-import 'package:fitlife/view/homePage.dart';
-import '../controller/addExercise.dart';
+
+import '../Widgets/ExerciseWidgets.dart';
+import '../model/Exercises.dart';
+import '../model/user_database.dart';
 
 class Exercises extends StatefulWidget {
   const Exercises({Key? key}) : super(key: key);
@@ -15,67 +13,73 @@ class Exercises extends StatefulWidget {
 
 class _ExercisesState extends State<Exercises> {
   String? _selectedMuscleGroup;
+  bool _hasSelected = false;
+  List<Exercise> exercises = [];
+  List<Exercise> _selectedExercises = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _getExercises(); // add call to get exercises on initialization
+  }
+
+  Future<void> _getExercises() async { //idk how to add to model
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT * from fitlife.exercises");
+      var result = await conn.query(
+          'SELECT muscle_group, workout, workout_gif FROM fitlife.exercises;');
+
+      setState(() {
+        for (var row in result) {
+          exercises.add(Exercise(row[1].toString(), row[2].toString(), row[3].toString()));
+        }
+      });
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }
+
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
 
+  Set<String> getUniqueMuscleGroups(List<Exercise> exercises) {
+    return exercises.map((exercise) => exercise.muscleGroup).toSet();
+  }
+
   @override
   Widget build(BuildContext context) {
+    _selectedExercises = (_selectedMuscleGroup == null
+        ? [...exercises]
+        : exercises
+            .where((exercise) => exercise.muscleGroup == _selectedMuscleGroup)
+            .toList());
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(
+        title: Text(
+          'Exercises',
+          style: TextStyle(
+            color: Colors.grey[900],
+          ),
+        ),
         leading: IconButton(
-          icon: const Icon(
-            Icons.home,
-            color: Colors.black,
+          icon: Icon(
+            Icons.arrow_back,
+            color: Colors.grey[900],
           ),
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const HomePage()));
+            Navigator.pop(context);
           },
         ),
-        title: const Text(
-          "Exercises",
-          style: TextStyle(fontSize: 24, color: Colors.black),
-        ),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.restaurant),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.restaurant),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Calorie()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.group),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SocialMedia()));
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.account_circle),
-            color: Colors.black,
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Accounts()));
-            },
-          ),
-        ],
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const Padding(
-            padding: EdgeInsets.only(left: 16, top: 16),
+            padding: EdgeInsets.all(10),
             child: Text(
               "Muscle Group",
               style: TextStyle(
@@ -91,23 +95,21 @@ class _ExercisesState extends State<Exercises> {
               width: 150,
               child: DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
+                  filled: true,
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                  ),
                 ),
                 value: _selectedMuscleGroup,
                 onChanged: (String? newValue) {
                   setState(() {
+                    _hasSelected = true;
                     _selectedMuscleGroup = newValue;
                   });
                 },
-                items: <String>[
-                  'Chest',
-                  'Back',
-                  'Shoulders',
-                  'Biceps',
-                  'Triceps',
-                  'Legs',
-                  'Abs'
-                ].map<DropdownMenuItem<String>>((String value) {
+                items: getUniqueMuscleGroups(exercises)
+                    .map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -116,96 +118,54 @@ class _ExercisesState extends State<Exercises> {
               ),
             ),
           ),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              onPageChanged: (int page) {
-                setState(() {
-                  _currentPage = page;
-                });
-              },
-              children: [
-                Container(  //temporary for now, replace with the exercises pulled from database
-                  color: Colors.blue,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AddExercise()),
-                      );
-                    },
-                    child: const Center(
-                      child: Text(
-                        'Exercise 1',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(  //temporary for now, replace with the exercises pulled from database
-                  color: Colors.blue,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AddExercise()),
-                      );
-                    },
-                    child: const Center(
-                      child: Text(
-                        'Exercise 2',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Container(  //temporary for now, replace with the exercises pulled from database
-                  color: Colors.blue,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const AddExercise()),
-                      );
-                    },
-                    child: const Center(
-                      child: Text(
-                        'Exercise 3',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+          if (_hasSelected) //displays only if dropdown is selected
+            Expanded(
+              child: PageView.builder(
+                itemCount: _selectedExercises.length,
+                controller: _pageController,
+                onPageChanged: (int page) {
+                  setState(() {
+                    _currentPage = page;
+                  });
+                },
+                itemBuilder: (context, index) {
+                  return exerciseTile(
+                      tileMuscleGroup: _selectedExercises[index].muscleGroup,
+                      tileWorkout: _selectedExercises[index].workout,
+                      tileWorkoutGif: _selectedExercises[index].workoutGif);
+                },
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                for (int i = 0; i < 3; i++)
-                  Container(
-                    width: 10,
-                    height: 10,
-                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentPage == i ? Colors.blue : Colors.grey,
+          if (_hasSelected)
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  for (int i = 0; i < _selectedExercises.length; i++)
+                    Container(
+                      width: 10,
+                      height: 10,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentPage == i ? Colors.blue : Colors.grey,
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
-          ),
+          if (!_hasSelected)
+            Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Text(
+                'Please select a Muscle Group',
+                style: TextStyle(
+                  color: Colors.grey[800],
+                  fontSize: 23,
+                ),
+              ),
+            ),
         ],
       ),
     );
