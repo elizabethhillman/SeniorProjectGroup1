@@ -22,7 +22,7 @@ class CalorieTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(8),
       child: Slidable(
         endActionPane: ActionPane(
           motion: const StretchMotion(),
@@ -43,8 +43,8 @@ class CalorieTile extends StatelessWidget {
         ),
         child: Container(
           padding: const EdgeInsets.only(
-            top: 15.0,
-            bottom: 1.0,
+            top: 12.0,
+            bottom: 12.0,
             left: 15.0,
             right: 15.0,
           ),
@@ -52,76 +52,75 @@ class CalorieTile extends StatelessWidget {
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            child:  Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text(
-                    '$tileFoodName x $tileQuantity',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-                  const SizedBox(height: 1),
-                  Text(
-                    '$tileCalorie calories',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      //  fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Chip(
-                        backgroundColor: Colors.brown[100],
-                        label: Text(
-                          "50g protein",
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            // fontWeight: FontWeight.bold,
-                            fontSize: 10,
-                          ),
+                      Text(
+                        '$tileFoodName x $tileQuantity',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          // fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
                       ),
-                      Chip(
-                        backgroundColor: Colors.orange[100],
-                        label: Text(
-                          "50g carb",
-                          style: TextStyle(
-                            color: Colors.grey[800],
-                            fontSize: 10,
-                          ),
+                      SizedBox(
+                        height: 1,
+                        child: Icon(
+                          Icons.arrow_forward_ios_sharp,
+                          size: 20,
+color: Colors.grey[700],
                         ),
-                      ),
+                      )
                     ],
                   ),
+                  const SizedBox(height: 2),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '$tileCalorie calories',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          //  fontWeight: FontWeight.bold,
+                          fontSize: 12.5,
+                        ),
+                      ),
+                      Text(
+                        '55g carb',
+                        style: TextStyle(
+                          color: Colors.red[800],
+                          //  fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                      ),
+                      Text(
+                        '50g protein',
+                        style: TextStyle(
+                          color: Colors.brown[400],
+                          //  fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                      ),
+                      Text(
+                        '50g fat',
+                        style: TextStyle(
+                          color: Colors.lime[700],
+                          //  fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                      ),
+                      const SizedBox(width:35),
+                    ],
+                  ),
+
                 ],
               ),
-              Transform.translate(
-                offset: const Offset(0, -7.0),
-                child: Text(
-                  'Slide to edit',
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-              Transform.translate(
-                offset: const Offset(0, -7.0),
-                child: const Icon(Icons.arrow_forward_ios_sharp),
-              ),
+
               // SizedBox(width: 30),
-            ],
-          ),
+
         ),
       ),
     );

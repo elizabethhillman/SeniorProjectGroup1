@@ -63,6 +63,8 @@ class _CalorieState extends State<Calorie> {
           'DELETE FROM fitlife.userfoodlog WHERE id = ?',
           [_currentUserFoodListFromDB[index].foodId]);
 
+      totalCalories = totalCalories - _currentUserFoodListFromDB[index].calorie;
+
       await conn.close();
     } catch (e) {
       print('Error while deleting row: $e');
@@ -140,7 +142,6 @@ class _CalorieState extends State<Calorie> {
             const SizedBox(
               height: 20,
             ),
-
             if (_currentUserFoodListFromDB.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 30.0),
@@ -149,21 +150,100 @@ class _CalorieState extends State<Calorie> {
                   style: TextStyle(
                       //  color: Colors.white,
                       // fontWeight: FontWeight.bold,
-                      fontSize: 24.0,
-                      color: Colors.grey[600]),
+                      fontSize: 25.0,
+                      color: Colors.grey[700]),
+                ),
+              ),
+            SizedBox(
+              height: 16,
+            ),
+            if (_currentUserFoodListFromDB.isNotEmpty)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Total calories for the day:',
+                    style: TextStyle(
+                      color: Colors.grey[600], //   fontWeight: FontWeight.bold,
+                      fontSize: 14.0,
+                    ),
+                  ),
+                  Text(
+                    ' $totalCalories',
+                    style: TextStyle(
+                      color: Colors.green[200],
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ],
+              ),
+            SizedBox(
+              height: 6,
+            ),
+            if (_currentUserFoodListFromDB.isNotEmpty)
+              Text(
+                'Total macros:',
+                style: TextStyle(
+                  color: Colors.grey[500], //  fontWeight: FontWeight.bold,
+                  fontSize: 13.5,
                 ),
               ),
             if (_currentUserFoodListFromDB.isNotEmpty)
-              Text(
-                'Total calories for the day: $totalCalories',
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14.0,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Chip(
+                    backgroundColor: Colors.orange[100],
+                    label: Text(
+                      "500g carb",
+                      style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                  Chip(
+                    backgroundColor: Colors.brown[100],
+                    label: Text(
+                      "500g protein",
+                      style: TextStyle(
+                        color: Colors.grey[800], // fontWeight: FontWeight.bold,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                  Chip(
+                    backgroundColor: Colors.yellow[400],
+                    label: Text(
+                      "100g fat",
+                      style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 10,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             const SizedBox(
               height: 25,
+            ),
+            if (_currentUserFoodListFromDB.isNotEmpty)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+               Icon(
+                 Icons.calendar_month,
+                 color: Colors.grey[700],
+               ),SizedBox(width: 5,),
+                  Text(
+                    '${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}:',
+                    style: TextStyle(
+                      color: Colors.grey[600], //  fontWeight: FontWeight.bold,
+                      fontSize: 13.5,
+                    ),
+                  ),
+              ],
             ),
             Expanded(
               child: ListView.builder(
@@ -194,13 +274,13 @@ class _CalorieState extends State<Calorie> {
                       (context, animation, secondaryAnimation, child) {
                     //page transition animation
                     var begin =
-                    const Offset(0.0, 2.0); //page transition animation
+                        const Offset(0.0, 2.0); //page transition animation
                     var end = Offset.zero; //page transition animation
                     var curve = Curves.ease; //page transition animation
                     var tween = Tween(begin: begin, end: end).chain(
                         CurveTween(curve: curve)); //page transition animation
                     var offsetAnimation =
-                    animation.drive(tween); //page transition animation
+                        animation.drive(tween); //page transition animation
                     return SlideTransition(
                       //page transition animation
                       position: offsetAnimation, //page transition animation
@@ -218,12 +298,12 @@ class _CalorieState extends State<Calorie> {
                   padding: const EdgeInsets.all(25),
                   child: Center(
                       child: Text(
-                        'Log Foods',
-                        style: TextStyle(
-                          color: Colors.grey[200],
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ))),
+                    'Log Foods',
+                    style: TextStyle(
+                      color: Colors.grey[200],
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ))),
             ),
             const SizedBox(
               height: 125,
