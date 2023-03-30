@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Widgets/ExerciseWidgets.dart';
+import 'package:fitlife/view/Widgets/ExerciseWidgets.dart';
 import '../model/Exercises.dart';
 import '../model/user_database.dart';
 
