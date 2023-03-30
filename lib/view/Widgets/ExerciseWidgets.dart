@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../controller/addExercise.dart';
+import 'package:fitlife/controller/addExercise.dart';
 
 class exerciseTile extends StatelessWidget {
   final String tileMuscleGroup;
@@ -19,8 +18,7 @@ class exerciseTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Container(
-        alignment: Alignment.bottomRight,
-        //temporary for now, replace with the exercises pulled from database
+        //alignment: Alignment.bottomRight,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),
@@ -59,10 +57,10 @@ class exerciseTile extends StatelessWidget {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.all(25),
+                    padding: const EdgeInsets.all(20),
                     decoration:
                     BoxDecoration(color:
-                    Colors.grey[800],
+                    Colors.grey[700],
                         borderRadius:
                         const BorderRadius.only(
                             topLeft: Radius.circular(19),

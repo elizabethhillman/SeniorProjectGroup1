@@ -192,11 +192,11 @@ class _AccountsState extends State<Accounts> {
                       TextButton(
                         onPressed: () {
                           setCurrentUser("", "", "","", "",0,0);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const MyApp(title: "FITLIFE")));
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => MyApp(title: "FITLIFE")),
+                                (route) => false,
+                          );
                         },
                         child: const Text('Logout'),
                       ),

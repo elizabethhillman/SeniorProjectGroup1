@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../model/Food.dart';
+import '../model/User.dart';
 import '../model/user_database.dart';
+import 'calorie.dart';
 
 class Results extends StatefulWidget {
   const Results({Key? key}) : super(key: key);
@@ -11,10 +13,10 @@ class Results extends StatefulWidget {
 }
 
 class _ResultsState extends State<Results> {
-  List<Food> _foodList = []; //list of the foods that were calc
-
-  List<Food> foodCalories = [];
-
+  List<Food> _foodList = []; //list of the foods that were selected
+  List<Food> foodCalories = []; //food from the database
+  //TODO add custom food function
+  
   @override
   void initState() {
     super.initState();
@@ -28,13 +30,32 @@ class _ResultsState extends State<Results> {
       var conn = await db.getSettings();
       var id = await conn.query("SELECT * from fitlife.food ORDER BY foodName");
       var result = await conn
-          .query('SELECT foodName, calorie, quantity FROM fitlife.food;');
+          .query('SELECT id,foodName, calorie, quantity FROM fitlife.food;');
 
       setState(() {
         for (var row in result) {
-          foodCalories.add(Food(row[1], row[2], row[3]));
+          foodCalories.add(Food(row[0], row[1], row[2], row[3]));
         }
       });
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }
+
+  Future<void> insertUserFoodLog(int userId, List<Food> foodList) async {
+    //idk how to add to model
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT id from fitlife.userfoodlog;");
+      // loop through the list of foods and insert each one
+      for (var food in foodList) {
+        await conn.query(
+            'INSERT INTO fitlife.userfoodlog (user_id, food_id, foodName, calorie, quantity) VALUES (?,?,?,?,?);',
+            [userId, food.foodId, food.foodName, food.calorie, food.quantity]);
+      }
+
       await conn.close();
     } catch (e) {
       print("Error Occurred: $e");
@@ -65,6 +86,7 @@ class _ResultsState extends State<Results> {
 
   void _calculateCalories() {
     Food food = foodCalories.firstWhere((f) => f.foodName == _selectedFood);
+    int id = food.foodId;
     int calories = food.calorie;
     int quantity = int.tryParse(_quantityController.text) ?? 0;
     _totalCalories = calories * quantity;
@@ -73,7 +95,7 @@ class _ResultsState extends State<Results> {
 
     if (quantity > 0) {
       setState(() {
-        _foodList.add(Food(_selectedFood!, _totalCalories, quantity));
+        _foodList.add(Food(id, _selectedFood!, _totalCalories, quantity));
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
@@ -124,7 +146,7 @@ class _ResultsState extends State<Results> {
                         ),
                       ),
                     ),
-                    Icon(
+                    const Icon(
                       Icons.search,
                       color: Colors.grey,
                     )
@@ -202,7 +224,7 @@ class _ResultsState extends State<Results> {
             ),
           if (_searchText.isEmpty && _selectedFood == null && _foodList.isEmpty)
             Padding(
-              padding: EdgeInsets.only(top: 150.0),
+              padding: const EdgeInsets.only(top: 150.0),
               child: Text(
                 "Search for a meal to log!",
                 style: TextStyle(
@@ -213,7 +235,7 @@ class _ResultsState extends State<Results> {
             ),
           if (_foodList.isNotEmpty)
             Padding(
-              padding: EdgeInsets.only(top: 150.0),
+              padding: const EdgeInsets.only(top: 150.0),
               child: Text(
                 "Food to be logged:",
                 style: TextStyle(
@@ -236,12 +258,19 @@ class _ResultsState extends State<Results> {
           ),
           if (_foodList.isNotEmpty)
             TextButton(
-              onPressed: () {
-                Navigator.pop(context, _foodList);
+              onPressed: () async {
+                print(currentUser.id);
+                await insertUserFoodLog(currentUser.id, _foodList);
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const Calorie()),
+                );
+                setState(() {});
               },
               child: const Text('Add to Tracker'),
             ),
-          const SizedBox(height: 100.0),
+          const SizedBox(height: 10.0),
         ],
       ),
     );

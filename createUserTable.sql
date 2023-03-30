@@ -1,3 +1,7 @@
+--UPDATED 3/30/23
+-- added database capability for storing food information b/w accounts
+--only use with premade users, buggy with new accounts due to currentUser.id
+
 CREATE SCHEMA `fitlife`;
 
 CREATE TABLE `user` (
@@ -22,9 +26,10 @@ CREATE TABLE `exercises` (
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --step 2 execute these for test data
+--add more workouts + their corresponding gifs if u guys can
 INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (1,'Chest','Bench Press','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
 INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (2,'Chest','Push Ups','https://homeworkouts.org/wp-content/uploads/anim-push-ups.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (3,'Chest','Incline Bench Press','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
+INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (3,'Chest','Incline Bench Press','https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Barbell-Bench-Press.gif');
 INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (4,'Chest','Decline Bench Press','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
 INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (5,'Back','Pull Ups','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
 INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (6,'Shoulders','Shoulder Press','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
@@ -45,7 +50,21 @@ CREATE TABLE `food` (
   `fat` int DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
---step 2 execuse these for test data
+--UPDATED 3/30/23
+--step 2 execute this to save food information to account
+CREATE TABLE `userfoodlog` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` int NOT NULL,
+  `food_id` int NOT NULL,
+  `foodName` varchar(255) DEFAULT NULL,
+  `calorie` int DEFAULT NULL,
+  `quantity` int DEFAULT NULL,
+  `protein` int DEFAULT NULL,
+  `carb` int DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--step 3 execuse these for test data
 INSERT INTO `food` (`id`,`foodName`,`calorie`,`quantity`,`protein`,`carbs`,`fat`) VALUES (1,'Banana',89,0,0,0,0);
 INSERT INTO `food` (`id`,`foodName`,`calorie`,`quantity`,`protein`,`carbs`,`fat`) VALUES (2,'Orange',47,0,0,0,0);
 INSERT INTO `food` (`id`,`foodName`,`calorie`,`quantity`,`protein`,`carbs`,`fat`) VALUES (3,'Pear',57,0,0,0,0);

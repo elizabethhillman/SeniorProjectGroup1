@@ -5,11 +5,11 @@ class CalorieTile extends StatelessWidget {
   final String tileFoodName;
   final int tileCalorie;
   final int tileQuantity;
+
   //TODO final int tileProtein
   //TODO final int tileCarbs
   final void Function(BuildContext)? editTap; //TODO implement method
-  final void Function(BuildContext)? deleteTap;//TODO  implement method
-
+  final void Function(BuildContext)? deleteTap;
   const CalorieTile({
     Key? key,
     required this.tileFoodName,
@@ -25,7 +25,7 @@ class CalorieTile extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       child: Slidable(
         endActionPane: ActionPane(
-          motion: StretchMotion(),
+          motion: const StretchMotion(),
           children: [
             SlidableAction(
               onPressed: editTap,
@@ -42,7 +42,7 @@ class CalorieTile extends StatelessWidget {
           ],
         ),
         child: Container(
-          padding: EdgeInsets.only(
+          padding: const EdgeInsets.only(
             top: 15.0,
             bottom: 1.0,
             left: 15.0,
@@ -62,16 +62,16 @@ class CalorieTile extends StatelessWidget {
                     '$tileFoodName x $tileQuantity',
                     style: const TextStyle(
                       color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      // fontWeight: FontWeight.bold,
                       fontSize: 17,
                     ),
                   ),
-                  SizedBox(height: 1),
+                  const SizedBox(height: 1),
                   Text(
                     '$tileCalorie calories',
                     style: TextStyle(
-                      color: Colors.grey[700],
-                      fontWeight: FontWeight.bold,
+                      color: Colors.grey[600],
+                      //  fontWeight: FontWeight.bold,
                       fontSize: 14,
                     ),
                   ),
@@ -80,17 +80,19 @@ class CalorieTile extends StatelessWidget {
                     children: [
                       Chip(
                         backgroundColor: Colors.brown[100],
-                        label: Text("50g protein",
+                        label: Text(
+                          "50g protein",
                           style: TextStyle(
                             color: Colors.grey[800],
-                            fontWeight: FontWeight.bold,
+                            // fontWeight: FontWeight.bold,
                             fontSize: 10,
                           ),
                         ),
                       ),
                       Chip(
                         backgroundColor: Colors.orange[100],
-                        label: Text("50g carb",
+                        label: Text(
+                          "50g carb",
                           style: TextStyle(
                             color: Colors.grey[800],
                             fontSize: 10,
@@ -102,8 +104,8 @@ class CalorieTile extends StatelessWidget {
                 ],
               ),
               Transform.translate(
-                offset: Offset(0,-7.0),
-                child:  Text(
+                offset: const Offset(0, -7.0),
+                child: Text(
                   'Slide to edit',
                   style: TextStyle(
                     color: Colors.grey[400],
@@ -114,8 +116,8 @@ class CalorieTile extends StatelessWidget {
                 ),
               ),
               Transform.translate(
-                offset: Offset(0, -7.0),
-                child: Icon(Icons.arrow_forward_ios_sharp),
+                offset: const Offset(0, -7.0),
+                child: const Icon(Icons.arrow_forward_ios_sharp),
               ),
               // SizedBox(width: 30),
             ],
