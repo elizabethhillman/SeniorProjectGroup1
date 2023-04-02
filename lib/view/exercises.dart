@@ -27,7 +27,7 @@ class _ExercisesState extends State<Exercises> {
     _getExercises(); // add call to get exercises on initialization
   }
 
-/*  String capitalize(String s) {
+ /* String capitalize(String s) {
     List<String> words = s.split(" ");
     List<String> capitalizedWords = [];
 
@@ -58,11 +58,14 @@ class _ExercisesState extends State<Exercises> {
         setState(() {
           for (var x in muscleGroup) {
             exercises.add(Exercise(
+              0,
               capitalize(x['bodyPart']),
               capitalize(x['equipment']),
               capitalize(x['gifUrl']),
               capitalize(x['name']),
               capitalize(x['target']),
+              0,
+              0
             ));
           }
          // insertExerciseToDB(exercises);
@@ -91,19 +94,28 @@ class _ExercisesState extends State<Exercises> {
     } catch (e) {
       print("Error Occurred: $e");
     }
-  }
-*/
+  }*/
+
   Future<void> _getExercises() async { //idk how to add to model
     try {
       Database db = Database();
       var conn = await db.getSettings();
       var id = await conn.query("SELECT * from fitlife.exerciseapi");
       var result = await conn.query(
-          'SELECT muscle_group, equipment, workout_gif, name, target FROM fitlife.exerciseapi;');
+          'SELECT id,muscle_group, equipment, workout_gif, name, target FROM fitlife.exerciseapi;');
 
       setState(() {
         for (var row in result) {
-          exercises.add(Exercise(row[1].toString(), row[2].toString(), row[3].toString(),row[4].toString(),row[5].toString()));
+          exercises.add(Exercise(
+            row[0],
+            row[1].toString(),
+            row[2].toString(),
+            row[3].toString(),
+            row[4].toString(),
+            row[5].toString(),
+            0,
+            0,
+          ));
         }
       });
       await conn.close();
@@ -212,6 +224,7 @@ class _ExercisesState extends State<Exercises> {
                     tileWorkoutGif: _selectedExercises[index].workoutGif,
                     tileWorkoutEquipment: _selectedExercises[index].equipment,
                     tileTargetMuscle: _selectedExercises[index].target,
+                    selectedExercise: _selectedExercises[index],
                   );
                 },
               ),

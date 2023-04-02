@@ -1,12 +1,17 @@
 import 'package:fitlife/controller/addExercise.dart';
 import 'package:flutter/material.dart';
 
+import '../../model/Exercises.dart';
+import '../../model/User.dart';
+import '../../model/user_database.dart';
+
 class exerciseTile extends StatelessWidget {
   final String? tileMuscleGroup;
   final String? tileWorkout;
   final String? tileWorkoutGif;
   final String? tileWorkoutEquipment;
   final String? tileTargetMuscle;
+  final Exercise selectedExercise;
 
   const exerciseTile({
     Key? key,
@@ -15,7 +20,25 @@ class exerciseTile extends StatelessWidget {
     required this.tileWorkoutGif,
     required this.tileWorkoutEquipment,
     required this.tileTargetMuscle,
+    required this.selectedExercise,
   }) : super(key: key);
+
+  Future<void> insertExercises(int userId, Exercise selectedExercise) async {
+    //idk how to add to model
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT id from fitlife.userexerciselog;");
+      // loop through the list of foods and insert each one
+
+      await conn.query(
+          'INSERT INTO fitlife.userexerciselog (user_id, exercise_id, muscle_group, equipment, workoutGif, name, target, reps, sets) VALUES (?,?,?,?,?,?,?,?,?);',
+          [userId, selectedExercise.exerciseId ,selectedExercise.muscleGroup, selectedExercise.equipment, selectedExercise.workoutGif, selectedExercise.name,selectedExercise.target,selectedExercise.reps,selectedExercise.sets]);
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,12 +98,14 @@ class exerciseTile extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               GestureDetector(
-                onTap: () {
-                  Navigator.push(
+                onTap: () async {
+                  final updatedExercise = await Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => const AddExercise()),
+                    MaterialPageRoute(builder: (context) => AddExercise(selectedExercise: selectedExercise)),
                   );
+                  if (updatedExercise != null) {
+                    insertExercises(currentUser.id, selectedExercise);
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(20),

@@ -1,92 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:fitlife/view/account.dart';
-import 'package:fitlife/view/calorie.dart';
-import 'package:fitlife/view/socialMedia.dart';
+import '../model/Exercises.dart';
 import 'package:fitlife/view/workouts.dart';
-import 'package:fitlife/view/homePage.dart';
-
 class AddExercise extends StatefulWidget {
-  const AddExercise({Key? key}) : super(key: key);
+  final Exercise selectedExercise;
+
+  const AddExercise({Key? key, required this.selectedExercise}) : super(key: key);
 
   @override
-  State<AddExercise> createState() => _AddExerciseState();
+  _AddExerciseState createState() => _AddExerciseState();
 }
 
 class _AddExerciseState extends State<AddExercise> {
-  final TextEditingController _setsController = TextEditingController();
-  final TextEditingController _repsController = TextEditingController();
+  late Exercise _updatedExercise;
+
+  @override
+  void initState() {
+    super.initState();
+    // initialize _updatedExercise with the selectedExercise passed from the previous page
+    _updatedExercise = widget.selectedExercise;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(
-            Icons.home,
-            color: Colors.black,
-          ),
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const HomePage()));
-          },
-        ),
-        title: const Text(
-          "Add Exercise",
-          style: TextStyle(fontSize: 19, color: Colors.black),
-        ),
+        title: const Text('Update Exercise'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Text(
-              "Input Number of Sets",
-              style: TextStyle(fontSize: 20, color: Colors.black),
+            Text(
+              'Muscle Group: ${_updatedExercise.muscleGroup}',
+              style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 16),
-            SizedBox(
-              width: 200,
-              child: TextField(
-                controller: _setsController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  hintText: "Enter sets",
-                ),
-              ),
+            Text(
+              'Workout: ${_updatedExercise.name}',
+              style: const TextStyle(fontSize: 20),
             ),
             const SizedBox(height: 16),
-            const Text(
-              "Input Number of Reps",
-              style: TextStyle(fontSize: 20, color: Colors.black),
+            TextFormField(
+              initialValue: _updatedExercise.reps.toString(),
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Reps',
+                border: OutlineInputBorder(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _updatedExercise.reps = int.tryParse(value) ?? 0;
+                });
+              },
             ),
             const SizedBox(height: 16),
-            SizedBox(
-              width: 200,
-              child: TextField(
-                controller: _repsController,
-                keyboardType: TextInputType.number,
-                textAlign: TextAlign.center,
-                decoration: const InputDecoration(
-                  hintText: "Enter reps",
-                ),
+            TextFormField(
+              initialValue: _updatedExercise.sets.toString(),
+              keyboardType: TextInputType.number,
+              decoration: const InputDecoration(
+                labelText: 'Sets',
+                border: OutlineInputBorder(),
               ),
+              onChanged: (value) {
+                setState(() {
+                  _updatedExercise.sets = int.tryParse(value) ?? 0;
+                });
+              },
             ),
-            Container(
-              margin: const EdgeInsets.only(top: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
-              ),
-              child: TextButton(
+            const SizedBox(height: 16),
+            Center(
+              child: ElevatedButton(
                 onPressed: () {
+                  // pass the updated exercise back to the previous page using Navigator.pop
+                  Navigator.of(context).pop(_updatedExercise);
                   Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => const MyWorkouts()),
-                  );
-                },
-                child: const Text(
-                  "Add",
-                  style: TextStyle(fontSize: 20, color: Colors.black),
-                ),
+                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
+                  setState(() {});
+                  },
+                child: const Text('Add Exercise'),
               ),
             ),
           ],
