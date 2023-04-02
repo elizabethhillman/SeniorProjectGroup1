@@ -1,8 +1,10 @@
 
 class Exercise {
-  String muscleGroup;
-  String workout;
-  String workoutGif;
+  String? muscleGroup;
+  String? equipment;
+  String? workoutGif;
+  String? name;
+  String? target;
 
-  Exercise(this.muscleGroup, this.workout, this.workoutGif);
+  Exercise(this.muscleGroup, this.equipment, this.workoutGif,this.name,this.target);
 }
