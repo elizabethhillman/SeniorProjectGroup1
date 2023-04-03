@@ -1,13 +1,13 @@
+import 'package:fitlife/controller/updateAccount.dart';
 import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/homePage.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
-import 'package:fitlife/controller/updateAccount.dart';
 
-import '../model/user_database.dart';
 import '../main.dart';
 import '../model/User.dart';
+import '../model/user_database.dart';
 
 class Accounts extends StatefulWidget {
   const Accounts({Key? key}) : super(key: key);
@@ -21,7 +21,6 @@ class _AccountsState extends State<Accounts> {
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
   final handleController = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +73,18 @@ class _AccountsState extends State<Accounts> {
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(
+                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd9JoBogU1DLQ-UIOxa8lv2Jn9_lBArw9eSffqemgHgQ&usqp=CAU&ec=48665698',
+                  ),
+                ),
+              ],
+            ),
             const Text(
               'Name',
               style: TextStyle(
@@ -112,7 +122,7 @@ class _AccountsState extends State<Accounts> {
                 child: Text(currentUser.handle),
               ),
             ),
-                const SizedBox(height: 16),
+            const SizedBox(height: 16),
             const Text(
               'Email',
               style: TextStyle(
@@ -120,7 +130,7 @@ class _AccountsState extends State<Accounts> {
                 color: Colors.grey,
               ),
             ),
-                const SizedBox(height: 8),
+            const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
@@ -150,25 +160,25 @@ class _AccountsState extends State<Accounts> {
                 child: Text("*********"),
               ),
             ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Bio',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(currentUser.bio),
-                  ),
-                ),
+            const SizedBox(height: 16),
+            const Text(
+              'Bio',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(currentUser.bio),
+              ),
+            ),
             const Spacer(),
             Center(
               child: Column(
@@ -178,10 +188,12 @@ class _AccountsState extends State<Accounts> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const UpdateAcct()));},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const UpdateAcct()));
+                        },
                         child: const Text('Edit'),
                       ),
                     ],
@@ -191,10 +203,11 @@ class _AccountsState extends State<Accounts> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          setCurrentUser("", "", "","", "",0,0);
+                          setCurrentUser("", "", "", "", "", 0, 0);
                           Navigator.pushAndRemoveUntil(
                             context,
-                            MaterialPageRoute(builder: (context) => MyApp(title: "FITLIFE")),
+                            MaterialPageRoute(
+                                builder: (context) => MyApp(title: "FITLIFE")),
                                 (route) => false,
                           );
                         },
@@ -205,12 +218,12 @@ class _AccountsState extends State<Accounts> {
                         onPressed: () {
                           String email = getCurrentUser().email;
                           deleteUser(email);
-                          setCurrentUser("", "", "","", "",0,0);
+                          setCurrentUser("", "", "", "", "", 0, 0);
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      const MyApp(title: "FITLIFE")));
+                                  const MyApp(title: "FITLIFE")));
                         },
                         child: const Text('Delete account'),
                       ),

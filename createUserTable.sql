@@ -1,3 +1,10 @@
+--UPDATED 4/2/23
+--exercises come from api now
+--still added db cause limited in api requests
+--run the api command getExercises in view/exercises.dart,
+--then run the other commented out getExercises to store it all in the mysql table
+
+
 --UPDATED 3/30/23
 -- added database capability for storing food information b/w accounts
 --only use with premade users, buggy with new accounts due to currentUser.id
@@ -15,30 +22,39 @@ CREATE TABLE `user` (
   `following` int DEFAULT '0',
   PRIMARY KEY (`id`)
 ) 
--------------Exercise database
+---------------------------------------Exercise database
 --step1 execute this
-CREATE TABLE `exercises` (
+--this provides ability to store logged exercises between users
+CREATE TABLE `userexerciselog` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `muscle_group` varchar(255) NOT NULL,
-  `workout` varchar(255) NOT NULL,
-  `workout_gif` text NOT NULL,
+  `user_id` int NOT NULL,
+  `exercise_id` int NOT NULL,
+  `muscle_group` varchar(255) DEFAULT NULL,
+  `equipment` varchar(255) DEFAULT NULL,
+  `workoutGif` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `target` varchar(255) DEFAULT NULL,
+  `reps` int DEFAULT NULL,
+  `sets` int DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---step 2 execute these for test data
---add more workouts + their corresponding gifs if u guys can
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (1,'Chest','Bench Press','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (2,'Chest','Push Ups','https://homeworkouts.org/wp-content/uploads/anim-push-ups.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (3,'Chest','Incline Bench Press','https://fitnessprogramer.com/wp-content/uploads/2021/02/Incline-Barbell-Bench-Press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (4,'Chest','Decline Bench Press','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (5,'Back','Pull Ups','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (6,'Shoulders','Shoulder Press','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (7,'Biceps','Bicep Curl','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (8,'Triceps','Tricep Extension ','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (9,'Legs ',' Squat ','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
-INSERT INTO `exercises` (`id`,`muscle_group`,`workout`,`workout_gif`) VALUES (10,'Abs','Crunch','https://www.inspireusafoundation.org/wp-content/uploads/2022/04/barbell-bench-press.gif');
---
--------------------Food database
+--step2 after u grab the api from view/exercises getexercises(), create this table and store it all in here
+--to do so, you have to go into the emulator, navigate to workouts, add an exercise,
+ --and select anything from the dropdown menu, nd shud be good to go
+CREATE TABLE `exerciseapi` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `muscle_group` varchar(255) DEFAULT NULL,
+  `equipment` varchar(255) DEFAULT NULL,
+  `workout_gif` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `target` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1325 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+----------------------------------------------------------------Food database
 --step 1 execute this
 CREATE TABLE `food` (
   `id` int NOT NULL AUTO_INCREMENT,

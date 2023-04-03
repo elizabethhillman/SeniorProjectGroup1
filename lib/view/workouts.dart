@@ -1,9 +1,13 @@
+import 'package:fitlife/model/Exercises.dart';
+import 'package:fitlife/view/Widgets/WorkoutWidgets.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/account.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/homePage.dart';
 
+import '../model/User.dart';
+import '../model/user_database.dart';
 import 'exercises.dart';
 
 class MyWorkouts extends StatefulWidget {
@@ -14,6 +18,70 @@ class MyWorkouts extends StatefulWidget {
 }
 
 class _MyWorkoutsState extends State<MyWorkouts> {
+  final List<Exercise> _selectedUserExerciseListFromDB =[];
+
+  @override
+  void initState() {
+    super.initState();
+    _getSelectedExercisesFromDB();
+  }
+
+
+  Future<void> deleteRowFromTable(int index) async {
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT * from fitlife.userexerciselog");
+      var result = await conn.query(
+          'DELETE FROM fitlife.userexerciselog WHERE id = ?',
+          [_selectedUserExerciseListFromDB[index].exerciseId]);
+      await conn.close();
+    } catch (e) {
+      print('Error while deleting row: $e');
+    }
+  }
+
+  void _handleDeleteTap(int index) async {
+    await deleteRowFromTable(index);
+    setState(() {
+      _selectedUserExerciseListFromDB.removeAt(index);
+    });
+  }
+
+  Future<void> _getSelectedExercisesFromDB() async {
+    //idk how to add to model
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query(
+          "SELECT * from fitlife.userexerciselog WHERE user_id = ${currentUser.id}");
+      // loop through the list of foods and insert each one
+
+      var result = await conn.query(
+          'SELECT id,user_id, exercise_id, muscle_group, equipment, workoutGif, name, target, reps, sets FROM fitlife.userexerciselog WHERE user_id = ${currentUser.id}');
+      setState(() {
+        for (var row in result) {
+          {
+            _selectedUserExerciseListFromDB
+                .add(Exercise(
+              row[0],
+              row[3].toString(),
+              row[4].toString(),
+              row[5].toString(),//workoutgif
+              row[6].toString(),
+              row[7].toString(),
+              row[8],
+              row[9],
+            ));
+        }
+        }
+      });
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,12 +154,28 @@ class _MyWorkoutsState extends State<MyWorkouts> {
             children: const [
               Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "Workout 1",
-                  style: TextStyle(fontSize: 24, color: Colors.black),
-                ),
               ),
             ],
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount:
+              _selectedUserExerciseListFromDB.length, //list after selected
+              itemBuilder: (context, index) {
+
+                return WorkoutTile(
+                  // add current food's calorie count to totalCalories
+                  tileWorkout: _selectedUserExerciseListFromDB[index].name,
+                  tileWorkoutEquipment: _selectedUserExerciseListFromDB[index].equipment,
+                  tileTargetMuscle: _selectedUserExerciseListFromDB[index].target,
+                    tileMuscleGroup: _selectedUserExerciseListFromDB[index].muscleGroup,
+                  tileReps: _selectedUserExerciseListFromDB[index].reps,
+                  tileSets: _selectedUserExerciseListFromDB[index].sets,
+                  index: index+1,
+                  deleteTap: (context) => _handleDeleteTap(index),
+                );
+              },
+            ),
           ),
         ],
       ),

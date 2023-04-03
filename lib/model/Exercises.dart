@@ -1,8 +1,23 @@
-
 class Exercise {
-  String muscleGroup;
-  String workout;
-  String workoutGif;
+  int exerciseId;
+  String? muscleGroup;
+  String? equipment;
+  String? workoutGif;
+  String? name;
+  String? target;
+  int sets;
+  int reps;
+  DateTime date;
 
-  Exercise(this.muscleGroup, this.workout, this.workoutGif);
+  Exercise(
+      this.exerciseId,
+      this.muscleGroup,
+      this.equipment,
+      this.workoutGif,
+      this.name,
+      this.target,
+      this.reps,
+      this.sets,
+      {DateTime? date})
+      : date = date ?? DateTime.now();
 }
