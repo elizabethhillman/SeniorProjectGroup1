@@ -1,11 +1,10 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:fitlife/view/Widgets/ExerciseWidgets.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import '../model/User.dart';
-import '../model/user_database.dart';
 import '../model/Exercises.dart';
+import '../model/user_database.dart';
+
 
 class Exercises extends StatefulWidget {
   const Exercises({Key? key}) : super(key: key);
@@ -16,9 +15,12 @@ class Exercises extends StatefulWidget {
 
 class _ExercisesState extends State<Exercises> {
   String? _selectedMuscleGroup;
+  String? _selectedTarget;
   bool _hasSelected = false;
   List<Exercise> exercises = [];
   List<Exercise> _selectedExercises = [];
+  List<String?> _selectedTargets = ["All"];
+
 //TODO ADD FILTER FOR TARGETED MUSCLES
 
   @override
@@ -27,7 +29,7 @@ class _ExercisesState extends State<Exercises> {
     _getExercises(); // add call to get exercises on initialization
   }
 
- /* String capitalize(String s) {
+   String capitalize(String s) {
     List<String> words = s.split(" ");
     List<String> capitalizedWords = [];
 
@@ -41,9 +43,8 @@ class _ExercisesState extends State<Exercises> {
     return capitalizedWords.join(" ");
   }
 
-  Future<void> _getExercises() async {
+  Future<void> _getExercises() async {    //TODO first use to save api requests,then comment this out after your exerciseapi database table gets populated,
     String apiUrlMuscles = 'https://exercisedb.p.rapidapi.com/exercises';
-
     final Map<String, String> headers = {
       'X-Rapidapi-Key': '205d35886cmsh5b1ec99d4c12573p16cd50jsncec4aa535cd4',
       'X-Rapidapi-Host': 'exercisedb.p.rapidapi.com',
@@ -68,7 +69,7 @@ class _ExercisesState extends State<Exercises> {
               0
             ));
           }
-         // insertExerciseToDB(exercises);
+          insertExerciseToDB(exercises);
         });
       } else {
         print('Request failed with status: ${response.statusCode}.');
@@ -78,7 +79,7 @@ class _ExercisesState extends State<Exercises> {
     }
   }
 
-   Future<void> insertExerciseToDB(List<Exercise> exercise) async {
+   Future<void> insertExerciseToDB(List<Exercise> exercise) async { //TODO comment this function out as well
     //idk how to add to model
     try {
       Database db = Database();
@@ -94,9 +95,10 @@ class _ExercisesState extends State<Exercises> {
     } catch (e) {
       print("Error Occurred: $e");
     }
-  }*/
+  }
 
-  Future<void> _getExercises() async { //idk how to add to model
+/*  Future<void> _getExercises() async { //TODO uncomment this out, and comment out the above once your database is populated from the api
+    //idk how to add to model
     try {
       Database db = Database();
       var conn = await db.getSettings();
@@ -122,10 +124,35 @@ class _ExercisesState extends State<Exercises> {
     } catch (e) {
       print("Error Occurred: $e");
     }
-  }
+  }*/
 
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
+
+  Set<String?> getUniqueTargets(List<Exercise> exercises) {
+    return exercises
+        .map((exercise) => exercise.target)
+        .where((target) => target != null)
+        .toSet();
+  }
+
+  List<Exercise> getFilteredExercises() {
+    List<Exercise> filteredExercises = [];
+
+    if (_selectedMuscleGroup != null) {
+      filteredExercises.addAll(exercises
+          .where((exercise) => exercise.muscleGroup == _selectedMuscleGroup));
+    } else {
+      filteredExercises.addAll(exercises);
+    }
+
+    if (_selectedTarget != null) {
+      filteredExercises
+          .retainWhere((exercise) => exercise.target == _selectedTarget);
+    }
+
+    return filteredExercises;
+  }
 
   Set<String?> getUniqueMuscleGroups(List<Exercise> exercises) {
     return exercises
@@ -170,7 +197,7 @@ class _ExercisesState extends State<Exercises> {
               "Muscle Group",
               style: TextStyle(
                 fontSize: 20,
-                fontWeight: FontWeight.bold,
+                // fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
@@ -178,35 +205,52 @@ class _ExercisesState extends State<Exercises> {
           Padding(
             padding: const EdgeInsets.all(5),
             child: SizedBox(
-              width: 150,
-              child: DropdownButtonFormField<String>(
-                decoration: const InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                ),
+              width: 200,
+              child: DropdownButton<String>(
+                hint: const Text("Select a muscle group"),
                 value: _selectedMuscleGroup,
                 onChanged: (String? newValue) {
                   setState(() {
                     _hasSelected = true;
                     _selectedMuscleGroup = newValue;
+                    _selectedTarget =
+                        null; // Reset selected target when changing muscle group
                   });
                 },
-                items: getUniqueMuscleGroups(exercises)
-                    .map<DropdownMenuItem<String>>((String? value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value!),
-                  );
-                }).toList()
-                  ..sort((a, b) =>
-                      a.child.toString().compareTo(b.child.toString())),
+                items: [...getUniqueMuscleGroups(exercises)]
+                    .map((muscleGroup) => DropdownMenuItem<String>(
+                          value: muscleGroup,
+                          child: Text(muscleGroup ?? "All"),
+                        ))
+                    .toList(),
               ),
             ),
           ),
-
+          const SizedBox(height: 10),
+          if (_hasSelected) const SizedBox(height: 20),
+          if (_hasSelected)
+            Wrap(
+              spacing: 8.0,
+              children: [
+                for (String? target in [
+                  "All",
+                  ...getUniqueTargets(_selectedExercises)
+                ])
+                  InputChip(
+                    label: Text(target ?? "All"),
+                    selected: _selectedTargets.contains(target),
+                    onSelected: (bool selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedTargets.add(target);
+                        } else {
+                          _selectedTargets.remove(target);
+                        }
+                      });
+                    },
+                  ),
+              ],
+            ),
           if (_hasSelected) //displays only if dropdown is selected
             Expanded(
               child: PageView.builder(
@@ -218,13 +262,31 @@ class _ExercisesState extends State<Exercises> {
                   });
                 },
                 itemBuilder: (context, index) {
+                  List<Exercise> filteredExercises =
+                      _selectedExercises.where((exercise) {
+                    return _selectedTargets.contains(exercise.target) ||
+                        _selectedTargets.contains("All");
+                  }).toList();
+
+                  if (filteredExercises.isEmpty) {
+                    Text(
+                      'Please select a Muscle Target',
+                      style: TextStyle(
+                        color: Colors.grey[900],
+                        fontSize: 23,
+                      ),
+                    );
+                    return null;
+                  }
+
+                  Exercise selectedExercise = filteredExercises[index];
                   return exerciseTile(
-                    tileMuscleGroup: _selectedExercises[index].muscleGroup,
-                    tileWorkout: _selectedExercises[index].name,
-                    tileWorkoutGif: _selectedExercises[index].workoutGif,
-                    tileWorkoutEquipment: _selectedExercises[index].equipment,
-                    tileTargetMuscle: _selectedExercises[index].target,
-                    selectedExercise: _selectedExercises[index],
+                    tileMuscleGroup: selectedExercise.muscleGroup,
+                    tileWorkout: selectedExercise.name,
+                    tileWorkoutGif: selectedExercise.workoutGif,
+                    tileWorkoutEquipment: selectedExercise.equipment,
+                    tileTargetMuscle: selectedExercise.target,
+                    selectedExercise: selectedExercise,
                   );
                 },
               ),
