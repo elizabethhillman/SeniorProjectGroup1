@@ -268,17 +268,6 @@ class _ExercisesState extends State<Exercises> {
                         _selectedTargets.contains("All");
                   }).toList();
 
-                  if (filteredExercises.isEmpty) {
-                    Text(
-                      'Please select a Muscle Target',
-                      style: TextStyle(
-                        color: Colors.grey[900],
-                        fontSize: 23,
-                      ),
-                    );
-                    return null;
-                  }
-
                   Exercise selectedExercise = filteredExercises[index];
                   return exerciseTile(
                     tileMuscleGroup: selectedExercise.muscleGroup,
