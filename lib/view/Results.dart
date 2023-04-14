@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../model/Food.dart';
 import '../model/User.dart';
 import '../model/user_database.dart';
@@ -16,30 +17,50 @@ class _ResultsState extends State<Results> {
   List<Food> _foodList = []; //list of the foods that were selected
   List<Food> foodCalories = []; //food from the database
   //TODO add custom food function
-  
+
   @override
   void initState() {
     super.initState();
-    _getFood(); // add call to get exercises on initialization
   }
 
-  Future<void> _getFood() async {
-    //idk how to add to model
-    try {
-      Database db = Database();
-      var conn = await db.getSettings();
-      var id = await conn.query("SELECT * from fitlife.food ORDER BY foodName");
-      var result = await conn
-          .query('SELECT id,foodName, calorie, quantity FROM fitlife.food;');
+  //WARNING: Food search limited to 10 api calls/min
+  Future<void> _getFood(String userInput) async {
+    // Clear existing data
+    setState(() {
+      foodCalories.clear();
+    });
 
-      setState(() {
-        for (var row in result) {
-          foodCalories.add(Food(row[0], row[1], row[2], row[3]));
-        }
-      });
-      await conn.close();
+    // Make API request
+    try {
+      // Construct API URL
+      final appId = '8c437815'; // Replace with your own API ID
+      final appKey = '6acd4948d9f7cfa3cefeaed56f3f3b10'; // Replace with your own API Key
+      final ingr = userInput;
+      final apiUrl = 'https://api.edamam.com/api/food-database/v2/parser?app_id=$appId&app_key=$appKey&ingr=$ingr';
+
+      // Make HTTP request
+      final response = await http.get(Uri.parse(apiUrl));
+
+      // Check for successful response
+      if (response.statusCode == 200) {
+        // Print API response for debugging
+        print('API response: ${response.body}');
+        // Parse response and update state
+        final data = jsonDecode(response.body);
+        setState(() {
+          for (var food in data['hints']) {
+            var foodName = food['food']['label'];
+            var calorie = food['food']['nutrients']['ENERC_KCAL']?.toInt() ?? 0; // Use null-aware operator and provide default value of 0
+            foodCalories.add(Food(0, foodName, calorie, 0));
+          }
+        });
+      } else {
+        // Print error response for debugging
+        print('API error: ${response.statusCode}');
+      }
     } catch (e) {
-      print("Error Occurred: $e");
+      // Print exception for debugging
+      print('Error occurred: $e');
     }
   }
 
@@ -67,13 +88,14 @@ class _ResultsState extends State<Results> {
   final TextEditingController _quantityController = TextEditingController();
   int _totalCalories = 0;
 
-  void _onSearchTextChanged(String text) {
+  void _onSearchTextChanged(String text) async {
     setState(() {
       _searchText = text;
       _selectedFood = null;
       _quantityController.clear();
       _totalCalories = 0;
     });
+    await _getFood(_searchText);
   }
 
   void _onFoodSelected(String food) {
@@ -228,7 +250,7 @@ class _ResultsState extends State<Results> {
               child: Text(
                 "Search for a meal to log!",
                 style: TextStyle(
-                    //fontWeight: FontWeight.bold,
+                  //fontWeight: FontWeight.bold,
                     fontSize: 24.0,
                     color: Colors.grey[700]),
               ),
@@ -239,7 +261,7 @@ class _ResultsState extends State<Results> {
               child: Text(
                 "Food to be logged:",
                 style: TextStyle(
-                    //fontWeight: FontWeight.bold,
+                  //fontWeight: FontWeight.bold,
                     fontSize: 24.0,
                     color: Colors.grey[800]),
               ),
