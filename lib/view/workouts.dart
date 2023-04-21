@@ -5,13 +5,17 @@ import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/account.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/homePage.dart';
+import 'package:flutter/scheduler.dart';
 
+import '../controller/EditExerciseDialog.dart';
 import '../model/User.dart';
 import '../model/user_database.dart';
 import 'exercises.dart';
 
 class MyWorkouts extends StatefulWidget {
-  const MyWorkouts({Key? key}) : super(key: key);
+  final Exercise? updatedExercise;
+
+  const MyWorkouts({Key? key, this.updatedExercise}) : super(key: key);
 
   @override
   State<MyWorkouts> createState() => _MyWorkoutsState();
@@ -46,6 +50,25 @@ class _MyWorkoutsState extends State<MyWorkouts> {
     setState(() {
       _selectedUserExerciseListFromDB.removeAt(index);
     });
+  }
+
+  void _handleEditTap(int index) async {
+    final updatedExercise = await showDialog<Exercise>(
+      context: context,
+      builder: (context) {
+        return EditExerciseDialog(
+          exercise: _selectedUserExerciseListFromDB[index],
+        );
+      },
+    );
+
+    if (updatedExercise != null) {
+      SchedulerBinding.instance!.addPostFrameCallback((_) {
+        setState(() {
+          _selectedUserExerciseListFromDB[index] = updatedExercise;
+        });
+      });
+    }
   }
 
   Future<void> _getSelectedExercisesFromDB() async {
@@ -172,6 +195,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                   tileReps: _selectedUserExerciseListFromDB[index].reps,
                   tileSets: _selectedUserExerciseListFromDB[index].sets,
                   index: index+1,
+                  editTap: (context) => _handleEditTap(index),
                   deleteTap: (context) => _handleDeleteTap(index),
                 );
               },
