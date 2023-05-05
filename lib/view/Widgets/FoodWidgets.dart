@@ -5,6 +5,9 @@ class CalorieTile extends StatelessWidget {
   final String tileFoodName;
   final int tileCalorie;
   final int tileQuantity;
+  final int? tileCarbs;
+  final int? tileProtein;
+  final int? tileFat;
 
   //TODO final int tileProtein
   //TODO final int tileCarbs
@@ -15,8 +18,9 @@ class CalorieTile extends StatelessWidget {
     required this.tileFoodName,
     required this.tileCalorie,
     required this.tileQuantity,
+    this.tileCarbs,  this.tileProtein, this.tileFat,
     this.editTap,
-    this.deleteTap,
+    this.deleteTap
   }) : super(key: key);
 
   @override
@@ -52,74 +56,74 @@ class CalorieTile extends StatelessWidget {
             color: Colors.grey[300],
             borderRadius: BorderRadius.circular(12),
           ),
-            child:  Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+          child:  Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '$tileFoodName x $tileQuantity',
-                        style: const TextStyle(
-                          color: Colors.black,
-                          // fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 1,
-                        child: Icon(
-                          Icons.arrow_forward_ios_sharp,
-                          size: 20,
-color: Colors.grey[700],
-                        ),
-                      )
-                    ],
+                  Text(
+                    '$tileFoodName x $tileQuantity',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      // fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
-                  const SizedBox(height: 2),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '$tileCalorie calories',
-                        style: TextStyle(
-                          color: Colors.grey[600],
-                          //  fontWeight: FontWeight.bold,
-                          fontSize: 12.5,
-                        ),
-                      ),
-                      Text(
-                        '55g carb',
-                        style: TextStyle(
-                          color: Colors.red[800],
-                          //  fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                      Text(
-                        '50g protein',
-                        style: TextStyle(
-                          color: Colors.brown[400],
-                          //  fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                      Text(
-                        '50g fat',
-                        style: TextStyle(
-                          color: Colors.lime[700],
-                          //  fontWeight: FontWeight.bold,
-                          fontSize: 11,
-                        ),
-                      ),
-                      const SizedBox(width:35),
-                    ],
+                  SizedBox(
+                    height: 1,
+                    child: Icon(
+                      Icons.arrow_forward_ios_sharp,
+                      size: 20,
+                      color: Colors.grey[700],
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 2),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '$tileCalorie calories',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      //  fontWeight: FontWeight.bold,
+                      fontSize: 12.5,
+                    ),
                   ),
-
+                  Text(
+                    '$tileCarbs g carb',
+                    style: TextStyle(
+                      color: Colors.red[800],
+                      //  fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                  Text(
+                    '$tileProtein g protein',
+                    style: TextStyle(
+                      color: Colors.brown[400],
+                      //  fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                  Text(
+                    '$tileFat g fat',
+                    style: TextStyle(
+                      color: Colors.lime[700],
+                      //  fontWeight: FontWeight.bold,
+                      fontSize: 11,
+                    ),
+                  ),
+                  const SizedBox(width:35),
                 ],
               ),
 
-              // SizedBox(width: 30),
+            ],
+          ),
+
+          // SizedBox(width: 30),
 
         ),
       ),

@@ -19,6 +19,9 @@ class Calorie extends StatefulWidget {
 
 class _CalorieState extends State<Calorie> {
   num totalCalories = 0;
+  num totalCarbs = 0;
+  num totalProtein = 0;
+  num totalFat = 0;
   final List<Food> _currentUserFoodListFromDB = [];
 
   //TODO implement edit method
@@ -37,15 +40,18 @@ class _CalorieState extends State<Calorie> {
       var id = await conn.query(
           "SELECT * from fitlife.userfoodlog WHERE user_id = ${currentUser.id}");
       var result = await conn.query(
-          'SELECT id,user_id,foodName, calorie, quantity FROM fitlife.userfoodlog WHERE user_id = ${currentUser.id}');
+          'SELECT id,user_id,foodName, calorie, quantity,carbs, protein, fat FROM fitlife.userfoodlog WHERE user_id = ${currentUser.id}');
 
       setState(() {
         for (var row in result) {
           {
             _currentUserFoodListFromDB
-                .add(Food(row[0], row[3], row[4], row[5]));
+                .add(Food(row[0], row[3], row[4], row[5], row[6], row[7], row[8]));
           }
           totalCalories += row[4];
+          totalCarbs += row[6] ?? 0;
+          totalProtein += row[7] ?? 0;
+          totalFat += row[8] ?? 0;
         }
       });
       await conn.close();
@@ -64,7 +70,9 @@ class _CalorieState extends State<Calorie> {
           [_currentUserFoodListFromDB[index].foodId]);
 
       totalCalories = totalCalories - _currentUserFoodListFromDB[index].calorie;
-
+      totalProtein = totalProtein - (_currentUserFoodListFromDB[index].protein ?? 0);
+      totalCarbs = totalCarbs - (_currentUserFoodListFromDB[index].carbs ?? 0);
+      totalFat = totalFat - (_currentUserFoodListFromDB[index].fat ?? 0 );
       await conn.close();
     } catch (e) {
       print('Error while deleting row: $e');
@@ -148,8 +156,8 @@ class _CalorieState extends State<Calorie> {
                 child: Text(
                   'Todays Meals',
                   style: TextStyle(
-                      //  color: Colors.white,
-                      // fontWeight: FontWeight.bold,
+                    //  color: Colors.white,
+                    // fontWeight: FontWeight.bold,
                       fontSize: 25.0,
                       color: Colors.grey[700]),
                 ),
@@ -196,7 +204,7 @@ class _CalorieState extends State<Calorie> {
                   Chip(
                     backgroundColor: Colors.orange[100],
                     label: Text(
-                      "500g carb",
+                      "$totalCarbs"+"g carb",
                       style: TextStyle(
                         color: Colors.grey[800],
                         fontSize: 10,
@@ -206,7 +214,7 @@ class _CalorieState extends State<Calorie> {
                   Chip(
                     backgroundColor: Colors.brown[100],
                     label: Text(
-                      "500g protein",
+                      "$totalProtein"+"g protein",
                       style: TextStyle(
                         color: Colors.grey[800], // fontWeight: FontWeight.bold,
                         fontSize: 10,
@@ -216,7 +224,7 @@ class _CalorieState extends State<Calorie> {
                   Chip(
                     backgroundColor: Colors.yellow[400],
                     label: Text(
-                      "100g fat",
+                      "$totalFat"+"g fat",
                       style: TextStyle(
                         color: Colors.grey[800],
                         fontSize: 10,
@@ -229,13 +237,13 @@ class _CalorieState extends State<Calorie> {
               height: 25,
             ),
             if (_currentUserFoodListFromDB.isNotEmpty)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-               Icon(
-                 Icons.calendar_month,
-                 color: Colors.grey[700],
-               ),SizedBox(width: 5,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.calendar_month,
+                    color: Colors.grey[700],
+                  ),SizedBox(width: 5,),
                   Text(
                     '${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}:',
                     style: TextStyle(
@@ -243,18 +251,21 @@ class _CalorieState extends State<Calorie> {
                       fontSize: 13.5,
                     ),
                   ),
-              ],
-            ),
+                ],
+              ),
             Expanded(
               child: ListView.builder(
                 itemCount:
-                    _currentUserFoodListFromDB.length, //list after selected
+                _currentUserFoodListFromDB.length, //list after selected
                 itemBuilder: (context, index) {
                   return CalorieTile(
                     // add current food's calorie count to totalCalories
                     tileFoodName: _currentUserFoodListFromDB[index].foodName,
                     tileCalorie: _currentUserFoodListFromDB[index].calorie,
                     tileQuantity: _currentUserFoodListFromDB[index].quantity,
+                    tileCarbs: _currentUserFoodListFromDB[index].carbs,
+                    tileProtein: _currentUserFoodListFromDB[index].protein,
+                    tileFat: _currentUserFoodListFromDB[index].fat,
                     deleteTap: (context) => _handleDeleteTap(index),
                   );
                 },
@@ -274,13 +285,13 @@ class _CalorieState extends State<Calorie> {
                       (context, animation, secondaryAnimation, child) {
                     //page transition animation
                     var begin =
-                        const Offset(0.0, 2.0); //page transition animation
+                    const Offset(0.0, 2.0); //page transition animation
                     var end = Offset.zero; //page transition animation
                     var curve = Curves.ease; //page transition animation
                     var tween = Tween(begin: begin, end: end).chain(
                         CurveTween(curve: curve)); //page transition animation
                     var offsetAnimation =
-                        animation.drive(tween); //page transition animation
+                    animation.drive(tween); //page transition animation
                     return SlideTransition(
                       //page transition animation
                       position: offsetAnimation, //page transition animation
@@ -298,12 +309,12 @@ class _CalorieState extends State<Calorie> {
                   padding: const EdgeInsets.all(25),
                   child: Center(
                       child: Text(
-                    'Log Foods',
-                    style: TextStyle(
-                      color: Colors.grey[200],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ))),
+                        'Log Foods',
+                        style: TextStyle(
+                          color: Colors.grey[200],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ))),
             ),
             const SizedBox(
               height: 125,
