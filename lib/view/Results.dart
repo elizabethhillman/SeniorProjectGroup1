@@ -16,6 +16,7 @@ class Results extends StatefulWidget {
 class _ResultsState extends State<Results> {
   List<Food> _foodList = []; //list of the foods that were selected
   List<Food> foodCalories = []; //food from the database
+  int grams = 0;
   //TODO add custom food function
 
   @override
@@ -51,7 +52,16 @@ class _ResultsState extends State<Results> {
           for (var food in data['hints']) {
             var foodName = food['food']['label'];
             var calorie = food['food']['nutrients']['ENERC_KCAL']?.toInt() ?? 0; // Use null-aware operator and provide default value of 0
-            foodCalories.add(Food(0, foodName, calorie, 0));
+            var carbs = food['food']['nutrients']['CHOCDF']?.toInt() ?? 0 ;
+            var protein = food['food']['nutrients']['PROCNT']?.toInt() ?? 0 ;
+            var fat = food['food']['nutrients']['FAT']?.toInt() ?? 0 ;
+
+            // Extract weight in grams for each measure
+            grams = food['measures']
+                .firstWhere((measure) => measure['label'] == 'Serving')['weight']
+                .toInt();
+
+            foodCalories.add(Food(0, foodName, calorie, 0, carbs,protein,fat));
           }
         });
       } else {
@@ -73,10 +83,9 @@ class _ResultsState extends State<Results> {
       // loop through the list of foods and insert each one
       for (var food in foodList) {
         await conn.query(
-            'INSERT INTO fitlife.userfoodlog (user_id, food_id, foodName, calorie, quantity) VALUES (?,?,?,?,?);',
-            [userId, food.foodId, food.foodName, food.calorie, food.quantity]);
+            'INSERT INTO fitlife.userfoodlog (user_id, food_id, foodName, calorie, quantity, carbs, protein, fat) VALUES (?,?,?,?,?,?,?,?);',
+            [userId, food.foodId, food.foodName, food.calorie, food.quantity,food.carbs,food.protein,food.fat]);
       }
-
       await conn.close();
     } catch (e) {
       print("Error Occurred: $e");
@@ -111,13 +120,16 @@ class _ResultsState extends State<Results> {
     int id = food.foodId;
     int calories = food.calorie;
     int quantity = int.tryParse(_quantityController.text) ?? 0;
+    int? carbs = food.carbs;
+    int? protein = food.protein;
+    int? fat = food.fat;
     _totalCalories = calories * quantity;
     DateTime dateToday = DateTime.now();
     String date = dateToday.toString().substring(0, 10);
 
     if (quantity > 0) {
       setState(() {
-        _foodList.add(Food(id, _selectedFood!, _totalCalories, quantity));
+        _foodList.add(Food(id, _selectedFood!, _totalCalories, quantity,carbs,protein,fat));
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
@@ -235,7 +247,7 @@ class _ResultsState extends State<Results> {
                       onTap: () => _onFoodSelected(food.foodName),
                       child: ListTile(
                         title: Text(food.foodName),
-                        subtitle: Text('${food.calorie} calories'),
+                        subtitle: Text('${food.calorie} calories $grams g'),
                       ),
                     );
                   } else {

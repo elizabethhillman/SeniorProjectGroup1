@@ -3,12 +3,12 @@ class Food{
   String foodName ;
   int calorie;
   int quantity;
-  //TODO int protein;
-  //TODO int carbs;
-  //TODO int fat;
+  int? carbs;
+  int? protein;
+  int? fat;
   //TODO date;
 
 
 
-  Food(this.foodId,this.foodName,this.calorie,this.quantity);
+  Food(this.foodId,this.foodName,this.calorie,this.quantity,this.carbs,this.protein,this.fat);
 }

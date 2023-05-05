@@ -24,29 +24,23 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
   @override
   void initState() {
     super.initState();
+    _muscleGroupController = TextEditingController(text: widget.exercise.muscleGroup);
+    _equipmentController = TextEditingController(text: widget.exercise.equipment);
+    _targetController = TextEditingController(text: widget.exercise.target);
     _nameController = TextEditingController(text: widget.exercise.name);
-    _targetController =
-        TextEditingController(text: widget.exercise.target.toString());
-    _equipmentController =
-        TextEditingController(text: widget.exercise.equipment);
-    _muscleGroupController =
-        TextEditingController(text: widget.exercise.muscleGroup);
-    _repsController =
-        TextEditingController(text: widget.exercise.reps.toString());
-    _setsController =
-        TextEditingController(text: widget.exercise.sets.toString());
+    _repsController = TextEditingController(text: widget.exercise.reps.toString());
+    _setsController = TextEditingController(text: widget.exercise.sets.toString());
   }
+
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _targetController.dispose();
-    _equipmentController.dispose();
-    _muscleGroupController.dispose();
     _repsController.dispose();
     _setsController.dispose();
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -57,34 +51,7 @@ class _EditExerciseDialogState extends State<EditExerciseDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: _nameController,
-              decoration: const InputDecoration(
-                labelText: 'Exercise Name',
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            TextField(
-              controller: _targetController,
-              keyboardType: TextInputType.number,
-              decoration: const InputDecoration(
-                labelText: 'Target',
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            TextField(
-              controller: _equipmentController,
-              decoration: const InputDecoration(
-                labelText: 'Equipment',
-              ),
-            ),
-            const SizedBox(height: 8.0),
-            TextField(
-              controller: _muscleGroupController,
-              decoration: const InputDecoration(
-                labelText: 'Muscle Group',
-              ),
-            ),
+
             const SizedBox(height: 8.0),
             TextField(
               controller: _repsController,

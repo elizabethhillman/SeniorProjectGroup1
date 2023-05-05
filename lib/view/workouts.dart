@@ -6,6 +6,7 @@ import 'package:fitlife/view/account.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/homePage.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:mysql1/mysql1.dart';
 
 import '../controller/EditExerciseDialog.dart';
 import '../model/User.dart';
@@ -45,6 +46,24 @@ class _MyWorkoutsState extends State<MyWorkouts> {
     }
   }
 
+  Future<void> updateRowInTable(Exercise updatedExercise) async {
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT * from fitlife.userexerciselog");
+      var result =  await conn.query(
+          'UPDATE fitlife.userexerciselog SET reps = ?, sets = ? WHERE id = ?',
+          [
+            updatedExercise.reps,
+            updatedExercise.sets,
+            updatedExercise.exerciseId
+          ]);
+    } catch (e) {
+      print('Error while updating row: $e');
+    }
+  }
+
+
   void _handleDeleteTap(int index) async {
     await deleteRowFromTable(index);
     setState(() {
@@ -63,6 +82,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
     );
 
     if (updatedExercise != null) {
+      await updateRowInTable(updatedExercise);
       SchedulerBinding.instance!.addPostFrameCallback((_) {
         setState(() {
           _selectedUserExerciseListFromDB[index] = updatedExercise;
@@ -70,6 +90,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       });
     }
   }
+
 
   Future<void> _getSelectedExercisesFromDB() async {
     //idk how to add to model
@@ -96,7 +117,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
               row[8],
               row[9],
             ));
-        }
+          }
         }
       });
       await conn.close();
@@ -191,7 +212,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                   tileWorkout: _selectedUserExerciseListFromDB[index].name,
                   tileWorkoutEquipment: _selectedUserExerciseListFromDB[index].equipment,
                   tileTargetMuscle: _selectedUserExerciseListFromDB[index].target,
-                    tileMuscleGroup: _selectedUserExerciseListFromDB[index].muscleGroup,
+                  tileMuscleGroup: _selectedUserExerciseListFromDB[index].muscleGroup,
                   tileReps: _selectedUserExerciseListFromDB[index].reps,
                   tileSets: _selectedUserExerciseListFromDB[index].sets,
                   index: index+1,
