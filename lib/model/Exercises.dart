@@ -7,7 +7,8 @@ class Exercise {
   String? target;
   int sets;
   int reps;
-  DateTime date;
+  bool? isPressed;
+
 
   Exercise(
       this.exerciseId,
@@ -18,6 +19,7 @@ class Exercise {
       this.target,
       this.reps,
       this.sets,
-      {DateTime? date})
-      : date = date ?? DateTime.now();
+      {bool? isPressed})
+      : this.isPressed = isPressed ?? false;
+
 }

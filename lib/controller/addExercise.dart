@@ -75,8 +75,12 @@ class _AddExerciseState extends State<AddExercise> {
                 onPressed: () {
                   // pass the updated exercise back to the previous page using Navigator.pop
                   Navigator.of(context).pop(_updatedExercise);
-                  Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => MyWorkouts(updatedExercise: _updatedExercise),
+                    ),
+                  );
                   setState(() {});
                   },
                 child: const Text('Add Exercise'),

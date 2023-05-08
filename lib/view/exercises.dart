@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:http/http.dart' as http;
+
 import 'package:fitlife/view/Widgets/ExerciseWidgets.dart';
 import 'package:flutter/material.dart';
+
 import '../model/Exercises.dart';
 import '../model/user_database.dart';
-
 
 class Exercises extends StatefulWidget {
   const Exercises({Key? key}) : super(key: key);
@@ -17,9 +19,12 @@ class _ExercisesState extends State<Exercises> {
   String? _selectedMuscleGroup;
   String? _selectedTarget;
   bool _hasSelected = false;
+  bool _isSearchEmpty = true;
   List<Exercise> exercises = [];
   List<Exercise> _selectedExercises = [];
+  List<Exercise> _filteredExercises = [];
   List<String?> _selectedTargets = ["All"];
+  final TextEditingController _searchController = TextEditingController();
 
 //TODO ADD FILTER FOR TARGETED MUSCLES
 
@@ -29,7 +34,7 @@ class _ExercisesState extends State<Exercises> {
     _getExercises(); // add call to get exercises on initialization
   }
 
-   String capitalize(String s) {
+  String capitalize(String s) {
     List<String> words = s.split(" ");
     List<String> capitalizedWords = [];
 
@@ -43,7 +48,8 @@ class _ExercisesState extends State<Exercises> {
     return capitalizedWords.join(" ");
   }
 
-  Future<void> _getExercises() async {    //TODO first use to save api requests,then comment this out after your exerciseapi database table gets populated,
+
+ /*Future<void> _getExercises() async {    //TODO first use to save api requests,then comment this out after your exerciseapi database table gets populated,
     String apiUrlMuscles = 'https://exercisedb.p.rapidapi.com/exercises';
     final Map<String, String> headers = {
       'X-Rapidapi-Key': '205d35886cmsh5b1ec99d4c12573p16cd50jsncec4aa535cd4',
@@ -95,9 +101,10 @@ class _ExercisesState extends State<Exercises> {
     } catch (e) {
       print("Error Occurred: $e");
     }
-  }
+  }*/
 
-/*  Future<void> _getExercises() async { //TODO uncomment this out, and comment out the above once your database is populated from the api
+  Future<void> _getExercises() async {
+    //TODO uncomment this out, and comment out the above once your database is populated from the api
     //idk how to add to model
     try {
       Database db = Database();
@@ -124,7 +131,7 @@ class _ExercisesState extends State<Exercises> {
     } catch (e) {
       print("Error Occurred: $e");
     }
-  }*/
+  }
 
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
@@ -169,6 +176,16 @@ class _ExercisesState extends State<Exercises> {
             .where((Exercise exercise) =>
                 exercise.muscleGroup == _selectedMuscleGroup)
             .toList();
+
+    _filteredExercises = _selectedExercises.where((exercise) {
+      bool matchesSearch = _searchController.text.isEmpty ||
+          exercise.name!
+              .toLowerCase()
+              .contains(_searchController.text.toLowerCase());
+      bool matchesTarget = _selectedTargets.contains(exercise.target) ||
+          _selectedTargets.contains("All");
+      return matchesSearch && matchesTarget;
+    }).toList();
     return Scaffold(
       backgroundColor: Colors.grey[200],
       appBar: AppBar(
@@ -207,54 +224,104 @@ class _ExercisesState extends State<Exercises> {
             child: SizedBox(
               width: 200,
               child: DropdownButton<String>(
-                hint: const Text("Select a muscle group"),
-                value: _selectedMuscleGroup,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    _hasSelected = true;
-                    _selectedMuscleGroup = newValue;
-                    _selectedTarget =
-                        null; // Reset selected target when changing muscle group
-                  });
-                },
-                items: [...getUniqueMuscleGroups(exercises)]
-                    .map((muscleGroup) => DropdownMenuItem<String>(
-                          value: muscleGroup,
-                          child: Text(muscleGroup ?? "All"),
-                        ))
-                    .toList(),
-              ),
+                  hint: const Text("Select a muscle group"),
+                  value: _selectedMuscleGroup,
+                  onChanged: (String? newValue) {
+                    setState(() {
+                      _hasSelected = true;
+                      _selectedMuscleGroup = newValue;
+                      _selectedTarget =
+                          null; // Reset selected target when changing muscle group
+                      _selectedTargets = [
+                        "All"
+                      ]; // Reset selected targets to contain only "All"
+                    });
+                  },
+                  items: [
+                    const DropdownMenuItem<String>(
+                      value: null,
+                      child: Text("All"),
+                    ),
+                    ...getUniqueMuscleGroups(exercises)
+                        .map(
+                          (muscleGroup) => DropdownMenuItem<String>(
+                            value: muscleGroup,
+                            child: Text(muscleGroup ?? "All"),
+                          ),
+                        )
+                        .toList(),
+                  ]),
             ),
           ),
           const SizedBox(height: 10),
           if (_hasSelected) const SizedBox(height: 20),
           if (_hasSelected)
-            Wrap(
-              spacing: 8.0,
-              children: [
-                for (String? target in [
-                  "All",
-                  ...getUniqueTargets(_selectedExercises)
-                ])
-                  InputChip(
-                    label: Text(target ?? "All"),
-                    selected: _selectedTargets.contains(target),
-                    onSelected: (bool selected) {
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Stack(
+                children: [
+                  TextField(
+                    controller: _searchController,
+                    decoration: const InputDecoration(
+                      labelText: 'Search for an exercise',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                      ),
+                    ),
+                    onChanged: (value) {
                       setState(() {
-                        if (selected) {
-                          _selectedTargets.add(target);
-                        } else {
-                          _selectedTargets.remove(target);
-                        }
+                        _isSearchEmpty = value.isEmpty;
                       });
                     },
                   ),
-              ],
+                  Positioned(
+                    right: 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _searchController.clear();
+                          _isSearchEmpty = true;
+                        });
+                      },
+                      color: _isSearchEmpty ? Colors.grey : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          if (_hasSelected)
+            Visibility(
+              visible:
+                  _selectedMuscleGroup != null && _selectedMuscleGroup != "All",
+              child: Wrap(
+                spacing: 8.0,
+                children: [
+                  for (String? target in [
+                    "All",
+                    ...getUniqueTargets(_selectedExercises)
+                  ])
+                    InputChip(
+                      label: Text(target ?? "All"),
+                      selected: _selectedTargets.contains(target),
+                      onSelected: (bool selected) {
+                        setState(() {
+                          if (selected) {
+                            _selectedTargets.add(target);
+                          } else {
+                            _selectedTargets.remove(target);
+                          }
+                        });
+                      },
+                    ),
+                ],
+              ),
             ),
           if (_hasSelected) //displays only if dropdown is selected
             Expanded(
               child: PageView.builder(
-                itemCount: _selectedExercises.length,
+                itemCount: _filteredExercises.length,
                 controller: _pageController,
                 onPageChanged: (int page) {
                   setState(() {
@@ -262,13 +329,20 @@ class _ExercisesState extends State<Exercises> {
                   });
                 },
                 itemBuilder: (context, index) {
-                  List<Exercise> filteredExercises =
-                      _selectedExercises.where((exercise) {
-                    return _selectedTargets.contains(exercise.target) ||
-                        _selectedTargets.contains("All");
-                  }).toList();
+                  if (_filteredExercises.isEmpty) {
+                    return Center(
+                      child: Text(
+                        'No exercises found',
+                        style: TextStyle(
+                          color: Colors.grey[900],
+                          fontSize: 23,
+                        ),
+                      ),
+                    );
+                  }
 
-                  Exercise selectedExercise = filteredExercises[index];
+                  Exercise selectedExercise = _filteredExercises[index];
+
                   return exerciseTile(
                     tileMuscleGroup: selectedExercise.muscleGroup,
                     tileWorkout: selectedExercise.name,
@@ -280,22 +354,41 @@ class _ExercisesState extends State<Exercises> {
                 },
               ),
             ),
-          if (_hasSelected) //TODO some1 fix this shit idk how it works
+          if (_hasSelected)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  for (int i = 0; i < _selectedExercises.length; i++)
-                    Expanded(
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        margin: const EdgeInsets.symmetric(horizontal: 4),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _currentPage == i ? Colors.blue : Colors.grey,
-                        ),
+                  for (int index = 0;
+                      index < min(8, _filteredExercises.length);
+                      index++)
+                    Container(
+                      width: 10,
+                      height: 10,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color:
+                            _currentPage == index ? Colors.blue : Colors.grey,
+                      ),
+                    ),
+                  /*if (_filteredExercises.length > 8)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 4),
+                      child: Text(
+                        '...',
+                        style: TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                    ),*/
+                  if (_filteredExercises.length > 8)
+                    Container(
+                      width: 10,
+                      height: 10,
+                      margin: const EdgeInsets.symmetric(horizontal: 4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _currentPage >= 8 ? Colors.blue : Colors.grey,
                       ),
                     ),
                 ],

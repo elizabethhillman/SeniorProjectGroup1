@@ -4,6 +4,7 @@ import 'package:fitlife/model/User.dart';
 import 'package:fitlife/view/Widgets/HomePageWidgets.dart';
 import 'package:fitlife/view/account.dart';
 import 'package:fitlife/view/calorie.dart';
+import 'package:fitlife/view/favoriteworkouts.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
@@ -93,10 +94,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ],
         ),
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+    body: SingleChildScrollView(
+    child: Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
               const SizedBox(height: 25),
               //spacer
               Padding(
@@ -109,108 +111,67 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               const SizedBox(height: 25),
+              Container(
+                alignment: Alignment.center,
+                padding: const EdgeInsets.all(4),
+                child: Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                    ),
+                    const SizedBox(width: 10),
+                    SizedBox(
+                      width: 137,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const favoriteWorkouts()));
+                        },
+                        icon: const Icon(Icons.favorite,
+                            color: homePageIconColor,size: 40),
+                        label: const Text("Favorite Workouts",
+                            style: TextStyle(color: Colors.black,fontSize: 13.5)),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0),
+                      ),
+                    ),
+                    const SizedBox(width: 33),
+                    SizedBox(
+                      width: 137,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const enterWeight()));
+                        },
+                        icon: const Icon(Icons.monitor_weight,size: 40,
+                            color: homePageIconColor),
+                        label: const Text("Enter Weight",
+                            style: TextStyle(color: Colors.black,fontSize: 13.5)),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 25),
               Row(
                 children: [
-                  const SizedBox(height: 35),
+                  SizedBox(width: 30),
                   const HomePageWidget(),
-                  Container(
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.all(4),
-                    child: Column(
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            "GO TO",
-                            style: TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 137,
-                          height: 50,
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.favorite,
-                                color: homePageIconColor),
-                            label: const Text("Favorite Workouts",
-                                style: TextStyle(color: Colors.black)),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                elevation: 0),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: 137,
-                          height: 50,
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const enterWeight()));
-                            },
-                            icon: const Icon(Icons.monitor_weight,
-                                color: homePageIconColor),
-                            label: const Text("Enter Weight",
-                                style: TextStyle(color: Colors.black)),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                elevation: 0),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: 137,
-                          height: 50,
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.front_hand_rounded,
-                                color: homePageIconColor),
-                            label: const Text("Join Competition",
-                                style: TextStyle(color: Colors.black)),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                elevation: 0),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: 137,
-                          height: 50,
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.push_pin,
-                                color: homePageIconColor),
-                            label: const Text("Gyms Near Me",
-                                style: TextStyle(color: Colors.black)),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                elevation: 0),
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        SizedBox(
-                          width: 137,
-                          height: 50,
-                          child: ElevatedButton.icon(
-                            onPressed: () {},
-                            icon: const Icon(Icons.camera_alt,
-                                color: homePageIconColor),
-                            label: const Text("Progress Pictures",
-                                style: TextStyle(color: Colors.black)),
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.transparent,
-                                elevation: 0),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
+
               const SizedBox(height: 35),
               AnimatedTextKit(
                 isRepeatingAnimation: true,
@@ -222,6 +183,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       duration: const Duration(seconds: 7)),
                 ],
               ),
-            ]));
+            ])));
   }
 }
