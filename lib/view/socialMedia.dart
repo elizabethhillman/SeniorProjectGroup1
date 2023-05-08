@@ -69,78 +69,80 @@ class _SocialMediaState extends State<SocialMedia> {
         children: [
           const SizedBox(height: 20),
           Row(
-            children:  [
-              Text("@${currentUser.handle}",
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "@${currentUser.handle}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.account_circle_outlined,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
+                  ],
                 ),
-              ),
-              const SizedBox(width: 60),
-              const Text(
-                'Followers',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(width: 60),
-              const Text(
-                'Following',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children:  [
-              const Icon(
-                Icons.account_circle_outlined,
-                size: 100,
-                color: Colors.grey,
-              ),
-              const SizedBox(width: 75),
-              Text(
-                currentUser.followers.toString(),
-                style: const TextStyle(
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-              const SizedBox(width: 100),
-              Text(
-                currentUser.following.toString(),
-                style: const TextStyle(
-                  fontSize: 60,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Column(
+                Column(children: [
+                  const Text(
+                    'Followers',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    "${currentUserFollowersCount()}",
+                    style: const TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ]),
+                Column(children: [
+                  const Text(
+                    'Following',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    "${currentUserFollowingCount()}",
+                    style: const TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ])]),
+              Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children:
-              [
-              const Text("Bio", style: TextStyle(color: Colors.black, fontSize: 15,
-                fontWeight: FontWeight.bold,),),
+            children: [
+              const Text(
+                "Bio",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               TextField(
-                readOnly: true,
-                enabled: false,
-                decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  labelText: currentUser.bio,
-                  )
-              )
+                  readOnly: true,
+                  enabled: false,
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(),
+                    labelText: currentUser.bio,
+                  ))
             ],
           ),
           const SizedBox(height: 20),
@@ -149,10 +151,12 @@ class _SocialMediaState extends State<SocialMedia> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Post()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => const Post()));
                 },
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.black),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -165,10 +169,14 @@ class _SocialMediaState extends State<SocialMedia> {
               const SizedBox(width: 20),
               TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchFriends()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchFriends()));
                 },
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.black),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -181,10 +189,14 @@ class _SocialMediaState extends State<SocialMedia> {
               const SizedBox(width: 20),
               TextButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const SearchTrainers()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const SearchTrainers()));
                 },
                 style: ButtonStyle(
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                  foregroundColor:
+                      MaterialStateProperty.all<Color>(Colors.black),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5)),

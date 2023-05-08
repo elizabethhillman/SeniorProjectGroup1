@@ -203,7 +203,7 @@ class _AccountsState extends State<Accounts> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          setCurrentUser("", "", "", "", "", 0, 0);
+                          setCurrentUser("", "", "", "", "", "", "");
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -218,7 +218,7 @@ class _AccountsState extends State<Accounts> {
                         onPressed: () {
                           String email = getCurrentUser().email;
                           deleteUser(email);
-                          setCurrentUser("", "", "", "", "", 0, 0);
+                          setCurrentUser("", "", "", "", "", "", "");
                           Navigator.push(
                               context,
                               MaterialPageRoute(

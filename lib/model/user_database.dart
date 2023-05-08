@@ -18,7 +18,7 @@ class Database {
 void addUser(var email, var password, var name, var handle) async {
   Database db = Database();
   var conn = await db.getSettings();
-  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`) VALUES ('$name', '$handle', '$email', '$password', '', '0','0' );");
+  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`) VALUES ('$name', '$handle', '$email', '$password', '', '','' );");
   //idk why this works but needs both select statements
   var id = await conn.query("SELECT MAX(id) from fitlife.user;");
   var result = await conn.query('SELECT id FROM fitlife.user;');
@@ -141,7 +141,7 @@ Future<String> getBio(String email) async
   return "";
 }
 
-Future<int> getFollowers(String email) async
+Future<String> getFollowers(String email) async
 {
   Database db = Database();
   var conn = await db.getSettings();
@@ -149,7 +149,7 @@ Future<int> getFollowers(String email) async
   var result = await conn.query('SELECT followers, email FROM fitlife.user;');
   for(var res in result)
   {
-    if(email.compareTo(res['email'])==0)
+    if(email.compareTo(res['handle'])==0)
     {
       return res['followers'];
     }
@@ -157,10 +157,10 @@ Future<int> getFollowers(String email) async
 
   await conn.close();
 
-  return -2;
+  return "-1";
 }
 
-Future<int> getFollowing(String email) async
+Future<String> getFollowing(String email) async
 {
   Database db = Database();
   var conn = await db.getSettings();
@@ -168,7 +168,7 @@ Future<int> getFollowing(String email) async
   var result = await conn.query('SELECT following, email FROM fitlife.user;');
   for(var res in result)
   {
-    if(email.compareTo(res['email'])==0)
+    if(email.compareTo(res['handle'])==0)
     {
       return res['following'];
     }
@@ -176,7 +176,7 @@ Future<int> getFollowing(String email) async
 
   await conn.close();
 
-  return -2;
+  return "-1";
 }
 
 Future<bool> emailExists(var email) async
@@ -215,6 +215,141 @@ Future<bool> handleExists(var handle) async
   await conn.close();
 
   return false;
+}
+
+Future<List<String>> findFriend(var input, var userHandle) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT handle FROM fitlife.user;');
+  final List<String> allResults = [];
+  for(var res in result)
+  {
+    var val = res['handle'];
+    if(val.contains(input) && val != userHandle){
+      allResults.add(val);
+    }
+  }
+
+  await conn.close();
+
+  return allResults;
+}
+
+Future<List<String>> searchingByHandle(String handle) async
+{
+  final List<String> data = [];
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT * FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(handle.compareTo(res['handle'])==0)
+    {
+      data.add(res['handle']);
+      data.add(res['followers']);
+      data.add(res['following']);
+      data.add(res['bio']);
+      data.add(res['email']);
+    }
+  }
+
+  await conn.close();
+
+  return data;
+}
+
+void addFollower(User current, String searching) async
+{
+  String followers = await getFollowers(current.handle);
+  Database db = Database();
+  var conn = await db.getSettings();
+  List<String> all = followers.split(",");
+  if(!all.contains(searching)) {
+    if (followers.isNotEmpty) {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `followers` = '$followers, $searching' WHERE (`handle` = '${current
+              .handle}');");
+    }
+    else {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `followers` = '$searching' WHERE (`handle` = '${current
+              .handle}');");
+    }
+  }
+
+  String fol = await getFollowers(current.handle);
+  current.followers = fol;
+
+  await conn.close();
+}
+
+void removeFollower(User current, String searching) async
+{
+  String followers = await getFollowers(current.handle);
+  Database db = Database();
+  var conn = await db.getSettings();
+  List<String> all = followers.split(",");
+  for (int i = 0; i < all.length; i++) {
+    all[i] = all[i].replaceAll(" ", '');
+  }
+  if (all.contains(searching)) {
+    if (all.contains(searching)) {
+      await conn.query("UPDATE `fitlife`.`user` SET `followers` = REPLACE('$followers', '$searching', '') WHERE (`handle` = '${current.handle}');");
+    }
+    await conn.close();
+  }
+}
+
+void addFollowing(User u, String newFriendHandle) async
+{
+  String following = await getFollowing(u.handle);
+  Database db = Database();
+  var conn = await db.getSettings();
+  List<String> all = following.split(",");
+  if(!all.contains(newFriendHandle)) {
+    if (following.isNotEmpty) {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `following` = '$following, $newFriendHandle' WHERE (`handle` = '${u
+              .handle}');");
+    }
+    else {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `following` = '$newFriendHandle' WHERE (`handle` = '${u
+              .handle}');");
+    }
+  }
+
+  String fol = await getFollowing(u.handle);
+  u.following = fol;
+
+  await conn.close();
+}
+
+void removeFollowing(User current, String searching) async
+{
+  String following = await getFollowing(current.handle);
+  Database db = Database();
+  var conn = await db.getSettings();
+  List<String> all = following.split(",");
+  for(int i = 0; i < all.length; i++) {
+    all[i] = all[i].replaceAll(" ", '');
+  }
+  if(all.contains(searching)) {
+    if(all.length>1)
+    {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `following` = REPLACE('$following', ', $searching', '') WHERE (`id` = '${current
+              .id}');");
+    }
+    else {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `following` = REPLACE('$following', '$searching', '') WHERE (`id` = '${current
+              .id}');");
+    }}
+  await conn.close();
 }
 
 
