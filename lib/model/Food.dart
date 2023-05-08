@@ -6,9 +6,13 @@ class Food{
   int? carbs;
   int? protein;
   int? fat;
-  //TODO date;
+  double? grams;
+  DateTime date;
 
 
 
-  Food(this.foodId,this.foodName,this.calorie,this.quantity,this.carbs,this.protein,this.fat);
+
+  Food(this.foodId,this.foodName,this.calorie,this.quantity,this.carbs,this.protein,this.fat,this.grams,
+      {DateTime? date})
+      : date = date ?? DateTime.now();
 }

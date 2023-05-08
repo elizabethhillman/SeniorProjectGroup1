@@ -3,7 +3,12 @@ import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/account.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/homePage.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:fitlife/model/userWeight.dart';
+
+import '../model/User.dart';
+import '../model/user_database.dart';
 class enterWeight extends StatefulWidget {
   const enterWeight({Key? key}) : super(key: key);
 
@@ -12,8 +17,44 @@ class enterWeight extends StatefulWidget {
 }
 
 class _enterWeightState extends State<enterWeight> {
-  String weight = '';
-  String date = '';
+  int weight = 0;
+  //String date = '';
+  final List<userWeight> _userWeightList = [];
+  final List<userWeight> _userWeightList2 = [];
+
+  void _saveWeight() {
+    if (weight > 0 ) {
+      setState(() {
+        _userWeightList.add(userWeight(
+          _userWeightList.length + 1,
+          weight,
+    //      date: DateTime.parse("20${date.substring(6)}-${date.substring(0, 2)}-${date.substring(3, 5)}T00:00:00.000Z"),
+        ));
+        weight = 0;
+   //     date = '';
+      });
+    }
+  }
+
+
+
+  Future<void> insertUserWeight(int userId, List<userWeight> weightList) async {
+    //idk how to add to model
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT id from fitlife.userweight;");
+      for (var weight in weightList) {
+        await conn.query(
+            'INSERT INTO fitlife.userweight (user_id, user_weight) VALUES (?,?);',
+            [userId, weight.weight]);
+      }
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,20 +118,24 @@ class _enterWeightState extends State<enterWeight> {
               decoration: InputDecoration(
                 hintText: 'Enter weight',
                 contentPadding: const EdgeInsets.all(16.0),
-                  suffixIcon: const Icon(Icons.monitor_weight_outlined),
-                  border: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(13.0),
-                  )
+                suffixIcon: const Icon(Icons.monitor_weight_outlined),
+                border: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(13.0),
+                ),
               ),
+              keyboardType: TextInputType.number,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+              ],
               onChanged: (value) {
                 setState(() {
-                  weight = value;
+                  weight = int.parse(value);
                 });
               },
             ),
             const SizedBox(height: 16.0),
-            TextField(
+            /*TextField(
               decoration: InputDecoration(
                 hintText: 'Enter date',
                 contentPadding: const EdgeInsets.all(16.0),
@@ -105,12 +150,19 @@ class _enterWeightState extends State<enterWeight> {
                   date = value;
                 });
               },
-            ),
+            ),*/
 
             const SizedBox(height: 16.0),
             ElevatedButton(
-              onPressed: () {
-              Navigator.pop(context);
+              onPressed:  () async {
+                _saveWeight();
+                await insertUserWeight(currentUser.id, _userWeightList);
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const HomePage()),
+                );
+                setState(() {});
               },
               child: const Text('Save Weight'),
             ),

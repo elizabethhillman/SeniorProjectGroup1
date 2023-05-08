@@ -13,16 +13,16 @@ import '../model/User.dart';
 import '../model/user_database.dart';
 import 'exercises.dart';
 
-class MyWorkouts extends StatefulWidget {
+class favoriteWorkouts extends StatefulWidget {
   final Exercise? updatedExercise;
 
-  const MyWorkouts({Key? key, this.updatedExercise}) : super(key: key);
+  const favoriteWorkouts({Key? key, this.updatedExercise}) : super(key: key);
 
   @override
-  State<MyWorkouts> createState() => _MyWorkoutsState();
+  State<favoriteWorkouts> createState() => _favoriteWorkoutsState();
 }
 
-class _MyWorkoutsState extends State<MyWorkouts> {
+class _favoriteWorkoutsState extends State<favoriteWorkouts> {
   final List<Exercise> _selectedUserExerciseListFromDB =[];
 
   @override
@@ -63,23 +63,6 @@ class _MyWorkoutsState extends State<MyWorkouts> {
     }
   }
 
-  Future<void> updateToggleFavorite(Exercise exercise) async {
-    try {
-      Database db = Database();
-      var conn = await db.getSettings();
-      var id = await conn.query(
-          "SELECT * from fitlife.userexerciselog WHERE user_id = ${currentUser.id}");
-      var result =  await conn.query(
-          'UPDATE fitlife.userexerciselog SET favorited = ? WHERE workoutGif = ?',
-          [
-            exercise.isPressed,
-            exercise.workoutGif
-          ]);
-    } catch (e) {
-      print('Error while updating row: $e');
-    }
-  }
-
 
   void _handleDeleteTap(int index) async {
     await deleteRowFromTable(index);
@@ -108,7 +91,22 @@ class _MyWorkoutsState extends State<MyWorkouts> {
     }
   }
 
-
+  Future<void> updateToggleFavorite(Exercise exercise) async {
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query(
+          "SELECT * from fitlife.userexerciselog WHERE user_id = ${currentUser.id}");
+      var result =  await conn.query(
+          'UPDATE fitlife.userexerciselog SET favorited = ? WHERE workoutGif = ?',
+          [
+            exercise.isPressed,
+            exercise.workoutGif
+          ]);
+    } catch (e) {
+      print('Error while updating row: $e');
+    }
+  }
   Future<void> _getSelectedExercisesFromDB() async {
     //idk how to add to model
     try {
@@ -119,7 +117,9 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       // loop through the list of foods and insert each one
 
       var result = await conn.query(
-          'SELECT id,user_id, exercise_id, muscle_group, equipment, workoutGif, name, target, reps, sets, favorited FROM fitlife.userexerciselog WHERE user_id = ${currentUser.id}');
+          'SELECT id, user_id, exercise_id, muscle_group, equipment, workoutGif, name, target, reps, sets, favorited FROM fitlife.userexerciselog WHERE user_id = ${currentUser.id} AND favorited = ?',
+      [1]
+      );
       setState(() {
         for (var row in result) {
           {
@@ -133,8 +133,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
               row[7].toString(),
               row[8],
               row[9],
-                isPressed: row[11] == 1 ? true : false
-
+              isPressed: true
             ));
           }
         }
@@ -149,6 +148,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.red[200],
         leading: IconButton(
           icon: const Icon(
             Icons.home,
@@ -160,8 +160,8 @@ class _MyWorkoutsState extends State<MyWorkouts> {
           },
         ),
         title: const Text(
-          "MyWorkouts",
-          style: TextStyle(fontSize: 22, color: Colors.black),
+          "Favorite Workouts",
+          style: TextStyle(fontSize: 15, color: Colors.black),
         ),
         actions: <Widget>[
           IconButton(
@@ -193,25 +193,29 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       body: Column(
         children: [
           const SizedBox(height: 15,),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Exercises()));
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black, backgroundColor: Colors.white,
-                  side: const BorderSide(color: Colors.black),
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                ),
-                child: const Text(
-                  "Add an Exercise",
-                  style: TextStyle(fontSize: 15, color: Colors.black),
-                ),
+          if (_selectedUserExerciseListFromDB.isEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 150.0),
+              child: Column(
+                children: [
+                  Text(
+                    "No favorite workouts available",
+                    style: TextStyle(
+                        fontSize: 24.0,
+                        color: Colors.grey[700]
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    "Tap the heart icon to add a workout to favorites",
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey[600]
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
           Row(  //temporary, replace with exercises that users select from database
             mainAxisAlignment: MainAxisAlignment.start,
             children: const [
@@ -233,7 +237,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                   editTap: (context) => _handleEditTap(index),
                   deleteTap: (context) => _handleDeleteTap(index),
                   updateFavoriteStatus: (exercise) => updateToggleFavorite(_selectedUserExerciseListFromDB[index]),
-
+                  containerColor: Colors.red[100],
                 );
               },
             ),
