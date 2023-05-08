@@ -17,6 +17,7 @@ class SocialMedia extends StatefulWidget {
 }
 
 class _SocialMediaState extends State<SocialMedia> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,61 +69,61 @@ class _SocialMediaState extends State<SocialMedia> {
         children: [
           const SizedBox(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    "@${currentUser.handle}",
-                    style: const TextStyle(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "@${currentUser.handle}",
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    const Icon(
+                      Icons.account_circle_outlined,
+                      size: 100,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+                Column(children: [
+                  const Text(
+                    'Followers',
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
                   ),
-                  const Icon(
-                    Icons.account_circle_outlined,
-                    size: 100,
-                    color: Colors.grey,
+                  Text(
+                    "${currentUserFollowersCount()}",
+                    style: const TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ],
-              ),
-              Column(children: [
-                const Text(
-                  'Followers',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                ]),
+                Column(children: [
+                  const Text(
+                    'Following',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-                Text(
-                  currentUser.followers.toString(),
-                  style: const TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                  Text(
+                    "${currentUserFollowingCount()}",
+                    style: const TextStyle(
+                      fontSize: 60,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
-                ),
-              ]),
-              Column(children: [
-                const Text(
-                  'Following',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                Text(
-                  currentUser.following.toString(),
-                  style: const TextStyle(
-                    fontSize: 60,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-              ])]),
+                ])]),
               Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,

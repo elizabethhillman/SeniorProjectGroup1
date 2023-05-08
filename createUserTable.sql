@@ -18,8 +18,8 @@ CREATE TABLE `user` (
   `password` varchar(45) NOT NULL,
   `handle` varchar(45) NOT NULL,
   `bio` varchar(45) DEFAULT NULL,
-  `followers` int DEFAULT '0',
-  `following` int DEFAULT '0',
+  `followers` varchar(500) NOT NULL,
+  `following` varchar(500) NOT NULL,
   PRIMARY KEY (`id`)
 ) 
 ---------------------------------------Exercise database

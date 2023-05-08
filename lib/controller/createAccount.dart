@@ -145,7 +145,7 @@ class _CreateAccountState extends State<CreateAccount> {
                     nameController.text, handleController.text);
 
                 // User u =  User(id: 0, name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
-                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, await getBio(emailController.text), await getFollowers(emailController.text), await getFollowing(emailController.text));
+                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, "", "", "");
                 // allUsers.add(u);
 
                 // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);
