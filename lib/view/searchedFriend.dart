@@ -175,8 +175,8 @@ class _SearchedFriend extends State<SearchedFriend> {
                     addFollowing(currentUser, searchedUser.handle);
                     addFollower(searchedUser, currentUser.handle);
                   }
-                  setCurrentUser(currentUser.name, currentUser.handle, currentUser.email, currentUser.password, currentUser.bio, await getFollowers(currentUser.email), await getFollowing(currentUser.email));
-                  setSearchedUser(searchedUser.name, searchedUser.handle, searchedUser.email, searchedUser.password, searchedUser.bio, await getFollowers(searchedUser.email), await getFollowing(searchedUser.email));
+                  setCurrentUser(currentUser.name, currentUser.handle, currentUser.email, currentUser.password, currentUser.bio, await getFollowers(currentUser.email), await getFollowing(currentUser.email), currentUser.trainer);
+                  setSearchedUser(searchedUser.name, searchedUser.handle, searchedUser.email, searchedUser.password, searchedUser.bio, await getFollowers(searchedUser.email), await getFollowing(searchedUser.email), searchedUser.trainer);
                   setState(() {});
 
                 },

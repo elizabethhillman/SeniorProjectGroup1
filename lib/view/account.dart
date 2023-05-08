@@ -22,6 +22,13 @@ class _AccountsState extends State<Accounts> {
   final nameController = TextEditingController();
   final handleController = TextEditingController();
 
+
+  bool getTrainerStat()
+  {
+    if(currentUser.trainer == "true") return true;
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,7 +186,17 @@ class _AccountsState extends State<Accounts> {
                 child: Text(currentUser.bio),
               ),
             ),
-            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Checkbox(
+                  value: getTrainerStat(),
+                  onChanged: null,
+                ),
+                const Text('Trainer Status'),
+              ],
+            ),
+            // const Spacer(),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -198,12 +215,12 @@ class _AccountsState extends State<Accounts> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
                   Column(
                     children: [
                       TextButton(
                         onPressed: () {
-                          setCurrentUser("", "", "", "", "", "", "");
+                          setCurrentUser("", "", "", "", "", "", "", "");
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -213,12 +230,12 @@ class _AccountsState extends State<Accounts> {
                         },
                         child: const Text('Logout'),
                       ),
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
                       TextButton(
                         onPressed: () {
                           String email = getCurrentUser().email;
                           deleteUser(email);
-                          setCurrentUser("", "", "", "", "", "", "");
+                          setCurrentUser("", "", "", "", "", "", "", "");
                           Navigator.push(
                               context,
                               MaterialPageRoute(

@@ -1,9 +1,13 @@
+import 'package:fitlife/model/user_database.dart';
 import 'package:flutter/material.dart';
 import 'package:fitlife/view/account.dart';
 import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:fitlife/view/homePage.dart';
+
+import '../model/User.dart';
+import '../view/searchedFriend.dart';
 
 class SearchTrainers extends StatefulWidget {
   const SearchTrainers({Key? key}) : super(key: key);
@@ -14,7 +18,18 @@ class SearchTrainers extends StatefulWidget {
 
 class _SearchTrainersState extends State<SearchTrainers> {
   final TextEditingController _searchController = TextEditingController();
+  List<String> searchRes = [];
   bool _showClearIcon = false;
+
+  List<String> userData = [];
+
+  List<String> getUserData() {
+    return userData;
+  }
+
+  void setUserData(List<String> data) {
+    userData = data;
+  }
 
   @override
   void initState() {
@@ -47,8 +62,8 @@ class _SearchTrainersState extends State<SearchTrainers> {
           },
         ),
         title: const Text(
-          "Search Trainers",
-          style: TextStyle(fontSize: 16, color: Colors.black),
+          "Search",
+          style: TextStyle(fontSize: 30, color: Colors.black),
         ),
         actions: <Widget>[
           IconButton(
@@ -91,6 +106,15 @@ class _SearchTrainersState extends State<SearchTrainers> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: _searchController,
+              onChanged: (String input) async {
+                List<String> ret = await findTrainer(input, currentUser.handle);
+                if (ret.isNotEmpty) {
+                  searchRes = ret;
+                }
+                else {
+                  searchRes.clear();
+                }
+              },
               decoration: InputDecoration(
                 hintText: "Search",
                 prefixIcon: const Icon(Icons.search),
@@ -99,6 +123,7 @@ class _SearchTrainersState extends State<SearchTrainers> {
                   icon: const Icon(Icons.clear),
                   onPressed: () {
                     _searchController.clear();
+                    searchRes.clear();
                   },
                 )
                     : null,
@@ -108,10 +133,37 @@ class _SearchTrainersState extends State<SearchTrainers> {
               ),
             ),
           ),
-          const Expanded( //Should display users here in the results after search
-                          //Should be able to click on any of the results which should bring them to that specific user so that they can follow/view their profile
-            child: Center(
-              child: Text("Results"),
+          Expanded(
+            child: ListView.builder(
+                itemCount: searchRes.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final String res = searchRes[index];
+                  return Material(
+                      color: Colors.transparent,
+                      child: InkWell
+                        (
+                        onTap: () async {
+                          List<String> info = await searchingByHandle(res);
+                          setSearchedUser(
+                              "",
+                              info[0],
+                              info[4],
+                              "",
+                              info[3],
+                              info[1],
+                              info[2],
+                              "");
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (
+                                  context) => const SearchedFriend()));
+                        },
+                        child: ListTile
+                          (
+                          title: Text("@$res"),
+                        ),
+                      )
+                  );
+                }
             ),
           ),
         ],

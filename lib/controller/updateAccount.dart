@@ -20,11 +20,32 @@ class UpdateAcct extends StatefulWidget {
 }
 
 class _UpdateAcctState extends State<UpdateAcct> {
+  String trainerStat = currentUser.trainer;
+
+  bool getTrainerStat()
+  {
+    if(trainerStat == "true")
+    {
+      return true;
+    }
+    return false;
+  }
+
+  late bool isTrainer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    isTrainer = getTrainerStat();
+  }
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final nameController = TextEditingController();
   final handleController = TextEditingController();
   final bioController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +96,7 @@ class _UpdateAcctState extends State<UpdateAcct> {
               ),
             ]),
         body: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(5.0),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -101,12 +122,12 @@ class _UpdateAcctState extends State<UpdateAcct> {
                 const Text(
                   '  Name',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     color: Colors.black,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(2),
                   child: TextField(
                     controller: nameController,
                     decoration: InputDecoration(
@@ -118,12 +139,12 @@ class _UpdateAcctState extends State<UpdateAcct> {
                 const Text(
                   '  Social Username',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     color: Colors.black,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(2),
                   child: TextField(
                     controller: handleController,
                     decoration: InputDecoration(
@@ -135,12 +156,12 @@ class _UpdateAcctState extends State<UpdateAcct> {
                 const Text(
                   '  Email',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     color: Colors.black,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(2),
                   child: TextField(
                     readOnly: true,
                     controller: emailController,
@@ -152,12 +173,12 @@ class _UpdateAcctState extends State<UpdateAcct> {
                 const Text(
                   '  Password',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     color: Colors.black,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(2),
                   child: TextField(
                     controller: passwordController,
                     decoration: InputDecoration(
@@ -169,12 +190,12 @@ class _UpdateAcctState extends State<UpdateAcct> {
                 const Text(
                   '  Bio',
                   style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 15,
                     color: Colors.black,
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(3),
+                  padding: const EdgeInsets.all(2),
                   child: TextField(
                     controller: bioController,
                     decoration: InputDecoration(
@@ -182,6 +203,20 @@ class _UpdateAcctState extends State<UpdateAcct> {
                       labelText: currentUser.bio,
                     ),
                   ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Checkbox(
+                      value: isTrainer,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          isTrainer = value ?? false;
+                        });
+                      },
+                    ),
+                    const Text('Are you a Trainer?'),
+                  ],
                 ),
                 // const Spacer(),
                 Center(
@@ -212,7 +247,8 @@ class _UpdateAcctState extends State<UpdateAcct> {
                                   handleController.text,
                                   passwordController.text,
                                   nameController.text,
-                                  bioController.text);
+                                  bioController.text,
+                                  "$isTrainer");
                               setCurrentUser(
                                   nameController.text,
                                   handleController.text,
@@ -220,7 +256,8 @@ class _UpdateAcctState extends State<UpdateAcct> {
                                   passwordController.text,
                                   bioController.text,
                                   currentUser.followers,
-                                  currentUser.following);
+                                  currentUser.following,
+                                  "$isTrainer");
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(

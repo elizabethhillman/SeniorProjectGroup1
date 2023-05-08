@@ -10,7 +10,8 @@ class User {
     required this.id,
     required this.bio,
     required this.following,
-    required this.followers
+    required this.followers,
+    required this.trainer
   });
 
   String name;
@@ -21,12 +22,13 @@ class User {
   String bio;
   String followers;
   String following;
+  String trainer;
 }
 
-User currentUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1");
-User searchedUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1");
+User currentUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1", trainer: "");
+User searchedUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1", trainer: "");
 List<User> allUsers = <User>[];
-void setCurrentUser(String name, String handle, String email, String password, String bio, String followers, String following)
+void setCurrentUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer)
 {
   currentUser.email = email;
   currentUser.name = name;
@@ -35,6 +37,7 @@ void setCurrentUser(String name, String handle, String email, String password, S
   currentUser.followers = followers;
   currentUser.following = following;
   currentUser.bio = bio;
+  currentUser.trainer = trainer;
 }
 
 List<String> currentUserFollowers()
@@ -68,7 +71,7 @@ User getCurrentUser()
   return currentUser;
 }
 
-void setSearchedUser(String name, String handle, String email, String password, String bio, String followers, String following)
+void setSearchedUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer)
 {
   searchedUser.email = email;
   searchedUser.name = name;
@@ -77,6 +80,7 @@ void setSearchedUser(String name, String handle, String email, String password, 
   searchedUser.followers = followers;
   searchedUser.following = following;
   searchedUser.bio = bio;
+  searchedUser.trainer = trainer;
 }
 
 List<String> searchedUserFollowers()

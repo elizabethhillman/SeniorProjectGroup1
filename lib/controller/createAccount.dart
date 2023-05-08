@@ -12,6 +12,15 @@ class CreateAccount extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<CreateAccount> {
+  bool isTrainer = false;
+  String trainerVal = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final reEnterController = TextEditingController();
@@ -121,6 +130,20 @@ class _CreateAccountState extends State<CreateAccount> {
                   hintText: "Enter the Same Password"),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Checkbox(
+                value: isTrainer,
+                onChanged: (bool? value) {
+                  setState(() {
+                    isTrainer = value ?? false;
+                  });
+                },
+              ),
+              const Text('Are you a Trainer?'),
+            ],
+          ),
           ElevatedButton(
             //https://docs.flutter.dev/cookbook/forms/retrieve-input
             onPressed: () async {
@@ -142,10 +165,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 alertMessage(context, "Error", "Social Media Handle already exists");
               } else {
                 addUser(emailController.text, passwordController.text,
-                    nameController.text, handleController.text);
+                    nameController.text, handleController.text, "$isTrainer");
 
                 // User u =  User(id: 0, name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
-                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, "", "", "");
+                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, "", "", "", "$isTrainer");
                 // allUsers.add(u);
 
                 // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);

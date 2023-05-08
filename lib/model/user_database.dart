@@ -6,8 +6,8 @@ class Database {
   Future<MySqlConnection> getSettings() async
   {
     return await MySqlConnection.connect(ConnectionSettings(
-         host: '10.0.2.2',//android emulator
-        //host: 'localhost',//ios emulator
+         // host: '10.0.2.2',//android emulator
+        host: 'localhost',//ios emulator
         port: 3306,
         user: 'root',
         db: 'fitlife',
@@ -15,10 +15,10 @@ class Database {
   }
 }
 
-void addUser(var email, var password, var name, var handle) async {
+void addUser(var email, var password, var name, var handle, var trainer) async {
   Database db = Database();
   var conn = await db.getSettings();
-  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`) VALUES ('$name', '$handle', '$email', '$password', '', '','' );");
+  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`, `trainer`) VALUES ('$name', '$handle', '$email', '$password', '', '','', '$trainer');");
   //idk why this works but needs both select statements
   var id = await conn.query("SELECT MAX(id) from fitlife.user;");
   var result = await conn.query('SELECT id FROM fitlife.user;');
@@ -38,11 +38,11 @@ void deleteUser(var email) async
   await conn.close();
 }
 
-void updateUser(int id, var email, var handle, var password, var name, var bio) async
+void updateUser(int id, var email, var handle, var password, var name, var bio, var trainer) async
 {
   Database db = Database();
   var conn = await db.getSettings();
-  await conn.query("UPDATE `fitlife`.`user` SET `name` = '$name', `handle` = '$handle',  `password` = '$password', `bio` = '$bio' WHERE (`id` = '$id');");
+  await conn.query("UPDATE `fitlife`.`user` SET `name` = '$name', `handle` = '$handle',  `password` = '$password', `bio` = '$bio', `trainer` = '$trainer' WHERE (`id` = '$id');");
   await conn.close();
 }
 
@@ -76,6 +76,25 @@ Future<String> getName(String email, var password) async
     if(email.compareTo(res['email'])==0 && password.compareTo(res['password'])==0)
     {
       return res['name'];
+    }
+  }
+
+  await conn.close();
+
+  return "";
+}
+
+Future<String> getTrainerStatus(String email) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT trainer, email FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(email.compareTo(res['email'])==0)
+    {
+      return res['trainer'];
     }
   }
 
@@ -222,13 +241,35 @@ Future<List<String>> findFriend(var input, var userHandle) async
   Database db = Database();
   var conn = await db.getSettings();
   var id = await conn.query("SELECT * from fitlife.user");
-  var result = await conn.query('SELECT handle FROM fitlife.user;');
+  var result = await conn.query('SELECT handle, trainer FROM fitlife.user;');
   final List<String> allResults = [];
-  for(var res in result)
-  {
-    var val = res['handle'];
-    if(val.contains(input) && val != userHandle){
-      allResults.add(val);
+  for(var res in result) {
+    if (res['trainer'] == "false") {
+      var val = res['handle'];
+      if (val.contains(input) && val != userHandle) {
+        allResults.add(val);
+      }
+    }
+  }
+
+  await conn.close();
+
+  return allResults;
+}
+
+Future<List<String>> findTrainer(var input, var userHandle) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT handle, trainer FROM fitlife.user;');
+  final List<String> allResults = [];
+  for(var res in result) {
+    if (res['trainer'] == "true") {
+      var val = res['handle'];
+      if (val.contains(input) && val != userHandle) {
+        allResults.add(val);
+      }
     }
   }
 
