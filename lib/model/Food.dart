@@ -3,12 +3,16 @@ class Food{
   String foodName ;
   int calorie;
   int quantity;
-  //TODO int protein;
-  //TODO int carbs;
-  //TODO int fat;
-  //TODO date;
+  int? carbs;
+  int? protein;
+  int? fat;
+  double? grams;
+  DateTime date;
 
 
 
-  Food(this.foodId,this.foodName,this.calorie,this.quantity);
+
+  Food(this.foodId,this.foodName,this.calorie,this.quantity,this.carbs,this.protein,this.fat,this.grams,
+      {DateTime? date})
+      : date = date ?? DateTime.now();
 }

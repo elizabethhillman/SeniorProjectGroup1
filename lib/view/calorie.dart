@@ -6,7 +6,9 @@ import 'package:fitlife/view/homePage.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
+import '../controller/EditFoodDialog.dart';
 import '../model/Food.dart';
 import '../model/user_database.dart';
 
@@ -19,7 +21,11 @@ class Calorie extends StatefulWidget {
 
 class _CalorieState extends State<Calorie> {
   num totalCalories = 0;
+  num totalCarbs = 0;
+  num totalProtein = 0;
+  num totalFat = 0;
   final List<Food> _currentUserFoodListFromDB = [];
+  DateTime _selectedDate = DateTime.now();
 
   //TODO implement edit method
 
@@ -37,20 +43,38 @@ class _CalorieState extends State<Calorie> {
       var id = await conn.query(
           "SELECT * from fitlife.userfoodlog WHERE user_id = ${currentUser.id}");
       var result = await conn.query(
-          'SELECT id,user_id,foodName, calorie, quantity FROM fitlife.userfoodlog WHERE user_id = ${currentUser.id}');
-
+          'SELECT id,user_id,foodName, calorie, quantity,carbs, protein, fat,grams, created_at FROM fitlife.userfoodlog WHERE user_id = ${currentUser.id} AND created_at = ${_selectedDate.toIso8601String().substring(0, 10)}');
       setState(() {
         for (var row in result) {
           {
-            _currentUserFoodListFromDB
-                .add(Food(row[0], row[3], row[4], row[5]));
+            _currentUserFoodListFromDB.add(Food(row[0], row[3].toString(),
+                row[4], row[5], row[6], row[7], row[8],row[9]));
           }
           totalCalories += row[4];
+          totalCarbs += row[6] ?? 0;
+          totalProtein += row[7] ?? 0;
+          totalFat += row[8] ?? 0;
         }
       });
       await conn.close();
     } catch (e) {
       print("Error Occurred: $e");
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate,
+      firstDate: DateTime(2018, 1),
+      lastDate: DateTime.now(),
+    );
+
+    if (picked != null && picked != _selectedDate) {
+      setState(() {
+        _selectedDate = picked;
+      });
+      _getSelectedFoodFromDB(); // Refresh the food data after changing the date
     }
   }
 
@@ -64,7 +88,10 @@ class _CalorieState extends State<Calorie> {
           [_currentUserFoodListFromDB[index].foodId]);
 
       totalCalories = totalCalories - _currentUserFoodListFromDB[index].calorie;
-
+      totalProtein =
+          totalProtein - (_currentUserFoodListFromDB[index].protein ?? 0);
+      totalCarbs = totalCarbs - (_currentUserFoodListFromDB[index].carbs ?? 0);
+      totalFat = totalFat - (_currentUserFoodListFromDB[index].fat ?? 0);
       await conn.close();
     } catch (e) {
       print('Error while deleting row: $e');
@@ -76,6 +103,58 @@ class _CalorieState extends State<Calorie> {
     setState(() {
       _currentUserFoodListFromDB.removeAt(index);
     });
+  }
+
+  void _handleEditTap(int index) async {
+    final originalFood = _currentUserFoodListFromDB[index];
+    final updatedFood = await showDialog<Food>(
+      context: context,
+      builder: (context) {
+        return EditFoodDialog(
+          food: originalFood,
+        );
+      },
+    );
+
+    if (updatedFood != null) {
+      await updateRowInTable(updatedFood);
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          // Update the food item in the list
+          _currentUserFoodListFromDB[index] = updatedFood;
+
+          totalCalories =
+              totalCalories - originalFood.calorie + updatedFood.calorie;
+          totalCarbs =
+              totalCarbs - (originalFood.carbs ?? 0) + (updatedFood.carbs ?? 0);
+          totalProtein = totalProtein -
+              (originalFood.protein ?? 0) +
+              (updatedFood.protein ?? 0);
+          totalFat =
+              totalFat - (originalFood.fat ?? 0) + (updatedFood.fat ?? 0);
+        });
+      });
+    }
+  }
+
+  Future<void> updateRowInTable(Food updatedFoods) async {
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query("SELECT * from fitlife.userexerciselog");
+      var result = await conn.query(
+          'UPDATE fitlife.userfoodlog SET quantity = ?, calorie = ?, carbs = ?, protein = ?, fat = ? WHERE id = ?',
+          [
+            updatedFoods.quantity,
+            updatedFoods.calorie,
+            updatedFoods.carbs,
+            updatedFoods.protein,
+            updatedFoods.fat,
+            updatedFoods.foodId
+          ]);
+    } catch (e) {
+      print('Error while updating row: $e');
+    }
   }
 
   @override
@@ -154,7 +233,7 @@ class _CalorieState extends State<Calorie> {
                       color: Colors.grey[700]),
                 ),
               ),
-            SizedBox(
+            const SizedBox(
               height: 16,
             ),
             if (_currentUserFoodListFromDB.isNotEmpty)
@@ -178,7 +257,7 @@ class _CalorieState extends State<Calorie> {
                   ),
                 ],
               ),
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
             if (_currentUserFoodListFromDB.isNotEmpty)
@@ -196,7 +275,7 @@ class _CalorieState extends State<Calorie> {
                   Chip(
                     backgroundColor: Colors.orange[100],
                     label: Text(
-                      "500g carb",
+                      "$totalCarbs" "g carb",
                       style: TextStyle(
                         color: Colors.grey[800],
                         fontSize: 10,
@@ -206,7 +285,7 @@ class _CalorieState extends State<Calorie> {
                   Chip(
                     backgroundColor: Colors.brown[100],
                     label: Text(
-                      "500g protein",
+                      "$totalProtein" "g protein",
                       style: TextStyle(
                         color: Colors.grey[800], // fontWeight: FontWeight.bold,
                         fontSize: 10,
@@ -216,7 +295,7 @@ class _CalorieState extends State<Calorie> {
                   Chip(
                     backgroundColor: Colors.yellow[400],
                     label: Text(
-                      "100g fat",
+                      "$totalFat" "g fat",
                       style: TextStyle(
                         color: Colors.grey[800],
                         fontSize: 10,
@@ -229,22 +308,28 @@ class _CalorieState extends State<Calorie> {
               height: 25,
             ),
             if (_currentUserFoodListFromDB.isNotEmpty)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-               Icon(
-                 Icons.calendar_month,
-                 color: Colors.grey[700],
-               ),SizedBox(width: 5,),
-                  Text(
-                    '${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}:',
-                    style: TextStyle(
-                      color: Colors.grey[600], //  fontWeight: FontWeight.bold,
-                      fontSize: 13.5,
+              GestureDetector(
+                onTap: () => _selectDate(context),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.calendar_month,
+                      color: Colors.grey[700],
                     ),
-                  ),
-              ],
-            ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Text(
+                      '${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}:',
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Expanded(
               child: ListView.builder(
                 itemCount:
@@ -255,6 +340,10 @@ class _CalorieState extends State<Calorie> {
                     tileFoodName: _currentUserFoodListFromDB[index].foodName,
                     tileCalorie: _currentUserFoodListFromDB[index].calorie,
                     tileQuantity: _currentUserFoodListFromDB[index].quantity,
+                    tileCarbs: _currentUserFoodListFromDB[index].carbs,
+                    tileProtein: _currentUserFoodListFromDB[index].protein,
+                    tileFat: _currentUserFoodListFromDB[index].fat,
+                    editTap: (context) => _handleEditTap(index),
                     deleteTap: (context) => _handleDeleteTap(index),
                   );
                 },

@@ -14,7 +14,7 @@ class Results extends StatefulWidget {
 }
 
 class _ResultsState extends State<Results> {
-  List<Food> _foodList = []; //list of the foods that were selected
+  final List<Food> _foodList = []; //list of the foods that were selected
   List<Food> foodCalories = []; //food from the database
   //TODO add custom food function
 
@@ -33,8 +33,8 @@ class _ResultsState extends State<Results> {
     // Make API request
     try {
       // Construct API URL
-      final appId = '8c437815'; // Replace with your own API ID
-      final appKey = '6acd4948d9f7cfa3cefeaed56f3f3b10'; // Replace with your own API Key
+      const appId = '8c437815'; // Replace with your own API ID
+      const appKey = '6acd4948d9f7cfa3cefeaed56f3f3b10'; // Replace with your own API Key
       final ingr = userInput;
       final apiUrl = 'https://api.edamam.com/api/food-database/v2/parser?app_id=$appId&app_key=$appKey&ingr=$ingr';
 
@@ -44,14 +44,21 @@ class _ResultsState extends State<Results> {
       // Check for successful response
       if (response.statusCode == 200) {
         // Print API response for debugging
-        print('API response: ${response.body}');
+     //   print('API response: ${response.body}');
         // Parse response and update state
         final data = jsonDecode(response.body);
         setState(() {
           for (var food in data['hints']) {
             var foodName = food['food']['label'];
-            var calorie = food['food']['nutrients']['ENERC_KCAL']?.toInt() ?? 0; // Use null-aware operator and provide default value of 0
-            foodCalories.add(Food(0, foodName, calorie, 0));
+            var calorie = food['food']['nutrients']['ENERC_KCAL']?.toInt() ?? 0;
+            var carbs = food['food']['nutrients']['CHOCDF']?.toInt() ?? 0 ;
+            var protein = food['food']['nutrients']['PROCNT']?.toInt() ?? 0 ;
+            var fat = food['food']['nutrients']['FAT']?.toInt() ?? 0 ;
+            var measures = food['measures'];
+            var servingMeasure = measures.firstWhere((measure) => measure['label'] == 'Serving', orElse: () => null);
+            var grams = servingMeasure != null ? servingMeasure['weight'].toDouble() : 0.0;
+
+            foodCalories.add(Food(0, foodName, calorie, 0, carbs,protein,fat,grams));
           }
         });
       } else {
@@ -73,10 +80,9 @@ class _ResultsState extends State<Results> {
       // loop through the list of foods and insert each one
       for (var food in foodList) {
         await conn.query(
-            'INSERT INTO fitlife.userfoodlog (user_id, food_id, foodName, calorie, quantity) VALUES (?,?,?,?,?);',
-            [userId, food.foodId, food.foodName, food.calorie, food.quantity]);
+            'INSERT INTO fitlife.userfoodlog (user_id, food_id, foodName, calorie, quantity, carbs, protein, fat) VALUES (?,?,?,?,?,?,?,?);',
+            [userId, food.foodId, food.foodName, food.calorie, food.quantity,food.carbs,food.protein,food.fat]);
       }
-
       await conn.close();
     } catch (e) {
       print("Error Occurred: $e");
@@ -87,6 +93,9 @@ class _ResultsState extends State<Results> {
   String? _selectedFood;
   final TextEditingController _quantityController = TextEditingController();
   int _totalCalories = 0;
+  int _totalProtein = 0;
+  int _totalCarbs = 0;
+  int _totalFat = 0;
 
   void _onSearchTextChanged(String text) async {
     setState(() {
@@ -111,16 +120,27 @@ class _ResultsState extends State<Results> {
     int id = food.foodId;
     int calories = food.calorie;
     int quantity = int.tryParse(_quantityController.text) ?? 0;
+    int? carbs = food.carbs;
+    int? protein = food.protein;
+    int? fat = food.fat;
+    double? grams = food.grams;
     _totalCalories = calories * quantity;
+    _totalProtein = (protein! * quantity);
+    _totalCarbs = (carbs! * quantity);
+    _totalFat = (fat! * quantity);
+
     DateTime dateToday = DateTime.now();
     String date = dateToday.toString().substring(0, 10);
 
     if (quantity > 0) {
       setState(() {
-        _foodList.add(Food(id, _selectedFood!, _totalCalories, quantity));
+        _foodList.add(Food(id, _selectedFood!, _totalCalories, quantity,_totalCarbs,_totalProtein,_totalFat,grams));
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
+        _totalCarbs=0;
+        _totalProtein=0;
+        _totalFat=0;
         _searchText = ''; // clear search text
         FocusScope.of(context).unfocus(); // hide keyboard
       });
@@ -235,7 +255,8 @@ class _ResultsState extends State<Results> {
                       onTap: () => _onFoodSelected(food.foodName),
                       child: ListTile(
                         title: Text(food.foodName),
-                        subtitle: Text('${food.calorie} calories'),
+                        subtitle: Text( ' ${food.grams?.toStringAsFixed(2)} g'),
+                        trailing:Text('${food.calorie} calories') ,
                       ),
                     );
                   } else {
@@ -257,7 +278,7 @@ class _ResultsState extends State<Results> {
             ),
           if (_foodList.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 150.0),
+              padding: const EdgeInsets.only(top: 100.0),
               child: Text(
                 "Food to be logged:",
                 style: TextStyle(
