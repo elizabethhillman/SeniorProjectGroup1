@@ -4,10 +4,11 @@ import 'package:fitlife/view/account.dart';
 import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:fitlife/view/homePage.dart';
-import 'package:fitlife/controller/post.dart';
 import 'package:fitlife/controller/searchFriends.dart';
 import 'package:fitlife/controller/searchTrainers.dart';
 import 'package:fitlife/model/User.dart';
+import 'package:fitlife/model/Post.dart';
+
 
 class SocialMedia extends StatefulWidget {
   const SocialMedia({Key? key}) : super(key: key);
@@ -151,12 +152,13 @@ class _SocialMediaState extends State<SocialMedia> {
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => const Post()));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const createPost()),
+                  );
                 },
                 style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(Colors.black),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
                   shape: MaterialStateProperty.all<OutlinedBorder>(
                     const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -166,6 +168,7 @@ class _SocialMediaState extends State<SocialMedia> {
                 ),
                 child: const Text('Make a Post'),
               ),
+
               const SizedBox(width: 20),
               TextButton(
                 onPressed: () {
