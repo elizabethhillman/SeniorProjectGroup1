@@ -60,18 +60,6 @@ class _CreatePostState extends State<CreatePost> {
           ),
           actions: <Widget>[
             IconButton(
-              icon: const Icon(Icons.favorite),
-              color: Colors.red,
-              onPressed: () {
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.comment),
-              color: Colors.grey,
-              onPressed: () {
-              },
-            ),
-            IconButton(
               icon: const Icon(Icons.fitness_center),
               color: Colors.black,
               onPressed: () {
