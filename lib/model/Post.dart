@@ -6,19 +6,23 @@ class Post {
     required this.id,
     required this.userId,
     required this.imageurl,
-    required this.caption
+    required this.caption,
+    required this.likes,
+    required this.comments
   });
 
   int id;
   int userId;
   String imageurl;
   String caption;
+  int likes;
+  String comments;
 }
 
   // dk if this is needed
   //Post({this.id, this.userId, this.imageurl, this.caption});
 
-  Post currentPost = Post(id: -1, userId: -1, imageurl: "", caption: "");
+  Post currentPost = Post(id: -1, userId: -1, imageurl: "", caption: "", likes: 0, comments: "");
   //void setCurrentUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer)
 
   ///dont set id, let SQL do that
