@@ -10,6 +10,8 @@ import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'Feed.dart';
+
 class HomePage extends StatelessWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -102,7 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 25),
               //spacer
               Padding(
-                padding: const EdgeInsets.only(left: 15.0),
+                padding: const EdgeInsets.only(left: 10.0),
                 child: Text(
                   "Welcome Back, ${currentUser.name}",
                   style: GoogleFonts.montserrat(
@@ -113,15 +115,15 @@ class _MyHomePageState extends State<MyHomePage> {
               const SizedBox(height: 25),
               Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.all(4),
+                // padding: const EdgeInsets.all(5),
                 child: Row(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(10),
-                    ),
-                    const SizedBox(width: 10),
+                    // const Padding(
+                    //   padding: EdgeInsets.all(5),
+                    // ),
+                    // const SizedBox(width: 10),
                     SizedBox(
-                      width: 137,
+                      width: 132,
                       height: 50,
                       child: ElevatedButton.icon(
                         onPressed: () {
@@ -134,15 +136,15 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: const Icon(Icons.favorite,
                             color: homePageIconColor,size: 40),
                         label: const Text("Favorite Workouts",
-                            style: TextStyle(color: Colors.black,fontSize: 13)),
+                            style: TextStyle(color: Colors.black,fontSize: 12)),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             elevation: 0),
                       ),
                     ),
-                    const SizedBox(width: 33),
+                    // const SizedBox(width: 10),
                     SizedBox(
-                      width: 137,
+                      width: 130,
                       height: 50,
                       child: ElevatedButton.icon(
                         onPressed: () {
@@ -155,7 +157,28 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: const Icon(Icons.monitor_weight,size: 40,
                             color: homePageIconColor),
                         label: const Text("Enter Weight",
-                            style: TextStyle(color: Colors.black,fontSize: 13.5)),
+                            style: TextStyle(color: Colors.black,fontSize: 12)),
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0),
+                      ),
+                    ),
+                    // const SizedBox(width: 10),
+                    SizedBox(
+                      width: 130,
+                      height: 50,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                  const Feed()));
+                        },
+                        icon: const Icon(Icons.camera_alt_sharp,size: 40,
+                            color: homePageIconColor),
+                        label: const Text("View Feed",
+                            style: TextStyle(color: Colors.black,fontSize: 12)),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             elevation: 0),

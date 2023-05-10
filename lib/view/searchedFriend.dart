@@ -31,7 +31,6 @@ class _SearchedFriend extends State<SearchedFriend> {
   @override
   void initState()  {
     super.initState();
-
   }
 
   @override

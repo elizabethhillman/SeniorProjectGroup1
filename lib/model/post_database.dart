@@ -20,7 +20,7 @@ void addLike(int postId) async
   Database db = Database();
   var conn = await db.getSettings();
   int currentLikes = await getLikes(postId);
-  int newLikes = currentLikes++;
+  int newLikes = currentLikes + 1;
   await conn.query("UPDATE `fitlife`.`posts` SET `likes` = '$newLikes' WHERE (`id` = '$postId');");
   await conn.close();
 }
@@ -82,12 +82,12 @@ Future<List<Post>> getUsersPosts(String handle) async
   var conn = await db.getSettings();
   List<Post> usersPosts= [];
   var id = await conn.query("SELECT * from fitlife.posts");
-  var result = await conn.query('SELECT handle, image, caption, likes, comments FROM fitlife.posts;');
+  var result = await conn.query('SELECT handle, imageURL, caption, likes, comments FROM fitlife.posts;');
   for(var res in result)
   {
     if(handle.compareTo(res['handle'])==0)
     {
-      Post post = Post(id: await getPostID(handle, res['image']), userHandle: handle, imageurl: res['image'], caption: res['caption'], likes: res['likes'], comments: res['comments']);
+      Post post = Post(id: await getPostID(handle, res['imageURL']), userHandle: handle, imageurl: res['imageURL'], caption: res['caption'], likes: res['likes'], comments: res['comments']);
       usersPosts.add(post);
     }
   }
@@ -102,16 +102,17 @@ Future<List<Post>> populateFeed(User user) async
   var conn = await db.getSettings();
   List<Post> allPosts= [];
   var id = await conn.query("SELECT * from fitlife.posts");
-  var result = await conn.query('SELECT handle, image, caption, likes, comments FROM fitlife.posts;');
+  var result = await conn.query('SELECT handle, imageURL, caption, likes, comments FROM fitlife.posts;');
   String userFollowing = await getFollowing(user.email);
   List<String> userFollowingList = userFollowing.split(",");
   for(var res in result)
   {
     if(user.handle.compareTo(res['handle'])==0 || userFollowingList.contains(res['handle']))
     {
-        Post post = Post(id: await getPostID(res['handle'], res['image']),
-            userHandle: res['handle'],
-            imageurl: res['image'],
+        Post post = Post(id: await getPostID(res['handle'], res['imageURL']),
+      // Post post = Post(id: -1,
+          userHandle: res['handle'],
+            imageurl: res['imageURL'],
             caption: res['caption'],
             likes: res['likes'],
             comments: res['comments']);
@@ -185,10 +186,10 @@ Future<int> getPostID(String handle, String image) async
   Database db = Database();
   var conn = await db.getSettings();
   var id = await conn.query("SELECT * from fitlife.posts");
-  var result = await conn.query('SELECT id, handle, image FROM fitlife.posts;');
+  var result = await conn.query('SELECT id, handle, imageURL FROM fitlife.posts;');
   for(var res in result)
   {
-    if(handle.compareTo(res['handle'])==0 && image.compareTo(res['image'])==0)
+    if(handle.compareTo(res['handle'])==0 && image.compareTo(res['imageURL'])==0)
     {
       return res['id'];
     }

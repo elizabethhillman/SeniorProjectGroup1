@@ -9,6 +9,7 @@ import 'package:fitlife/controller/searchTrainers.dart';
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/Post.dart';
 
+import '../model/post_database.dart';
 import 'createPost.dart';
 
 
@@ -20,6 +21,9 @@ class SocialMedia extends StatefulWidget {
 }
 
 class _SocialMediaState extends State<SocialMedia> {
+  Future<List<Post>> getUserPosts() async {
+    return await getUsersPosts(currentUser.handle);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -240,14 +244,65 @@ class _SocialMediaState extends State<SocialMedia> {
               ),
             ],
           ),
-          Expanded(
-            child: ListView(
-              children: const [
-                // Add scrollable posts here
+          Expanded(child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                FutureBuilder<List<Post>>(
+                  future: getUserPosts(),
+                  builder:
+                      (BuildContext context, AsyncSnapshot<List<Post>> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else {
+                        List<Post> feedPosts = snapshot.data!;
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: feedPosts.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final Post post = feedPosts[index];
+                            return ListTile(
+                              title: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Text('@${post.userHandle}', style: const TextStyle(fontWeight: FontWeight.bold),),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width,
+                                    child: Image.network(
+                                      post.imageurl,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Text(post.caption),
+                                ],
+                              ),
+                              subtitle: Row(
+                                children: <Widget>[
+                                  const Icon(Icons.favorite, color: Colors.red,),
+                                  Text('${post.likes}'),
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(Icons.comment),
+                                  ),
+                                  Text(post.comments),
+                                ],
+                              ),
+
+                            );
+
+                          },
+                        );
+                      }
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  },
+                ),
               ],
             ),
-          ),
-        ],
+          )
+          )],
       ),
     );
   }
