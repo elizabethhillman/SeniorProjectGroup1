@@ -134,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: const Icon(Icons.favorite,
                             color: homePageIconColor,size: 40),
                         label: const Text("Favorite Workouts",
-                            style: TextStyle(color: Colors.black,fontSize: 13.5)),
+                            style: TextStyle(color: Colors.black,fontSize: 13)),
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             elevation: 0),

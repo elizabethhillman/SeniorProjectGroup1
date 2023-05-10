@@ -9,6 +9,8 @@ import 'package:fitlife/controller/searchTrainers.dart';
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/Post.dart';
 
+import 'createPost.dart';
+
 
 class SocialMedia extends StatefulWidget {
   const SocialMedia({Key? key}) : super(key: key);
@@ -154,7 +156,7 @@ class _SocialMediaState extends State<SocialMedia> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const createPost()),
+                    MaterialPageRoute(builder: (context) => const CreatePost()),
                   );
                 },
                 style: ButtonStyle(

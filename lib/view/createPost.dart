@@ -1,5 +1,10 @@
+import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
+import 'account.dart';
+import 'calorie.dart';
+import 'homePage.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -46,9 +51,52 @@ class _CreatePostState extends State<CreatePost> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Create Post'),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.home,
+            color: Colors.black,
+          ),
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const HomePage()));
+          },
+        ),
+        title: const Text(
+          "Create Post",
+          style: TextStyle(fontSize: 23, color: Colors.black),
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.fitness_center),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const MyWorkouts()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.restaurant),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Calorie()));
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            color: Colors.black,
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => const Accounts()));
+            },
+          ),
+        ],
       ),
-      body: Padding(
+      body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+       Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
@@ -73,6 +121,6 @@ class _CreatePostState extends State<CreatePost> {
           ],
         ),
       ),
-    );
+    ]));
   }
 }
