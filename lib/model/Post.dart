@@ -4,7 +4,7 @@ class Post {
 
   Post({
     required this.id,
-    required this.userId,
+    required this.userHandle,
     required this.imageurl,
     required this.caption,
     required this.likes,
@@ -12,7 +12,7 @@ class Post {
   });
 
   int id;
-  int userId;
+  String userHandle;
   String imageurl;
   String caption;
   int likes;
@@ -22,13 +22,13 @@ class Post {
   // dk if this is needed
   //Post({this.id, this.userId, this.imageurl, this.caption});
 
-  Post currentPost = Post(id: -1, userId: -1, imageurl: "", caption: "", likes: 0, comments: "");
+  Post currentPost = Post(id: -1, userHandle: "", imageurl: "", caption: "", likes: 0, comments: "");
   //void setCurrentUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer)
 
   ///dont set id, let SQL do that
-  void setCurrentPost(int userID, String imageURL, String caption)
+  void setCurrentPost(String handle, String imageURL, String caption)
   {
-  currentPost.userId = userID;
+  currentPost.userHandle = handle;
   // the Ink.image part it autofilled so I am keeping here until I understand what to do.
  // currentPost.imageurl = Ink.image(image: image);
   currentPost.caption = caption;
