@@ -149,13 +149,15 @@ class _SearchFriendsState extends State<SearchFriends> {
                     (
                     onTap: () async {
                       List<String> info = await searchingByHandle(res);
-                      setSearchedUser("", info[0], info[4], "", info[3], info[1], info[2], "");
+                      setSearchedUser("", info[0], info[4], "", info[3], info[1], info[2], info[5], info[6]);
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => const SearchedFriend()));
                     },
                     child: ListTile
                       (
-                      title: Text("@$res"),
+                      title: Row(
+                          children:[Text("@$res"),]
+                          ),
                     ),
                   )
                 );

@@ -152,7 +152,8 @@ class _SearchTrainersState extends State<SearchTrainers> {
                               info[3],
                               info[1],
                               info[2],
-                              "");
+                              info[5],
+                              info[6]);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (
                                   context) => const SearchedFriend()));

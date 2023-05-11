@@ -15,13 +15,13 @@ class Database {
   }
 }
 
-void addUser(var email, var password, var name, var handle, var trainer) async {
+void addUser(var email, var password, var name, var handle, var trainer, var profilePic) async {
   Database db = Database();
   var conn = await db.getSettings();
-  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`, `trainer`) VALUES ('$name', '$handle', '$email', '$password', '', '','', '$trainer');");
+  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`, `trainer`, `profilePic` ) VALUES ('$name', '$handle', '$email', '$password', '', '','', '$trainer', '$profilePic');");
   //idk why this works but needs both select statements
-  var id = await conn.query("SELECT MAX(id) from fitlife.user;");
-  var result = await conn.query('SELECT id FROM fitlife.user;');
+  var id = await conn.query("SELECT * from fitlife.user;");
+  var result = await conn.query('SELECT MAX(id) FROM fitlife.user;');
   for(var res in result)
   {
     currentUser.id = res['MAX(id)'];
@@ -43,6 +43,15 @@ void updateUser(int id, var email, var handle, var password, var name, var bio, 
   Database db = Database();
   var conn = await db.getSettings();
   await conn.query("UPDATE `fitlife`.`user` SET `name` = '$name', `handle` = '$handle',  `password` = '$password', `bio` = '$bio', `trainer` = '$trainer' WHERE (`id` = '$id');");
+  await conn.close();
+}
+
+void updateProfilePic(int id, var profilePic) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  print(profilePic);
+  await conn.query("UPDATE `fitlife`.`user` SET `profilePic` = '$profilePic' WHERE (`id` = '$id');");
   await conn.close();
 }
 
@@ -84,12 +93,31 @@ Future<String> getName(String email, var password) async
   return "";
 }
 
+Future<String> getProfilePic(String email) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT email, profilePic FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(email.compareTo(res['email'])==0)
+    {
+      return res['profilePic'];
+    }
+  }
+
+  await conn.close();
+
+  return " ";
+}
+
 Future<String> getTrainerStatus(String email) async
 {
   Database db = Database();
   var conn = await db.getSettings();
   var id = await conn.query("SELECT * from fitlife.user");
-  var result = await conn.query('SELECT trainer, email FROM fitlife.user;');
+  var result = await conn.query('SELECT trainer, email, handle FROM fitlife.user;');
   for(var res in result)
   {
     if(email.compareTo(res['email'])==0)
@@ -294,6 +322,8 @@ Future<List<String>> searchingByHandle(String handle) async
       data.add(res['following']);
       data.add(res['bio']);
       data.add(res['email']);
+      data.add(res['trainer']);
+      data.add(res['profilePic']);
     }
   }
 
@@ -311,7 +341,7 @@ void addFollower(User current, String searching) async
   if(!all.contains(searching)) {
     if (followers.isNotEmpty) {
       await conn.query(
-          "UPDATE `fitlife`.`user` SET `followers` = '$followers, $searching' WHERE (`handle` = '${current
+          "UPDATE `fitlife`.`user` SET `followers` = '$followers,$searching' WHERE (`handle` = '${current
               .handle}');");
     }
     else {
@@ -329,19 +359,28 @@ void addFollower(User current, String searching) async
 
 void removeFollower(User current, String searching) async
 {
-  String followers = await getFollowers(current.handle);
+  String follower = await getFollowers(current.email);
+  print(follower);
   Database db = Database();
   var conn = await db.getSettings();
-  List<String> all = followers.split(",");
-  for (int i = 0; i < all.length; i++) {
+  List<String> all = follower.split(",");
+  for(int i = 0; i < all.length; i++) {
     all[i] = all[i].replaceAll(" ", '');
   }
-  if (all.contains(searching)) {
-    if (all.contains(searching)) {
-      await conn.query("UPDATE `fitlife`.`user` SET `followers` = REPLACE('$followers', '$searching', '') WHERE (`handle` = '${current.handle}');");
+  if(all.contains(searching)) {
+    print(all);
+    if(all.length>1)
+    {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `followers` = REPLACE('$follower', ',$searching', '') WHERE (`handle` = '${current
+              .handle}');");
+      print("here");
     }
-    await conn.close();
-  }
+    else {
+      await conn.query(
+          "UPDATE `fitlife`.`user` SET `followers` = REPLACE('$follower', '$searching', '') WHERE (`handle` = '${current
+              .handle}');");
+    }}
 }
 
 void addFollowing(User u, String newFriendHandle) async
@@ -353,7 +392,7 @@ void addFollowing(User u, String newFriendHandle) async
   if(!all.contains(newFriendHandle)) {
     if (following.isNotEmpty) {
       await conn.query(
-          "UPDATE `fitlife`.`user` SET `following` = '$following, $newFriendHandle' WHERE (`handle` = '${u
+          "UPDATE `fitlife`.`user` SET `following` = '$following,$newFriendHandle' WHERE (`handle` = '${u
               .handle}');");
     }
     else {
@@ -371,7 +410,8 @@ void addFollowing(User u, String newFriendHandle) async
 
 void removeFollowing(User current, String searching) async
 {
-  String following = await getFollowing(current.handle);
+  String following = await getFollowing(current.email);
+  print("following: $following");
   Database db = Database();
   var conn = await db.getSettings();
   List<String> all = following.split(",");
@@ -379,16 +419,20 @@ void removeFollowing(User current, String searching) async
     all[i] = all[i].replaceAll(" ", '');
   }
   if(all.contains(searching)) {
+    print("see it");
     if(all.length>1)
     {
+      print(">1");
       await conn.query(
-          "UPDATE `fitlife`.`user` SET `following` = REPLACE('$following', ', $searching', '') WHERE (`id` = '${current
-              .id}');");
+          "UPDATE `fitlife`.`user` SET `following` = REPLACE('$following', ',$searching', '') WHERE (`handle` = '${current
+              .handle}');");
     }
     else {
+      print("<1");
+      print(searching);
       await conn.query(
-          "UPDATE `fitlife`.`user` SET `following` = REPLACE('$following', '$searching', '') WHERE (`id` = '${current
-              .id}');");
+          "UPDATE `fitlife`.`user` SET `following` = REPLACE('$following', '$searching', '') WHERE (`handle` = '${current
+              .handle}');");
     }}
   await conn.close();
 }

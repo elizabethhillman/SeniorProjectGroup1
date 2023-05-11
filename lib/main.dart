@@ -108,7 +108,7 @@ class _MyAppState extends State<MyApp> {
             onPressed: () async {//bypass login with database
               if(await logIn(emailController.text, passwordController.text) == true)
               {
-                setCurrentUser(await getName(emailController.text, passwordController.text), await getHandle(emailController.text, passwordController.text), emailController.text, passwordController.text, await getBio(emailController.text),await getFollowers(emailController.text) ,await getFollowing(emailController.text), await getTrainerStatus(emailController.text));
+                setCurrentUser(await getName(emailController.text, passwordController.text), await getHandle(emailController.text, passwordController.text), emailController.text, passwordController.text, await getBio(emailController.text),await getFollowers(emailController.text) ,await getFollowing(emailController.text), await getTrainerStatus(emailController.text), await getProfilePic(emailController.text));
                 setId(await getID(emailController.text, passwordController.text));
                 Navigator.push(
                     context,

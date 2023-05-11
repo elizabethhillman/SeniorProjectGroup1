@@ -11,7 +11,8 @@ class User {
     required this.bio,
     required this.following,
     required this.followers,
-    required this.trainer
+    required this.trainer,
+    required this.profilePic
   });
 
   String name;
@@ -23,12 +24,13 @@ class User {
   String followers;
   String following;
   String trainer;
+  String profilePic;
 }
 
-User currentUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1", trainer: "");
-User searchedUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1", trainer: "");
+User currentUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1", trainer: "", profilePic: "");
+User searchedUser = User(id: -1, name: "", handle: "", email: "", password: "", bio: "", followers: "-1", following: "-1", trainer: "", profilePic: "");
 List<User> allUsers = <User>[];
-void setCurrentUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer)
+void setCurrentUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer, String profilePic)
 {
   currentUser.email = email;
   currentUser.name = name;
@@ -38,6 +40,7 @@ void setCurrentUser(String name, String handle, String email, String password, S
   currentUser.following = following;
   currentUser.bio = bio;
   currentUser.trainer = trainer;
+  currentUser.profilePic = profilePic;
 }
 
 List<String> currentUserFollowers()
@@ -71,7 +74,7 @@ User getCurrentUser()
   return currentUser;
 }
 
-void setSearchedUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer)
+void setSearchedUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer, String profilePic)
 {
   searchedUser.email = email;
   searchedUser.name = name;
@@ -81,6 +84,7 @@ void setSearchedUser(String name, String handle, String email, String password, 
   searchedUser.following = following;
   searchedUser.bio = bio;
   searchedUser.trainer = trainer;
+  searchedUser.profilePic = profilePic;
 }
 
 List<String> searchedUserFollowers()

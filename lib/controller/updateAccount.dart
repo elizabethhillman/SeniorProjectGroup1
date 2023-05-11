@@ -1,4 +1,5 @@
 import 'package:file_picker/file_picker.dart';
+import 'package:fitlife/model/post_database.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:fitlife/view/calorie.dart';
@@ -10,6 +11,8 @@ import 'package:fitlife/view/account.dart';
 import '../model/user_database.dart';
 import '../model/User.dart';
 import 'dart:io';
+import 'package:image_picker/image_picker.dart';
+
 
 
 class UpdateAcct extends StatefulWidget {
@@ -21,6 +24,19 @@ class UpdateAcct extends StatefulWidget {
 
 class _UpdateAcctState extends State<UpdateAcct> {
   String trainerStat = currentUser.trainer;
+
+  Future getImage() async {
+    final ImagePicker picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      File image = File(pickedFile.path);
+      updateProfilePic(currentUser.id, pickedFile.path);
+      setState(() {
+        currentUser.profilePic = pickedFile.path;
+      });
+    }
+  }
 
   bool getTrainerStat()
   {
@@ -40,11 +56,11 @@ class _UpdateAcctState extends State<UpdateAcct> {
     isTrainer = getTrainerStat();
   }
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final nameController = TextEditingController();
-  final handleController = TextEditingController();
-  final bioController = TextEditingController();
+  final emailController = TextEditingController(text: currentUser.email);
+  final passwordController = TextEditingController(text: currentUser.password);
+  final nameController = TextEditingController(text: currentUser.name);
+  final handleController = TextEditingController(text: currentUser.handle);
+  final bioController = TextEditingController(text: currentUser.bio);
 
 
   @override
@@ -96,19 +112,17 @@ class _UpdateAcctState extends State<UpdateAcct> {
               ),
             ]),
         body: Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                  Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children:const [
+                      children: [
                         CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd9JoBogU1DLQ-UIOxa8lv2Jn9_lBArw9eSffqemgHgQ&usqp=CAU&ec=48665698',
-                          ),
-                        ),
+                          radius: 75,
+                          backgroundImage: currentUser.profilePic.isNotEmpty ? AssetImage(currentUser.profilePic) : const AssetImage('lib/view/image/blankAvatar.png'),
+                        )
                       ],
                     ),
                 Row(
@@ -116,94 +130,102 @@ class _UpdateAcctState extends State<UpdateAcct> {
                       children: [
                         TextButton(
                             onPressed: () {
+                              getImage();
                             }, child: const Text("Change Image"))
                       ],
                     ),
-                const Text(
-                  '  Name',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: TextField(
-                    controller: nameController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: currentUser.name,
+                // const SizedBox(height: 25,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.account_box_outlined, size: 50,),
+                    const SizedBox(width: 10,),
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .80,
+                      child: TextField(
+                        controller: nameController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const Text(
-                  '  Social Username',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: TextField(
-                    controller: handleController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: currentUser.handle,
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Text("@", style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
+                    const SizedBox(width: 10,),
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .80,
+                      child: TextField(
+                        controller: handleController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const Text(
-                  '  Email',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: TextField(
-                    readOnly: true,
-                    controller: emailController,
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        hintText: currentUser.email),
-                  ),
-                ),
-                const Text(
-                  '  Password',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: TextField(
-                    controller: passwordController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: currentUser.password,
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.mail_outline, size: 50,),
+                    const SizedBox(width: 10,),
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .80,
+                      child: TextField(
+                        controller: emailController,
+                        enabled: false,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                const Text(
-                  '  Bio',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Colors.black,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(2),
-                  child: TextField(
-                    controller: bioController,
-                    decoration: InputDecoration(
-                      border: const OutlineInputBorder(),
-                      labelText: currentUser.bio,
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.lock_outline, size: 50,),
+                    const SizedBox(width: 10,),
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .80,
+                      child: TextField(
+                        controller: passwordController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
+                const SizedBox(height: 20,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.sticky_note_2_outlined,size: 50,),
+                    const SizedBox(width: 10,),
+                    SizedBox(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * .80,
+                      child: TextField(
+                        controller: bioController,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -212,10 +234,16 @@ class _UpdateAcctState extends State<UpdateAcct> {
                       onChanged: (bool? value) {
                         setState(() {
                           isTrainer = value ?? false;
+                          if(isTrainer) {
+                            updateUserTrainer("true");
+                          } else {
+                            updateUserTrainer("false");
+                          }
                         });
                       },
                     ),
                     const Text('Are you a Trainer?'),
+                    const Icon(Icons.star, size: 20,),
                   ],
                 ),
                 // const Spacer(),
@@ -227,7 +255,6 @@ class _UpdateAcctState extends State<UpdateAcct> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            //add something where user can edit info and either save or cancel
                             onPressed: () async {
                               if (handleController.text.compareTo("") == 0) {
                                 handleController.text = currentUser.handle;
@@ -257,7 +284,7 @@ class _UpdateAcctState extends State<UpdateAcct> {
                                   bioController.text,
                                   currentUser.followers,
                                   currentUser.following,
-                                  "$isTrainer");
+                                  "$isTrainer", currentUser.profilePic);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
