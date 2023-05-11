@@ -1,10 +1,13 @@
+import 'package:fitlife/model/User.dart';
+import 'package:fitlife/model/post_database.dart';
+import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'account.dart';
-import 'calorie.dart';
-import 'homePage.dart';
+import '../view/account.dart';
+import '../view/calorie.dart';
+import '../view/homePage.dart';
 
 class CreatePost extends StatefulWidget {
   const CreatePost({Key? key}) : super(key: key);
@@ -106,7 +109,10 @@ class _CreatePostState extends State<CreatePost> {
                     ),
                     const SizedBox(height: 16.0),
                     ElevatedButton(
-                      onPressed: createPost,
+                      onPressed: (){
+                        addPost(currentUser.handle, linkController.text, captionController.text);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const SocialMedia()));
+                        },
                       child: const Text('Post'),
                     ),
                   ],

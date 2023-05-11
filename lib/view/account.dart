@@ -43,7 +43,7 @@ class _AccountsState extends State<Accounts> {
                     MaterialPageRoute(builder: (context) => const HomePage()));
               },
             ),
-            title: const Text(
+            title:  const Text(
               "Account",
               style: TextStyle(fontSize: 30, color: Colors.black),
             ),
@@ -78,125 +78,67 @@ class _AccountsState extends State<Accounts> {
               ),
             ]),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(12.0),
           child:
           Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: const [
                 CircleAvatar(
-                  radius: 50,
+                  radius: 70,
                   backgroundImage: NetworkImage(
                     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd9JoBogU1DLQ-UIOxa8lv2Jn9_lBArw9eSffqemgHgQ&usqp=CAU&ec=48665698',
                   ),
                 ),
               ],
             ),
-            const Text(
-              'Name',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(currentUser.name),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Social Username',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(currentUser.handle),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Email',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(currentUser.email),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Password',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text("*********"),
-              ),
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Bio',
-              style: TextStyle(
-                fontSize: 18,
-                color: Colors.grey,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(currentUser.bio),
-              ),
-            ),
+            const SizedBox(height: 25,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Checkbox(
-                  value: getTrainerStat(),
-                  onChanged: null,
-                ),
-                const Text('Trainer Status'),
+                const Icon(Icons.account_box_outlined, size: 50,),
+                const SizedBox(width: 10,),
+                Text(currentUser.name, style: TextStyle(fontSize: 20),),
               ],
             ),
-            // const Spacer(),
+            const SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+              const Text("@", style: TextStyle(fontSize: 50,fontWeight: FontWeight.bold),),
+              const SizedBox(width: 10,),
+              Text(currentUser.handle, style: const TextStyle(fontSize: 20),),
+                getTrainerStat() ? const Icon(Icons.star) : const SizedBox.shrink(),
+              ],
+            ),
+            const SizedBox(height: 20,),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(Icons.email_outlined, size: 50,),
+                const SizedBox(width: 10,),
+                Text(currentUser.email, style: const TextStyle(fontSize: 20),),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: const[
+                Icon(Icons.lock_outline, size: 50,),
+                SizedBox(width: 10,),
+                Text("*********", style: const TextStyle(fontSize: 20),),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Icon(Icons.sticky_note_2_outlined, size: 50,),
+                const SizedBox(width: 10,),
+                Text(currentUser.bio, style: const TextStyle(fontSize: 20),),
+              ],
+            ),
+            const SizedBox(height: 30),
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

@@ -1,5 +1,8 @@
+
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/post_database.dart';
+import 'package:fitlife/model/user_database.dart';
+import 'package:fitlife/view/comment.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
@@ -20,15 +23,11 @@ class _FeedState extends State<Feed> {
   Future<List<Post>> generateFeed() async {
     return await populateFeed(currentUser);
   }
+
   @override
   void initState()  {
     super.initState();
   }
-
-  // List<String> posts = [
-  //   "Post 1",
-  //   // Figure out how to take posts once created and name them + attach each name to a post?
-  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -107,21 +106,25 @@ class _FeedState extends State<Feed> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: feedPosts.length,
                         itemBuilder: (BuildContext context, int index) {
-                          bool hasLiked = false;
-                          final Post post = feedPosts[index];
+                          // setCurrentPost(feedPosts[index].id,feedPosts[index].userHandle, feedPosts[index].imageurl, feedPosts[index].caption, feedPosts[index].comments, feedPosts[index].likes, feedPosts[index].whoLiked);
                           return ListTile(
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text('@${post.userHandle}', style: const TextStyle(fontWeight: FontWeight.bold),),
+                                Row(
+                                  children: [
+                                    Text('@${feedPosts[index].userHandle}', style: const TextStyle(fontWeight: FontWeight.bold),),
+                                    feedPosts[index].userTrainer=="true" ? Icon(Icons.star,size: 20,color: Colors.amber,) : SizedBox.shrink(),
+                                  ],
+                                ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width,
                                   child: Image.network(
-                                    post.imageurl,
+                                    feedPosts[index].imageurl,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-                                Text(post.caption),
+                                Text(feedPosts[index].caption),
                               ],
                             ),
                             subtitle: Row(
@@ -129,32 +132,42 @@ class _FeedState extends State<Feed> {
                                 IconButton(
                                   icon: const Icon(Icons.favorite),
                                   onPressed: () async {
-                                    if(hasLiked == false)
+                                    bool found = false;
+                                    String lik = await getWhoLiked(feedPosts[index].id);
+                                    List<String> all = lik.split(",");
+                                    for(var x in all)
                                     {
-                                      addLike(post.id);
-                                      hasLiked = true;
+                                      if(x.compareTo(currentUser.handle) == 0) {found = true;}
+                                    }
+
+                                    if(!found)
+                                    {
+                                      addLike(feedPosts[index].id);
+                                      addWhoLiked(feedPosts[index].id, currentUser.handle);
                                     }
                                     else
                                     {
-                                      removeLike(post.id);
-                                      hasLiked = false;
-                                      print("no");
+                                      removeLike(feedPosts[index].id);
+                                      removeWhoLiked(feedPosts[index].id, currentUser.handle);
                                     }
-                                    // setState(() {hasLiked = !hasLiked;});
-                                    post.likes = await getLikes(post.id);
+                                    feedPosts[index].likes = await getLikes(feedPosts[index].id);
+                                    // String vals = await getWhoLiked(feedPosts[index].id);
+                                    // List<String>
                                     setState(() {
-                                      post.likes;
+                                      setCurrentPost(feedPosts[index].id,feedPosts[index].userHandle, feedPosts[index].imageurl, feedPosts[index].caption, feedPosts[index].comments, feedPosts[index].likes, feedPosts[index].whoLiked, feedPosts[index].userTrainer);
                                     });
                                   },
-                                  color: hasLiked ? Colors.red : Colors.grey,
-                                  // color: hasLiked ? Colors.red : Colors.grey,
+                                  // color: feedPosts[index].hasBeenLiked ? Colors.red : Colors.grey,
                                 ),
-                                Text('${post.likes}'),
+                                Text('${feedPosts[index].likes}'),
                                 IconButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setSearchedPost(feedPosts[index].id, feedPosts[index].userHandle, feedPosts[index].imageurl, feedPosts[index].caption, feedPosts[index].comments, feedPosts[index].likes, feedPosts[index].whoLiked, feedPosts[index].userTrainer);
+                                    Navigator.push(
+                                      context, MaterialPageRoute(builder: (context) => const Comment()));},
                                   icon: const Icon(Icons.comment),
                                 ),
-                                Text(post.comments),
+                                Text('${feedPosts[index].comments.isEmpty ? 0 : feedPosts[index].comments.split(",").length}'),
                               ],
                             ),
 
