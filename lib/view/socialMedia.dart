@@ -95,11 +95,10 @@ class _SocialMediaState extends State<SocialMedia> {
                         currentUser.trainer=="true" ? const Icon(Icons.star) : const SizedBox.shrink(),
                       ]
                     ),
-                    const Icon(
-                      Icons.account_circle_outlined,
-                      size: 100,
-                      color: Colors.grey,
-                    ),
+                    CircleAvatar(
+                      radius: 75,
+                      backgroundImage: currentUser.profilePic.isNotEmpty ? AssetImage(currentUser.profilePic) : const AssetImage('lib/view/image/blankAvatar.png'),
+                    )
                   ],
                 ),
                 Column(children: [
@@ -283,8 +282,9 @@ class _SocialMediaState extends State<SocialMedia> {
                                   Text('@${post.userHandle}', style: const TextStyle(fontWeight: FontWeight.bold),),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
-                                    child: Image.network(
-                                      post.imageurl,
+                                    child: Image(
+                                      image:
+                                      AssetImage(feedPosts[index].imageurl),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

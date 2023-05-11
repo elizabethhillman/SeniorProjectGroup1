@@ -165,10 +165,10 @@ class _CreateAccountState extends State<CreateAccount> {
                 alertMessage(context, "Error", "Social Media Handle already exists");
               } else {
                 addUser(emailController.text, passwordController.text,
-                    nameController.text, handleController.text, "$isTrainer");
+                    nameController.text, handleController.text, "$isTrainer", "");
 
                 // User u =  User(id: 0, name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
-                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, "", "", "", "$isTrainer");
+                setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, "", "", "", "$isTrainer", "");
                 // allUsers.add(u);
 
                 // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);

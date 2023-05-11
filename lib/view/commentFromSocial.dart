@@ -54,12 +54,10 @@ class _CommentFromSocial extends State<CommentFromSocial> {
         children: <Widget>[
           // const Padding(padding: EdgeInsets.all(10)),
           SizedBox(
-            width: MediaQuery
-                .of(context)
-                .size
-                .width,
-            child: Image.network(
-              searchedPost.imageurl,
+            width: MediaQuery.of(context).size.width,
+            child: Image(
+              image:
+              AssetImage(searchedPost.imageurl),
               fit: BoxFit.cover,
             ),
           ),

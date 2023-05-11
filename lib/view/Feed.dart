@@ -1,4 +1,3 @@
-
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/post_database.dart';
 import 'package:fitlife/model/user_database.dart';
@@ -25,7 +24,7 @@ class _FeedState extends State<Feed> {
   }
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
   }
 
@@ -113,14 +112,25 @@ class _FeedState extends State<Feed> {
                               children: <Widget>[
                                 Row(
                                   children: [
-                                    Text('@${feedPosts[index].userHandle}', style: const TextStyle(fontWeight: FontWeight.bold),),
-                                    feedPosts[index].userTrainer=="true" ? Icon(Icons.star,size: 20,color: Colors.amber,) : SizedBox.shrink(),
+                                    Text(
+                                      '@${feedPosts[index].userHandle}',
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    feedPosts[index].userTrainer == "true"
+                                        ? Icon(
+                                            Icons.star,
+                                            size: 20,
+                                            color: Colors.amber,
+                                          )
+                                        : SizedBox.shrink(),
                                   ],
                                 ),
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width,
-                                  child: Image.network(
-                                    feedPosts[index].imageurl,
+                                  child: Image(
+                                    image:
+                                        AssetImage(feedPosts[index].imageurl),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -133,28 +143,39 @@ class _FeedState extends State<Feed> {
                                   icon: const Icon(Icons.favorite),
                                   onPressed: () async {
                                     bool found = false;
-                                    String lik = await getWhoLiked(feedPosts[index].id);
+                                    String lik =
+                                        await getWhoLiked(feedPosts[index].id);
                                     List<String> all = lik.split(",");
-                                    for(var x in all)
-                                    {
-                                      if(x.compareTo(currentUser.handle) == 0) {found = true;}
+                                    for (var x in all) {
+                                      if (x.compareTo(currentUser.handle) ==
+                                          0) {
+                                        found = true;
+                                      }
                                     }
 
-                                    if(!found)
-                                    {
+                                    if (!found) {
                                       addLike(feedPosts[index].id);
-                                      addWhoLiked(feedPosts[index].id, currentUser.handle);
-                                    }
-                                    else
-                                    {
+                                      addWhoLiked(feedPosts[index].id,
+                                          currentUser.handle);
+                                    } else {
                                       removeLike(feedPosts[index].id);
-                                      removeWhoLiked(feedPosts[index].id, currentUser.handle);
+                                      removeWhoLiked(feedPosts[index].id,
+                                          currentUser.handle);
                                     }
-                                    feedPosts[index].likes = await getLikes(feedPosts[index].id);
+                                    feedPosts[index].likes =
+                                        await getLikes(feedPosts[index].id);
                                     // String vals = await getWhoLiked(feedPosts[index].id);
                                     // List<String>
                                     setState(() {
-                                      setCurrentPost(feedPosts[index].id,feedPosts[index].userHandle, feedPosts[index].imageurl, feedPosts[index].caption, feedPosts[index].comments, feedPosts[index].likes, feedPosts[index].whoLiked, feedPosts[index].userTrainer);
+                                      setCurrentPost(
+                                          feedPosts[index].id,
+                                          feedPosts[index].userHandle,
+                                          feedPosts[index].imageurl,
+                                          feedPosts[index].caption,
+                                          feedPosts[index].comments,
+                                          feedPosts[index].likes,
+                                          feedPosts[index].whoLiked,
+                                          feedPosts[index].userTrainer);
                                     });
                                   },
                                   // color: feedPosts[index].hasBeenLiked ? Colors.red : Colors.grey,
@@ -162,17 +183,28 @@ class _FeedState extends State<Feed> {
                                 Text('${feedPosts[index].likes}'),
                                 IconButton(
                                   onPressed: () {
-                                    setSearchedPost(feedPosts[index].id, feedPosts[index].userHandle, feedPosts[index].imageurl, feedPosts[index].caption, feedPosts[index].comments, feedPosts[index].likes, feedPosts[index].whoLiked, feedPosts[index].userTrainer);
+                                    setSearchedPost(
+                                        feedPosts[index].id,
+                                        feedPosts[index].userHandle,
+                                        feedPosts[index].imageurl,
+                                        feedPosts[index].caption,
+                                        feedPosts[index].comments,
+                                        feedPosts[index].likes,
+                                        feedPosts[index].whoLiked,
+                                        feedPosts[index].userTrainer);
                                     Navigator.push(
-                                      context, MaterialPageRoute(builder: (context) => const Comment()));},
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const Comment()));
+                                  },
                                   icon: const Icon(Icons.comment),
                                 ),
-                                Text('${feedPosts[index].comments.isEmpty ? 0 : feedPosts[index].comments.split(",").length}'),
+                                Text(
+                                    '${feedPosts[index].comments.isEmpty ? 0 : feedPosts[index].comments.split(",").length}'),
                               ],
                             ),
-
                           );
-
                         },
                       );
                     }
@@ -184,9 +216,8 @@ class _FeedState extends State<Feed> {
             ],
           ),
         ));
-
-
-}}
+  }
+}
 
 // ListView.builder(
 //   itemCount: posts.length,

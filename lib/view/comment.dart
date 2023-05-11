@@ -54,8 +54,9 @@ class _Comment extends State<Comment> {
           // const Padding(padding: EdgeInsets.all(10)),
           SizedBox(
             width: MediaQuery.of(context).size.width,
-            child: Image.network(
-                searchedPost.imageurl,
+            child: Image(
+              image:
+              AssetImage(searchedPost.imageurl),
               fit: BoxFit.cover,
             ),
           ),

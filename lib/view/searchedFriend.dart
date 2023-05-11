@@ -108,11 +108,10 @@ class _SearchedFriend extends State<SearchedFriend> {
                     searchedUser.trainer=="true" ? const Icon(Icons.star) : const SizedBox.shrink(),
                   ],
                 ),
-                const Icon(
-                  Icons.account_circle_outlined,
-                  size: 100,
-                  color: Colors.grey,
-                ),
+                CircleAvatar(
+                  radius: 75,
+                  backgroundImage: searchedUser.profilePic.isNotEmpty ? AssetImage(searchedUser.profilePic) : const AssetImage('lib/view/image/blankAvatar.png'),
+                )
               ],
             ),
             Column(children: [
@@ -186,15 +185,13 @@ class _SearchedFriend extends State<SearchedFriend> {
                 onPressed: () async {
                   if (isFound()) {
                     removeFollowing(currentUser, searchedUser.handle);
-                    print(currentUser.handle);
-                    print(searchedUser.handle);
                     removeFollower(searchedUser, currentUser.handle);
                   } else {
                     addFollowing(currentUser, searchedUser.handle);
                     addFollower(searchedUser, currentUser.handle);
                   }
-                  setCurrentUser(currentUser.name, currentUser.handle, currentUser.email, currentUser.password, currentUser.bio, await getFollowers(currentUser.email), await getFollowing(currentUser.email), currentUser.trainer);
-                  setSearchedUser(searchedUser.name, searchedUser.handle, searchedUser.email, searchedUser.password, searchedUser.bio, await getFollowers(searchedUser.email), await getFollowing(searchedUser.email), searchedUser.trainer);
+                  setCurrentUser(currentUser.name, currentUser.handle, currentUser.email, currentUser.password, currentUser.bio, await getFollowers(currentUser.email), await getFollowing(currentUser.email), currentUser.trainer, currentUser.profilePic);
+                  setSearchedUser(searchedUser.name, searchedUser.handle, searchedUser.email, searchedUser.password, searchedUser.bio, await getFollowers(searchedUser.email), await getFollowing(searchedUser.email), searchedUser.trainer, searchedUser.profilePic);
                   setState(() {
                   });
 
@@ -264,8 +261,9 @@ class _SearchedFriend extends State<SearchedFriend> {
                                   Text('@${post.userHandle}', style: const TextStyle(fontWeight: FontWeight.bold),),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width,
-                                    child: Image.network(
-                                      post.imageurl,
+                                    child: Image(
+                                      image:
+                                      AssetImage(post.imageurl),
                                       fit: BoxFit.cover,
                                     ),
                                   ),

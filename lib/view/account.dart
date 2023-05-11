@@ -5,6 +5,7 @@ import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 
+
 import '../main.dart';
 import '../model/User.dart';
 import '../model/user_database.dart';
@@ -83,13 +84,11 @@ class _AccountsState extends State<Accounts> {
           Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
+              children: [
                 CircleAvatar(
-                  radius: 70,
-                  backgroundImage: NetworkImage(
-                    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd9JoBogU1DLQ-UIOxa8lv2Jn9_lBArw9eSffqemgHgQ&usqp=CAU&ec=48665698',
-                  ),
-                ),
+                  radius: 75,
+                  backgroundImage: currentUser.profilePic.isNotEmpty ? AssetImage(currentUser.profilePic) : const AssetImage('lib/view/image/blankAvatar.png'),
+                )
               ],
             ),
             const SizedBox(height: 25,),
@@ -162,7 +161,7 @@ class _AccountsState extends State<Accounts> {
                     children: [
                       TextButton(
                         onPressed: () {
-                          setCurrentUser("", "", "", "", "", "", "", "");
+                          setCurrentUser("", "", "", "", "", "", "", "", "");
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
@@ -177,7 +176,7 @@ class _AccountsState extends State<Accounts> {
                         onPressed: () {
                           String email = getCurrentUser().email;
                           deleteUser(email);
-                          setCurrentUser("", "", "", "", "", "", "", "");
+                          setCurrentUser("", "", "", "", "", "", "", "", "");
                           Navigator.push(
                               context,
                               MaterialPageRoute(

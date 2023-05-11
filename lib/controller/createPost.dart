@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/post_database.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
 
+import '../model/user_database.dart';
 import '../view/account.dart';
 import '../view/calorie.dart';
 import '../view/homePage.dart';
@@ -20,28 +24,28 @@ class _CreatePostState extends State<CreatePost> {
   final TextEditingController captionController = TextEditingController();
   final TextEditingController linkController = TextEditingController();
 
+
+
+  String imagePath ="";
+
+  Future uploadImage() async {
+    final ImagePicker picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      imagePath = pickedFile.path;
+    }
+  }
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   void dispose() {
     captionController.dispose();
     linkController.dispose();
     super.dispose();
-  }
-
-  void createPost() async {
-    String caption = captionController.text;
-    String link = linkController.text;
-
-    Uri url = Uri.parse('ADD URL HERE');
-    final response = await http.post(url, body: {
-      'caption': caption,
-      'link': link,
-    });
-
-    if (response.statusCode == 200) {
-      Navigator.pop(context);
-    } else {
-      print('Error creating post: ${response.body}');
-    }
   }
 
   @override
@@ -100,17 +104,32 @@ class _CreatePostState extends State<CreatePost> {
                       ),
                     ),
                     const SizedBox(height: 16.0),
-                    TextField(
-                      controller: linkController,
-                      decoration: const InputDecoration(
-                        labelText
-                            : 'Link',
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                    TextButton(
+                      onPressed: () {
+                        setState(() {uploadImage();});
+
+
+                      },
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                            side: BorderSide(color: Colors.black),
+                          ),
+                        ),
                       ),
+                      child: const Text('Upload an image'),
                     ),
+    imagePath.isNotEmpty ? const Icon(Icons.check_circle,color: Colors.green,) : const Icon(Icons.error, color: Colors.red,),
+    ]),
                     const SizedBox(height: 16.0),
                     ElevatedButton(
                       onPressed: (){
-                        addPost(currentUser.handle, linkController.text, captionController.text);
+                        addPost(currentUser.handle, imagePath, captionController.text, currentUser.trainer);
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const SocialMedia()));
                         },
                       child: const Text('Post'),

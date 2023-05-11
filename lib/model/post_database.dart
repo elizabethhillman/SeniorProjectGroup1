@@ -2,16 +2,17 @@ import 'package:fitlife/model/user_database.dart';
 import 'Post.dart';
 import 'User.dart';
 
-void addPost(String handle, String image, String caption) async {
+void addPost(String handle, String image, String caption, String userTrainer) async {
     Database db = Database();
     var conn = await db.getSettings();
-    await conn.query("INSERT INTO `fitlife`.`posts` (`handle`, `imageURL`, `caption`, `likes`, `whoLiked`, `comments`) VALUES ('$handle', '$image', '$caption', 0, '', '');");
-    var id = await conn.query("SELECT MAX(id) from fitlife.user;");
-    var result = await conn.query('SELECT id FROM fitlife.user;');
+    var id = await conn.query("SELECT * from fitlife.posts;");
+    var result = await conn.query('SELECT MAX(id) FROM fitlife.posts;');
     for(var res in result)
     {
       currentPost.id = res['MAX(id)'];
     }
+    await conn.query("INSERT INTO `fitlife`.`posts` (`handle`, `imageURL`, `caption`, `likes`, `whoLiked`, `comments`, `userTrainer`) VALUES ('$handle', '$image', '$caption', 0, '', '', '$userTrainer');");
+
     await conn.close();
 }
 

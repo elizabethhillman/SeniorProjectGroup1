@@ -15,13 +15,13 @@ class Database {
   }
 }
 
-void addUser(var email, var password, var name, var handle, var trainer) async {
+void addUser(var email, var password, var name, var handle, var trainer, var profilePic) async {
   Database db = Database();
   var conn = await db.getSettings();
-  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`, `trainer`) VALUES ('$name', '$handle', '$email', '$password', '', '','', '$trainer');");
+  await conn.query("INSERT INTO `fitlife`.`user` (`name`, `handle`, `email`, `password`, `bio`, `followers`, `following`, `trainer`, `profilePic` ) VALUES ('$name', '$handle', '$email', '$password', '', '','', '$trainer', '$profilePic');");
   //idk why this works but needs both select statements
-  var id = await conn.query("SELECT MAX(id) from fitlife.user;");
-  var result = await conn.query('SELECT id FROM fitlife.user;');
+  var id = await conn.query("SELECT * from fitlife.user;");
+  var result = await conn.query('SELECT MAX(id) FROM fitlife.user;');
   for(var res in result)
   {
     currentUser.id = res['MAX(id)'];
@@ -50,6 +50,7 @@ void updateProfilePic(int id, var profilePic) async
 {
   Database db = Database();
   var conn = await db.getSettings();
+  print(profilePic);
   await conn.query("UPDATE `fitlife`.`user` SET `profilePic` = '$profilePic' WHERE (`id` = '$id');");
   await conn.close();
 }
@@ -90,6 +91,25 @@ Future<String> getName(String email, var password) async
   await conn.close();
 
   return "";
+}
+
+Future<String> getProfilePic(String email) async
+{
+  Database db = Database();
+  var conn = await db.getSettings();
+  var id = await conn.query("SELECT * from fitlife.user");
+  var result = await conn.query('SELECT email, profilePic FROM fitlife.user;');
+  for(var res in result)
+  {
+    if(email.compareTo(res['email'])==0)
+    {
+      return res['profilePic'];
+    }
+  }
+
+  await conn.close();
+
+  return " ";
 }
 
 Future<String> getTrainerStatus(String email) async
@@ -303,6 +323,7 @@ Future<List<String>> searchingByHandle(String handle) async
       data.add(res['bio']);
       data.add(res['email']);
       data.add(res['trainer']);
+      data.add(res['profilePic']);
     }
   }
 

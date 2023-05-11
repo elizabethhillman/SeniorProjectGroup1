@@ -27,12 +27,14 @@ class _UpdateAcctState extends State<UpdateAcct> {
 
   Future getImage() async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
-      // Save the image to a variable or use it directly
       File image = File(pickedFile.path);
-      updateProfilePic(currentUser.id, image);
+      updateProfilePic(currentUser.id, pickedFile.path);
+      setState(() {
+        currentUser.profilePic = pickedFile.path;
+      });
     }
   }
 
@@ -110,19 +112,17 @@ class _UpdateAcctState extends State<UpdateAcct> {
               ),
             ]),
         body: Padding(
-          padding: const EdgeInsets.all(5.0),
+          padding: const EdgeInsets.all(8.0),
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                  Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children:const [
+                      children: [
                         CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                            'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd9JoBogU1DLQ-UIOxa8lv2Jn9_lBArw9eSffqemgHgQ&usqp=CAU&ec=48665698',
-                          ),
-                        ),
+                          radius: 75,
+                          backgroundImage: currentUser.profilePic.isNotEmpty ? AssetImage(currentUser.profilePic) : const AssetImage('lib/view/image/blankAvatar.png'),
+                        )
                       ],
                     ),
                 Row(
@@ -134,7 +134,7 @@ class _UpdateAcctState extends State<UpdateAcct> {
                             }, child: const Text("Change Image"))
                       ],
                     ),
-                const SizedBox(height: 25,),
+                // const SizedBox(height: 25,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -284,7 +284,7 @@ class _UpdateAcctState extends State<UpdateAcct> {
                                   bioController.text,
                                   currentUser.followers,
                                   currentUser.following,
-                                  "$isTrainer");
+                                  "$isTrainer", currentUser.profilePic);
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
