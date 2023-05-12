@@ -12,16 +12,18 @@ class CalorieTile extends StatelessWidget {
   final void Function(BuildContext)? editTap;
   final void Function(BuildContext)? deleteTap;
 
-  const CalorieTile({
-    Key? key,
-    required this.tileFoodName,
-    required this.tileCalorie,
-    required this.tileQuantity,
-    this.tileCarbs,  this.tileProtein, this.tileFat,
-
-    this.editTap,
-    this.deleteTap, this.containerColor
-  }) : super(key: key);
+  const CalorieTile(
+      {Key? key,
+      required this.tileFoodName,
+      required this.tileCalorie,
+      required this.tileQuantity,
+      this.tileCarbs,
+      this.tileProtein,
+      this.tileFat,
+      this.editTap,
+      this.deleteTap,
+      this.containerColor})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class CalorieTile extends StatelessWidget {
             color: containerColor ?? Colors.grey[300],
             borderRadius: BorderRadius.circular(12),
           ),
-          child:  Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
@@ -107,7 +109,6 @@ class CalorieTile extends StatelessWidget {
                     '$tileCalorie calories',
                     style: TextStyle(
                       color: Colors.grey[600],
-                      //  fontWeight: FontWeight.bold,
                       fontSize: 12.5,
                     ),
                   ),
@@ -115,7 +116,6 @@ class CalorieTile extends StatelessWidget {
                     '$tileCarbs g carb',
                     style: TextStyle(
                       color: Colors.red[800],
-                      //  fontWeight: FontWeight.bold,
                       fontSize: 11,
                     ),
                   ),
@@ -123,7 +123,6 @@ class CalorieTile extends StatelessWidget {
                     '$tileProtein g protein',
                     style: TextStyle(
                       color: Colors.brown[400],
-                      //  fontWeight: FontWeight.bold,
                       fontSize: 11,
                     ),
                   ),
@@ -131,19 +130,14 @@ class CalorieTile extends StatelessWidget {
                     '$tileFat g fat',
                     style: TextStyle(
                       color: Colors.lime[700],
-                      //  fontWeight: FontWeight.bold,
                       fontSize: 11,
                     ),
                   ),
-                  const SizedBox(width:35),
+                  const SizedBox(width: 35),
                 ],
               ),
-
             ],
           ),
-
-          // SizedBox(width: 30),
-
         ),
       ),
     );

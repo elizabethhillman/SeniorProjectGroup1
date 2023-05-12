@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 import '../model/Food.dart';
 import '../model/User.dart';
 import '../model/user_database.dart';
@@ -16,7 +18,6 @@ class Results extends StatefulWidget {
 class _ResultsState extends State<Results> {
   final List<Food> _foodList = []; //list of the foods that were selected
   List<Food> foodCalories = []; //food from the database
-  //TODO add custom food function
 
   @override
   void initState() {
@@ -25,63 +26,66 @@ class _ResultsState extends State<Results> {
 
   //WARNING: Food search limited to 10 api calls/min
   Future<void> _getFood(String userInput) async {
-    // Clear existing data
     setState(() {
       foodCalories.clear();
     });
 
-    // Make API request
     try {
-      // Construct API URL
-      const appId = '8c437815'; // Replace with your own API ID
-      const appKey = '6acd4948d9f7cfa3cefeaed56f3f3b10'; // Replace with your own API Key
+      const appId = '8c437815';
+      const appKey = '6acd4948d9f7cfa3cefeaed56f3f3b10';
       final ingr = userInput;
-      final apiUrl = 'https://api.edamam.com/api/food-database/v2/parser?app_id=$appId&app_key=$appKey&ingr=$ingr';
+      final apiUrl =
+          'https://api.edamam.com/api/food-database/v2/parser?app_id=$appId&app_key=$appKey&ingr=$ingr';
 
-      // Make HTTP request
       final response = await http.get(Uri.parse(apiUrl));
 
-      // Check for successful response
       if (response.statusCode == 200) {
-        // Print API response for debugging
-     //   print('API response: ${response.body}');
-        // Parse response and update state
         final data = jsonDecode(response.body);
         setState(() {
           for (var food in data['hints']) {
             var foodName = food['food']['label'];
             var calorie = food['food']['nutrients']['ENERC_KCAL']?.toInt() ?? 0;
-            var carbs = food['food']['nutrients']['CHOCDF']?.toInt() ?? 0 ;
-            var protein = food['food']['nutrients']['PROCNT']?.toInt() ?? 0 ;
-            var fat = food['food']['nutrients']['FAT']?.toInt() ?? 0 ;
+            var carbs = food['food']['nutrients']['CHOCDF']?.toInt() ?? 0;
+            var protein = food['food']['nutrients']['PROCNT']?.toInt() ?? 0;
+            var fat = food['food']['nutrients']['FAT']?.toInt() ?? 0;
             var measures = food['measures'];
-            var servingMeasure = measures.firstWhere((measure) => measure['label'] == 'Serving', orElse: () => null);
-            var grams = servingMeasure != null ? servingMeasure['weight'].toDouble() : 0.0;
+            var servingMeasure = measures.firstWhere(
+                (measure) => measure['label'] == 'Serving',
+                orElse: () => null);
+            var grams = servingMeasure != null
+                ? servingMeasure['weight'].toDouble()
+                : 0.0;
 
-            foodCalories.add(Food(0, foodName, calorie, 0, carbs,protein,fat,grams));
+            foodCalories
+                .add(Food(0, foodName, calorie, 0, carbs, protein, fat, grams));
           }
         });
       } else {
-        // Print error response for debugging
         print('API error: ${response.statusCode}');
       }
     } catch (e) {
-      // Print exception for debugging
       print('Error occurred: $e');
     }
   }
 
   Future<void> insertUserFoodLog(int userId, List<Food> foodList) async {
-    //idk how to add to model
     try {
       Database db = Database();
       var conn = await db.getSettings();
       var id = await conn.query("SELECT id from fitlife.userfoodlog;");
-      // loop through the list of foods and insert each one
       for (var food in foodList) {
         await conn.query(
             'INSERT INTO fitlife.userfoodlog (user_id, food_id, foodName, calorie, quantity, carbs, protein, fat) VALUES (?,?,?,?,?,?,?,?);',
-            [userId, food.foodId, food.foodName, food.calorie, food.quantity,food.carbs,food.protein,food.fat]);
+            [
+              userId,
+              food.foodId,
+              food.foodName,
+              food.calorie,
+              food.quantity,
+              food.carbs,
+              food.protein,
+              food.fat
+            ]);
       }
       await conn.close();
     } catch (e) {
@@ -134,14 +138,15 @@ class _ResultsState extends State<Results> {
 
     if (quantity > 0) {
       setState(() {
-        _foodList.add(Food(id, _selectedFood!, _totalCalories, quantity,_totalCarbs,_totalProtein,_totalFat,grams));
+        _foodList.add(Food(id, _selectedFood!, _totalCalories, quantity,
+            _totalCarbs, _totalProtein, _totalFat, grams));
         _selectedFood = null;
         _quantityController.clear();
         _totalCalories = 0;
-        _totalCarbs=0;
-        _totalProtein=0;
-        _totalFat=0;
-        _searchText = ''; // clear search text
+        _totalCarbs = 0;
+        _totalProtein = 0;
+        _totalFat = 0;
+        _searchText = '';
         FocusScope.of(context).unfocus(); // hide keyboard
       });
     }
@@ -180,7 +185,6 @@ class _ResultsState extends State<Results> {
                   children: [
                     Expanded(
                       child: TextField(
-                        //autofocus: true, //page opens up with keyboard open
                         onChanged: _onSearchTextChanged,
                         decoration: const InputDecoration(
                           hintText: 'Search',
@@ -221,7 +225,6 @@ class _ResultsState extends State<Results> {
                               controller: _quantityController,
                               keyboardType: TextInputType.number,
                               autofocus: true,
-                              //page opens up with keyboard open
                               onChanged: (text) {
                                 setState(() {
                                   _calculateCalories();
@@ -255,8 +258,8 @@ class _ResultsState extends State<Results> {
                       onTap: () => _onFoodSelected(food.foodName),
                       child: ListTile(
                         title: Text(food.foodName),
-                        subtitle: Text( ' ${food.grams?.toStringAsFixed(2)} g'),
-                        trailing:Text('${food.calorie} calories') ,
+                        subtitle: Text(' ${food.grams?.toStringAsFixed(2)} g'),
+                        trailing: Text('${food.calorie} calories'),
                       ),
                     );
                   } else {
@@ -270,21 +273,15 @@ class _ResultsState extends State<Results> {
               padding: const EdgeInsets.only(top: 150.0),
               child: Text(
                 "Search for a meal to log!",
-                style: TextStyle(
-                  //fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
-                    color: Colors.grey[700]),
+                style: TextStyle(fontSize: 24.0, color: Colors.grey[700]),
               ),
             ),
           if (_foodList.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 100.0,bottom: 10),
+              padding: const EdgeInsets.only(top: 100.0, bottom: 10),
               child: Text(
                 "Food to be logged:",
-                style: TextStyle(
-                  //fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
-                    color: Colors.grey[800]),
+                style: TextStyle(fontSize: 24.0, color: Colors.grey[800]),
               ),
             ),
           Expanded(
@@ -292,7 +289,8 @@ class _ResultsState extends State<Results> {
               itemCount: _foodList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text('${_foodList[index].foodName} x ${_foodList[index].quantity}'),
+                  title: Text(
+                      '${_foodList[index].foodName} x ${_foodList[index].quantity}'),
                   subtitle: Text('Calories: ${_foodList[index].calorie}\n'
                       'Protein: ${_foodList[index].protein}g  |  Carbs: ${_foodList[index].carbs}g'
                       '  |  fats: ${_foodList[index].fat}g'),

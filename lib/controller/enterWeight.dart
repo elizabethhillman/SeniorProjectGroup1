@@ -20,7 +20,6 @@ class _enterWeightState extends State<enterWeight> {
   int weight = 0;
   //String date = '';
   final List<userWeight> _userWeightList = [];
-  final List<userWeight> _userWeightList2 = [];
 
   void _saveWeight() {
     if (weight > 0 ) {
@@ -28,10 +27,8 @@ class _enterWeightState extends State<enterWeight> {
         _userWeightList.add(userWeight(
           _userWeightList.length + 1,
           weight,
-    //      date: DateTime.parse("20${date.substring(6)}-${date.substring(0, 2)}-${date.substring(3, 5)}T00:00:00.000Z"),
         ));
         weight = 0;
-   //     date = '';
       });
     }
   }
@@ -104,19 +101,18 @@ class _enterWeightState extends State<enterWeight> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-        //  crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Please Input your weight below',
+              'Please Input your weight in lbs below',
           style: GoogleFonts.montserrat(
-            fontSize: 20,
+            fontSize: 18.5,
             fontWeight: FontWeight.bold,
           )
               ),
             const SizedBox(height: 100.0),
             TextField(
               decoration: InputDecoration(
-                hintText: 'Enter weight',
+                hintText: 'Enter weight (lbs)',
                 contentPadding: const EdgeInsets.all(16.0),
                 suffixIcon: const Icon(Icons.monitor_weight_outlined),
                 border: OutlineInputBorder(
@@ -135,22 +131,6 @@ class _enterWeightState extends State<enterWeight> {
               },
             ),
             const SizedBox(height: 16.0),
-            /*TextField(
-              decoration: InputDecoration(
-                hintText: 'Enter date',
-                contentPadding: const EdgeInsets.all(16.0),
-                suffixIcon: const Icon(Icons.calendar_today),
-                border: OutlineInputBorder(
-                  borderSide: const BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(13.0),
-                ),
-            ),
-              onChanged: (value) {
-                setState(() {
-                  date = value;
-                });
-              },
-            ),*/
 
             const SizedBox(height: 16.0),
             ElevatedButton(

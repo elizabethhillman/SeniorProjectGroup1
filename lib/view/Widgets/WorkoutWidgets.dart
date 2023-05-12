@@ -1,10 +1,7 @@
-import 'package:fitlife/controller/addExercise.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../model/Exercises.dart';
-import '../../model/User.dart';
-import '../../model/user_database.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class WorkoutTile extends StatefulWidget {
   final Exercise exercise;
@@ -13,13 +10,15 @@ class WorkoutTile extends StatefulWidget {
   final void Function(BuildContext)? deleteTap;
   final void Function(Exercise)? updateFavoriteStatus;
   final Color? containerColor;
+
   const WorkoutTile({
     Key? key,
     required this.exercise,
     required this.index,
     this.editTap,
     this.deleteTap,
-    this.updateFavoriteStatus, this.containerColor,
+    this.updateFavoriteStatus,
+    this.containerColor,
   }) : super(key: key);
 
   @override
@@ -27,7 +26,6 @@ class WorkoutTile extends StatefulWidget {
 }
 
 class _WorkoutTileState extends State<WorkoutTile> {
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -57,7 +55,6 @@ class _WorkoutTileState extends State<WorkoutTile> {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
-        //    mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
@@ -65,17 +62,15 @@ class _WorkoutTileState extends State<WorkoutTile> {
                 children: [
                   Text(
                     'Workout ${widget.index}',
-                    style:  TextStyle(
+                    style: TextStyle(
                       color: Colors.grey[600],
-                      // fontWeight: FontWeight.bold,
                       fontSize: 24,
                     ),
                   ),
                   Text(
                     ' ${DateTime.now().month}/${DateTime.now().day}/${DateTime.now().year}',
-                    style:  TextStyle(
+                    style: TextStyle(
                       color: Colors.grey[600],
-                      // fontWeight: FontWeight.bold,
                       fontSize: 12,
                     ),
                   ),
@@ -88,7 +83,6 @@ class _WorkoutTileState extends State<WorkoutTile> {
                     '${widget.exercise.name}',
                     style: const TextStyle(
                       color: Colors.black,
-                      // fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
@@ -103,72 +97,60 @@ class _WorkoutTileState extends State<WorkoutTile> {
                 ],
               ),
               const SizedBox(height: 2),
-                  Text(
-                    '${widget.exercise.target}',
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      //  fontWeight: FontWeight.bold,
-                      fontSize: 12.5,
-                    ),
-                  ),
-                  Text(
-                    widget.exercise.equipment!,
-                    style: TextStyle(
-                   //   color: Colors.red[800],
-                      //  fontWeight: FontWeight.bold,
-                      fontSize: 11,
-                    ),
-                  ),
-                  Text(
-                    widget.exercise.muscleGroup!,
-                    style: TextStyle(
-                    //  color: Colors.brown[400],
-                      //  fontWeight: FontWeight.bold,
-                      fontSize: 11,
-                    ),),
-
+              Text(
+                '${widget.exercise.target}',
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12.5,
+                ),
+              ),
+              Text(
+                widget.exercise.equipment!,
+                style: const TextStyle(
+                  fontSize: 11,
+                ),
+              ),
+              Text(
+                widget.exercise.muscleGroup!,
+                style: const TextStyle(
+                  fontSize: 11,
+                ),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     'Reps/Sets:${widget.exercise.reps} x ${widget.exercise.sets}',
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 13,
                       textBaseline: TextBaseline.alphabetic,
-                      height: 0.8, // adjust this value as needed
+                      height: 0.8,
                     ),
                   ),
                   Align(
                     alignment: Alignment.topRight,
-                    child:  IconButton(
+                    child: IconButton(
                       icon: widget.exercise.isPressed!
-                          ? Icon(Icons.favorite, color: Colors.red)
-                          : Icon(Icons.favorite_border),
+                          ? const Icon(Icons.favorite, color: Colors.red)
+                          : const Icon(Icons.favorite_border),
                       onPressed: () {
                         setState(() {
-                          widget.exercise.isPressed = !widget.exercise.isPressed!;
+                          widget.exercise.isPressed =
+                              !widget.exercise.isPressed!;
                         });
                         if (widget.updateFavoriteStatus != null) {
                           widget.updateFavoriteStatus!(widget.exercise);
                         }
                       },
                     ),
-                    ),
-
+                  ),
                 ],
-              )
-
-                  ,const SizedBox(width: 35),
-
+              ),
+              const SizedBox(width: 35),
             ],
           ),
-
-          // SizedBox(width: 30),
-
         ),
       ),
     );
   }
-
 }
-

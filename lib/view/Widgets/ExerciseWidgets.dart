@@ -24,13 +24,10 @@ class exerciseTile extends StatelessWidget {
   }) : super(key: key);
 
   Future<void> insertExercises(int userId, Exercise selectedExercise) async {
-    //idk how to add to model
     try {
       Database db = Database();
       var conn = await db.getSettings();
       var id = await conn.query("SELECT id from fitlife.userexerciselog;");
-      // loop through the list of foods and insert each one
-
       await conn.query(
           'INSERT INTO fitlife.userexerciselog (user_id, exercise_id, muscle_group, equipment, workoutGif, name, target, reps, sets) VALUES (?,?,?,?,?,?,?,?,?);',
           [userId, selectedExercise.exerciseId ,selectedExercise.muscleGroup, selectedExercise.equipment, selectedExercise.workoutGif, selectedExercise.name,selectedExercise.target,selectedExercise.reps,selectedExercise.sets]);
@@ -45,7 +42,6 @@ class exerciseTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(15),
       child: Container(
-        //alignment: Alignment.bottomRight,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15),

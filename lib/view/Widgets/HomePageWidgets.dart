@@ -1,5 +1,4 @@
 import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -34,8 +33,6 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         }
       });
       await conn.close();
-
-      // Print the first content of _userWeightList after the list has been updated
     } catch (e) {
       print("Error Occurred: $e");
     }
@@ -59,18 +56,19 @@ class _HomePageWidgetState extends State<HomePageWidget> {
         domainFn: (MyData myData, _) => myData.label,
         measureFn: (MyData myData, _) => myData.value,
         data: chartData,
-        // Use the generated chartData
-        labelAccessorFn: (MyData myData, _) =>
-            '${myData.value}', // Add this line
+        labelAccessorFn: (MyData myData, _) => '${myData.value} lbs',
       ),
     ];
 
     return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-       Padding(
+      Padding(
         padding: EdgeInsets.all(8.0),
         child: Text(
           'Weight Progress',
-          style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold,color: Colors.grey[600]),
+          style: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+              color: Colors.grey[600]),
         ),
       ),
       SizedBox(
@@ -82,14 +80,14 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           animationDuration: const Duration(milliseconds: 1000),
           barRendererDecorator: charts.BarLabelDecorator<String>(
             insideLabelStyleSpec: const charts.TextStyleSpec(
-              fontSize: 13, // size in Pts.
+              fontSize: 13,
               color: charts.MaterialPalette.white,
             ),
           ),
           primaryMeasureAxis: const charts.NumericAxisSpec(
             renderSpec: charts.GridlineRendererSpec(
               labelStyle: charts.TextStyleSpec(
-                fontSize: 12, // size in Pts.
+                fontSize: 12,
                 color: charts.MaterialPalette.black,
               ),
               lineStyle: charts.LineStyleSpec(
@@ -100,7 +98,7 @@ class _HomePageWidgetState extends State<HomePageWidget> {
           domainAxis: charts.OrdinalAxisSpec(
             renderSpec: charts.SmallTickRendererSpec(
               labelStyle: const charts.TextStyleSpec(
-                fontSize: 12, // size in Pts.
+                fontSize: 12,
                 color: charts.MaterialPalette.black,
               ),
               lineStyle: charts.LineStyleSpec(

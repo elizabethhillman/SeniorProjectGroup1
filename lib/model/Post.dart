@@ -30,8 +30,6 @@ class Post {
   Post currentPost = Post(id: -1, userHandle: "", imageurl: "", caption: "", likes: 0, whoLiked: "", comments: "", userTrainer: "");
   Post searchedPost = Post(id: -1, userHandle: "", imageurl: "", caption: "", likes: 0, whoLiked: "", comments: "", userTrainer: "");
 
-  //void setCurrentUser(String name, String handle, String email, String password, String bio, String followers, String following, String trainer)
-
   ///dont set id, let SQL do that
   void setCurrentPost(int id, String handle, String imageURL, String caption, String comments, int likes, String whoLiked, String userTrainer)
   {
