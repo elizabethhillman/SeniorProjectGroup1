@@ -278,7 +278,7 @@ class _ResultsState extends State<Results> {
             ),
           if (_foodList.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(top: 100.0),
+              padding: const EdgeInsets.only(top: 100.0,bottom: 10),
               child: Text(
                 "Food to be logged:",
                 style: TextStyle(
@@ -288,15 +288,27 @@ class _ResultsState extends State<Results> {
               ),
             ),
           Expanded(
-            child: ListView.builder(
+            child: ListView.separated(
               itemCount: _foodList.length,
               itemBuilder: (context, index) {
                 return ListTile(
-                  title: Text(
-                      '${_foodList[index].foodName} x ${_foodList[index].quantity}'),
-                  subtitle: Text('Calories: ${_foodList[index].calorie}'),
+                  title: Text('${_foodList[index].foodName} x ${_foodList[index].quantity}'),
+                  subtitle: Text('Calories: ${_foodList[index].calorie}\n'
+                      'Protein: ${_foodList[index].protein}g  |  Carbs: ${_foodList[index].carbs}g'
+                      '  |  fats: ${_foodList[index].fat}g'),
+                  trailing: IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: () {
+                      setState(() {
+                        _foodList.removeAt(index);
+                      });
+                    },
+                  ),
                 );
               },
+              separatorBuilder: (context, index) => Divider(
+                thickness: 2,
+              ),
             ),
           ),
           if (_foodList.isNotEmpty)
