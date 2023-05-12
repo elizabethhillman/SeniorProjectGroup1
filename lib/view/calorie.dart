@@ -325,7 +325,7 @@ class _CalorieState extends State<Calorie> {
                   ),
                 ),
                 Chip(
-                  backgroundColor: totalCarbs==0 ?  Colors.red[200] : Colors.yellow[400],
+                  backgroundColor: totalFat==0 ?  Colors.red[200] : Colors.yellow[400],
                   label: Text(
                     "$totalFat" "g fat",
                     style: TextStyle(
@@ -368,7 +368,7 @@ class _CalorieState extends State<Calorie> {
                 child: Text(
                   "No meals logged for the day",
                   style: TextStyle(
-                    color: Colors.grey[600], //fontWeight: FontWeight.bold,
+                    color: _isToday ? Colors.grey[600] : Colors.blueAccent[200],
                     fontSize: 22.0,
                   ),
                 ),
@@ -380,7 +380,7 @@ class _CalorieState extends State<Calorie> {
                 child: Text(
                   "Select another date to view previous logs",
                   style: TextStyle(
-                    color: Colors.grey[500], //fontWeight: FontWeight.bold,
+                    color: _isToday ? Colors.grey[500] : Colors.blueAccent[100],
                     fontSize: 16.0,
                   ),
                 ),
