@@ -123,7 +123,6 @@ class _MyWorkoutsState extends State<MyWorkouts> {
         );
       },
     );
-
     if (updatedExercise != null) {
       await updateRowInTable(updatedExercise);
       SchedulerBinding.instance!.addPostFrameCallback((_) {
@@ -132,6 +131,31 @@ class _MyWorkoutsState extends State<MyWorkouts> {
         });
       });
     }
+  }
+
+  void showInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('How to use'),
+          content: Text(
+              'After adding an exercise you can perform many actions to the container\n'
+              '\n- Long press anywhere on the container to view gif'
+              '\n- Tap the heart icon to toggle favorite'
+              '\n- Slide to delete the workout'
+              '\n- Slide to edit the Reps/Sets'),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -204,6 +228,12 @@ class _MyWorkoutsState extends State<MyWorkouts> {
                   "Add an Exercise",
                   style: TextStyle(fontSize: 15, color: Colors.black),
                 ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.info_outline),
+                onPressed: () {
+                  showInfoDialog(context);
+                },
               ),
             ],
           ),
