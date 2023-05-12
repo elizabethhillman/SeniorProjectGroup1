@@ -34,7 +34,6 @@ class _FeedState extends State<Feed> {
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
-          // title: Text(widget.title),
           leading: IconButton(
             icon: const Icon(
               Icons.home,
@@ -165,7 +164,6 @@ class _FeedState extends State<Feed> {
                                     feedPosts[index].likes =
                                         await getLikes(feedPosts[index].id);
                                     // String vals = await getWhoLiked(feedPosts[index].id);
-                                    // List<String>
                                     setState(() {
                                       setCurrentPost(
                                           feedPosts[index].id,
@@ -218,43 +216,3 @@ class _FeedState extends State<Feed> {
         ));
   }
 }
-
-// ListView.builder(
-//   itemCount: posts.length,
-//   itemBuilder: (BuildContext context, int index) {
-//     final String post = posts[index];
-//     return Container(
-//       padding: const EdgeInsets.all(16.0),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           // Image placeholder
-//           Container(
-//             width: double.infinity,
-//             height: 200,
-//             color: Colors.grey[300],
-//             margin: const EdgeInsets.only(bottom: 16.0),
-//           ),
-//           Row(
-//             children: [
-//               IconButton(
-//                 icon: const Icon(Icons.favorite),
-//                 onPressed: () {
-//                   // add heart becomes filled? and #likes goes up
-//                 },
-//               ),
-//               IconButton(
-//                 icon: const Icon(Icons.comment),
-//                 onPressed: () {
-//                   // goes to a separate page with all comments shown, and area to type out a comment, and add to DB
-//                 },
-//               ),
-//             ],
-//           ),
-// ],
-// ),
-// );
-// },
-// ),
-// );
-// Comments container

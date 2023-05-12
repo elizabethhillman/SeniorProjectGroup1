@@ -1,12 +1,11 @@
 import 'package:fitlife/model/Exercises.dart';
 import 'package:fitlife/view/Widgets/WorkoutWidgets.dart';
-import 'package:flutter/material.dart';
-import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/account.dart';
-import 'package:fitlife/view/socialMedia.dart';
+import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/view/socialMedia.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:mysql1/mysql1.dart';
 
 import '../controller/EditExerciseDialog.dart';
 import '../model/User.dart';
@@ -23,7 +22,7 @@ class MyWorkouts extends StatefulWidget {
 }
 
 class _MyWorkoutsState extends State<MyWorkouts> {
-  final List<Exercise> _selectedUserExerciseListFromDB =[];
+  final List<Exercise> _selectedUserExerciseListFromDB = [];
 
   @override
   void initState() {
@@ -31,6 +30,37 @@ class _MyWorkoutsState extends State<MyWorkouts> {
     _getSelectedExercisesFromDB();
   }
 
+  Future<void> _getSelectedExercisesFromDB() async {
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query(
+          "SELECT * from fitlife.userexerciselog WHERE user_id = ${currentUser.id}");
+
+      var result = await conn.query(
+          'SELECT id,user_id, exercise_id, muscle_group, equipment, workoutGif, name, target, reps, sets, favorited FROM fitlife.userexerciselog WHERE user_id = ${currentUser.id}');
+      setState(() {
+        for (var row in result) {
+          {
+            _selectedUserExerciseListFromDB.add(Exercise(
+                row[0],
+                row[3].toString(),
+                row[4].toString(),
+                row[5].toString(),
+                //workoutgif
+                row[6].toString(),
+                row[7].toString(),
+                row[8],
+                row[9],
+                isPressed: row[11] == 1 ? true : false));
+          }
+        }
+      });
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }
 
   Future<void> deleteRowFromTable(int index) async {
     try {
@@ -51,7 +81,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       Database db = Database();
       var conn = await db.getSettings();
       var id = await conn.query("SELECT * from fitlife.userexerciselog");
-      var result =  await conn.query(
+      var result = await conn.query(
           'UPDATE fitlife.userexerciselog SET reps = ?, sets = ? WHERE id = ?',
           [
             updatedExercise.reps,
@@ -69,17 +99,13 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       var conn = await db.getSettings();
       var id = await conn.query(
           "SELECT * from fitlife.userexerciselog WHERE user_id = ${currentUser.id}");
-      var result =  await conn.query(
+      var result = await conn.query(
           'UPDATE fitlife.userexerciselog SET favorited = ? WHERE workoutGif = ?',
-          [
-            exercise.isPressed,
-            exercise.workoutGif
-          ]);
+          [exercise.isPressed, exercise.workoutGif]);
     } catch (e) {
       print('Error while updating row: $e');
     }
   }
-
 
   void _handleDeleteTap(int index) async {
     await deleteRowFromTable(index);
@@ -105,43 +131,6 @@ class _MyWorkoutsState extends State<MyWorkouts> {
           _selectedUserExerciseListFromDB[index] = updatedExercise;
         });
       });
-    }
-  }
-
-
-  Future<void> _getSelectedExercisesFromDB() async {
-    //idk how to add to model
-    try {
-      Database db = Database();
-      var conn = await db.getSettings();
-      var id = await conn.query(
-          "SELECT * from fitlife.userexerciselog WHERE user_id = ${currentUser.id}");
-      // loop through the list of foods and insert each one
-
-      var result = await conn.query(
-          'SELECT id,user_id, exercise_id, muscle_group, equipment, workoutGif, name, target, reps, sets, favorited FROM fitlife.userexerciselog WHERE user_id = ${currentUser.id}');
-      setState(() {
-        for (var row in result) {
-          {
-            _selectedUserExerciseListFromDB
-                .add(Exercise(
-              row[0],
-              row[3].toString(),
-              row[4].toString(),
-              row[5].toString(),//workoutgif
-              row[6].toString(),
-              row[7].toString(),
-              row[8],
-              row[9],
-                isPressed: row[11] == 1 ? true : false
-
-            ));
-          }
-        }
-      });
-      await conn.close();
-    } catch (e) {
-      print("Error Occurred: $e");
     }
   }
 
@@ -192,16 +181,22 @@ class _MyWorkoutsState extends State<MyWorkouts> {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 15,),
+          const SizedBox(
+            height: 15,
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const Exercises()));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Exercises()));
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black, backgroundColor: Colors.white,
+                  foregroundColor: Colors.black,
+                  backgroundColor: Colors.white,
                   side: const BorderSide(color: Colors.black),
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 ),
@@ -212,7 +207,7 @@ class _MyWorkoutsState extends State<MyWorkouts> {
               ),
             ],
           ),
-          Row(  //temporary, replace with exercises that users select from database
+          Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: const [
               Padding(
@@ -222,18 +217,15 @@ class _MyWorkoutsState extends State<MyWorkouts> {
           ),
           Expanded(
             child: ListView.builder(
-              itemCount:
-              _selectedUserExerciseListFromDB.length, //list after selected
+              itemCount: _selectedUserExerciseListFromDB.length,
               itemBuilder: (context, index) {
-
                 return WorkoutTile(
-                  // add current food's calorie count to totalCalories
                   exercise: _selectedUserExerciseListFromDB[index],
-                  index: index+1,
+                  index: index + 1,
                   editTap: (context) => _handleEditTap(index),
                   deleteTap: (context) => _handleDeleteTap(index),
-                  updateFavoriteStatus: (exercise) => updateToggleFavorite(_selectedUserExerciseListFromDB[index]),
-
+                  updateFavoriteStatus: (exercise) => updateToggleFavorite(
+                      _selectedUserExerciseListFromDB[index]),
                 );
               },
             ),

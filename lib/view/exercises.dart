@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:math';
-import 'package:http/http.dart' as http;
 
 import 'package:fitlife/view/Widgets/ExerciseWidgets.dart';
 import 'package:flutter/material.dart';
@@ -26,12 +24,10 @@ class _ExercisesState extends State<Exercises> {
   List<String?> _selectedTargets = ["All"];
   final TextEditingController _searchController = TextEditingController();
 
-//TODO ADD FILTER FOR TARGETED MUSCLES
-
   @override
   void initState() {
     super.initState();
-    _getExercises(); // add call to get exercises on initialization
+    _getExercises();
   }
 
   String capitalize(String s) {
@@ -48,8 +44,8 @@ class _ExercisesState extends State<Exercises> {
     return capitalizedWords.join(" ");
   }
 
-
- /*Future<void> _getExercises() async {    //TODO first use to save api requests,then comment this out after your exerciseapi database table gets populated,
+//TODO if api request is exhausted,first use to save api requests,then comment this out after your exerciseapi database table gets populated,
+  /*Future<void> _getExercises() async {
     String apiUrlMuscles = 'https://exercisedb.p.rapidapi.com/exercises';
     final Map<String, String> headers = {
       'X-Rapidapi-Key': '205d35886cmsh5b1ec99d4c12573p16cd50jsncec4aa535cd4',
@@ -86,12 +82,11 @@ class _ExercisesState extends State<Exercises> {
   }
 
    Future<void> insertExerciseToDB(List<Exercise> exercise) async { //TODO comment this function out as well
-    //idk how to add to model
+
     try {
       Database db = Database();
       var conn = await db.getSettings();
       var id = await conn.query("SELECT id from fitlife.exerciseapi;");
-      // loop through the list of foods and insert each one
       for (var ex in exercise) {
         await conn.query(
             'INSERT INTO fitlife.exerciseapi (muscle_group, equipment, workout_gif, name, target) VALUES (?,?,?,?,?);',
@@ -105,7 +100,6 @@ class _ExercisesState extends State<Exercises> {
 
   Future<void> _getExercises() async {
     //TODO uncomment this out, and comment out the above once your database is populated from the api
-    //idk how to add to model
     try {
       Database db = Database();
       var conn = await db.getSettings();
@@ -214,7 +208,6 @@ class _ExercisesState extends State<Exercises> {
               "Muscle Group",
               style: TextStyle(
                 fontSize: 20,
-                // fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
             ),
@@ -230,11 +223,8 @@ class _ExercisesState extends State<Exercises> {
                     setState(() {
                       _hasSelected = true;
                       _selectedMuscleGroup = newValue;
-                      _selectedTarget =
-                          null; // Reset selected target when changing muscle group
-                      _selectedTargets = [
-                        "All"
-                      ]; // Reset selected targets to contain only "All"
+                      _selectedTarget = null;
+                      _selectedTargets = ["All"];
                     });
                   },
                   items: [
@@ -318,7 +308,7 @@ class _ExercisesState extends State<Exercises> {
                 ],
               ),
             ),
-          if (_hasSelected) //displays only if dropdown is selected
+          if (_hasSelected)
             Expanded(
               child: PageView.builder(
                 itemCount: _filteredExercises.length,
@@ -373,14 +363,6 @@ class _ExercisesState extends State<Exercises> {
                             _currentPage == index ? Colors.blue : Colors.grey,
                       ),
                     ),
-                  /*if (_filteredExercises.length > 8)
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 4),
-                      child: Text(
-                        '...',
-                        style: TextStyle(fontSize: 16, color: Colors.grey),
-                      ),
-                    ),*/
                   if (_filteredExercises.length > 8)
                     Container(
                       width: 10,

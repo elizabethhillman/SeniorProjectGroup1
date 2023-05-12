@@ -5,7 +5,6 @@ import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';
 
-
 import '../main.dart';
 import '../model/User.dart';
 import '../model/user_database.dart';
@@ -23,10 +22,8 @@ class _AccountsState extends State<Accounts> {
   final nameController = TextEditingController();
   final handleController = TextEditingController();
 
-
-  bool getTrainerStat()
-  {
-    if(currentUser.trainer == "true") return true;
+  bool getTrainerStat() {
+    if (currentUser.trainer == "true") return true;
     return false;
   }
 
@@ -44,7 +41,7 @@ class _AccountsState extends State<Accounts> {
                     MaterialPageRoute(builder: (context) => const HomePage()));
               },
             ),
-            title:  const Text(
+            title: const Text(
               "Account",
               style: TextStyle(fontSize: 30, color: Colors.black),
             ),
@@ -81,60 +78,110 @@ class _AccountsState extends State<Accounts> {
         body: Padding(
           padding: const EdgeInsets.all(12.0),
           child:
-          Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
+              Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 CircleAvatar(
                   radius: 75,
-                  backgroundImage: currentUser.profilePic.isNotEmpty ? AssetImage(currentUser.profilePic) : const AssetImage('lib/view/image/blankAvatar.png'),
+                  backgroundImage: currentUser.profilePic.isNotEmpty
+                      ? AssetImage(currentUser.profilePic)
+                      : const AssetImage('lib/view/image/blankAvatar.png'),
                 )
               ],
             ),
-            const SizedBox(height: 25,),
+            const SizedBox(
+              height: 25,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Icon(Icons.account_box_outlined, size: 50,),
-                const SizedBox(width: 10,),
-                Text(currentUser.name, style: TextStyle(fontSize: 20),),
+                const Icon(
+                  Icons.account_box_outlined,
+                  size: 50,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  currentUser.name,
+                  style: TextStyle(fontSize: 20),
+                ),
               ],
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-              const Text("@", style: TextStyle(fontSize: 50,fontWeight: FontWeight.bold),),
-              const SizedBox(width: 10,),
-              Text(currentUser.handle, style: const TextStyle(fontSize: 20),),
-                getTrainerStat() ? const Icon(Icons.star) : const SizedBox.shrink(),
+                const Text(
+                  "@",
+                  style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  currentUser.handle,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                getTrainerStat()
+                    ? const Icon(Icons.star)
+                    : const SizedBox.shrink(),
               ],
             ),
-            const SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Icon(Icons.email_outlined, size: 50,),
-                const SizedBox(width: 10,),
-                Text(currentUser.email, style: const TextStyle(fontSize: 20),),
+                const Icon(
+                  Icons.email_outlined,
+                  size: 50,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  currentUser.email,
+                  style: const TextStyle(fontSize: 20),
+                ),
               ],
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: const[
-                Icon(Icons.lock_outline, size: 50,),
-                SizedBox(width: 10,),
-                Text("*********", style: const TextStyle(fontSize: 20),),
+              children: const [
+                Icon(
+                  Icons.lock_outline,
+                  size: 50,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  "*********",
+                  style: const TextStyle(fontSize: 20),
+                ),
               ],
             ),
             const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const Icon(Icons.sticky_note_2_outlined, size: 50,),
-                const SizedBox(width: 10,),
-                Text(currentUser.bio, style: const TextStyle(fontSize: 20),),
+                const Icon(
+                  Icons.sticky_note_2_outlined,
+                  size: 50,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Text(
+                  currentUser.bio,
+                  style: const TextStyle(fontSize: 20),
+                ),
               ],
             ),
             const SizedBox(height: 30),
@@ -156,7 +203,6 @@ class _AccountsState extends State<Accounts> {
                       ),
                     ],
                   ),
-                  // const SizedBox(height: 20),
                   Column(
                     children: [
                       TextButton(
@@ -166,12 +212,11 @@ class _AccountsState extends State<Accounts> {
                             context,
                             MaterialPageRoute(
                                 builder: (context) => MyApp(title: "FITLIFE")),
-                                (route) => false,
+                            (route) => false,
                           );
                         },
                         child: const Text('Logout'),
                       ),
-                      // const SizedBox(height: 20),
                       TextButton(
                         onPressed: () {
                           String email = getCurrentUser().email;
@@ -181,7 +226,7 @@ class _AccountsState extends State<Accounts> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                  const MyApp(title: "FITLIFE")));
+                                      const MyApp(title: "FITLIFE")));
                         },
                         child: const Text('Delete account'),
                       ),

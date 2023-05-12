@@ -1,9 +1,8 @@
-
-import 'package:fitlife/model/User.dart';
-import 'package:flutter/material.dart';
 import 'package:fitlife/controller/createAccount.dart';
-import 'package:fitlife/view/homePage.dart';
+import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/user_database.dart';
+import 'package:fitlife/view/homePage.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(const App());
@@ -47,15 +46,6 @@ class _MyAppState extends State<MyApp> {
     AlertDialog popUp = const AlertDialog(
       title: Text("Error"),
       content: Text("Incorrect Credentials"),
-
-      ///this doesn't work right if you log in and then log out and go to sign up (goes back to log in)
-      // actions: [
-      //   TextButton(
-      //       onPressed: () {
-      //         Navigator.pop(context, false);
-      //       },
-      //       child: const Text("okay"))
-      // ],
     );
     showDialog(
       context: context,
@@ -105,41 +95,29 @@ class _MyAppState extends State<MyApp> {
             ),
           ),
           ElevatedButton(
-            onPressed: () async {//bypass login with database
-              if(await logIn(emailController.text, passwordController.text) == true)
-              {
-                setCurrentUser(await getName(emailController.text, passwordController.text), await getHandle(emailController.text, passwordController.text), emailController.text, passwordController.text, await getBio(emailController.text),await getFollowers(emailController.text) ,await getFollowing(emailController.text), await getTrainerStatus(emailController.text), await getProfilePic(emailController.text));
-                setId(await getID(emailController.text, passwordController.text));
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const HomePage()));
-              }
-              else
-              {
+            onPressed: () async {
+              if (await logIn(emailController.text, passwordController.text) ==
+                  true) {
+                setCurrentUser(
+                    await getName(
+                        emailController.text, passwordController.text),
+                    await getHandle(
+                        emailController.text, passwordController.text),
+                    emailController.text,
+                    passwordController.text,
+                    await getBio(emailController.text),
+                    await getFollowers(emailController.text),
+                    await getFollowing(emailController.text),
+                    await getTrainerStatus(emailController.text),
+                    await getProfilePic(emailController.text));
+                setId(
+                    await getID(emailController.text, passwordController.text));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const HomePage()));
+              } else {
                 clearLogInControllers();
                 alertMessageLogIn(context);
               }
-              // logIn(emailController.text, passwordController.text);
-              // Navigator.push(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => const HomePage()));
-              // bool loggedIn = false;
-
-              // if (await foundUser(emailController.text, passwordController.text)) {
-      // for(int i = 0; i < allUsers.length; i++){
-      //   if(allUsers[i].email == emailController.text && allUsers[i].password == passwordController.text){
-      //     loggedIn = true;
-      //           Navigator.push(context,
-      //               MaterialPageRoute(builder: (context) => const HomePage()));
-      //         }
-      // }
-      // if(loggedIn == false)
-      // {
-      //   clearLogInControllers();
-      //   alertMessageLogIn(context);
-      // }
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(

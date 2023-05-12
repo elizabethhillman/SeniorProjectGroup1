@@ -17,7 +17,6 @@ class _CreateAccountState extends State<CreateAccount> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -167,23 +166,15 @@ class _CreateAccountState extends State<CreateAccount> {
                 addUser(emailController.text, passwordController.text,
                     nameController.text, handleController.text, "$isTrainer", "");
 
-                // User u =  User(id: 0, name: nameController.text, handle: handleController.text, email: emailController.text, password: passwordController.text);
+
                 setCurrentUser(nameController.text, handleController.text, emailController.text, passwordController.text, "", "", "", "$isTrainer", "");
-                // allUsers.add(u);
 
-                // bool canSwitchPages = await foundUser(emailController.text, passwordController.text);
-
-                // if (canSwitchPages) {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) => const HomePage()));
 
-                // } else {
-                //   clearControllers();
-                //   alertMessage(context, "Invalid Email", "User already exists");
                 }
-              // }
             },
             style: ElevatedButton.styleFrom(
                 shape: RoundedRectangleBorder(
@@ -214,15 +205,3 @@ class _CreateAccountState extends State<CreateAccount> {
   }
 }
 
-// futureAdd(String email, String password, String name) {
-//   return FutureBuilder(
-//       future: addUser(email, password, name),
-//       builder: (BuildContext context, snapshot) {
-//         if (snapshot.connectionState == ConnectionState.waiting) {
-//           return const CircularProgressIndicator();
-//         } else if (snapshot.hasError) {
-//           return Text(snapshot.error.toString());
-//         }
-//         return const Text("err");
-//       });
-// }

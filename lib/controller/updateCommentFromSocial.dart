@@ -24,9 +24,6 @@ class _CommentFromSocial extends State<CommentFromSocial> {
   void initState() {
     super.initState();
     commentController.addListener(() {
-      // setState(() {
-      //   _showClearIcon = _searchController.text.isNotEmpty;
-      // });
     });
   }
 
@@ -40,7 +37,6 @@ class _CommentFromSocial extends State<CommentFromSocial> {
             color: Colors.black,
           ),
           onPressed: () {
-            // Navigator.pop(context);
             Navigator.push(
                 context, MaterialPageRoute(builder: (context) => const SocialMedia()));
           },
@@ -52,7 +48,6 @@ class _CommentFromSocial extends State<CommentFromSocial> {
       ),
       body: Column(
         children: <Widget>[
-          // const Padding(padding: EdgeInsets.all(10)),
           SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Image(
@@ -84,7 +79,6 @@ class _CommentFromSocial extends State<CommentFromSocial> {
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: everyComment.length,
                       itemBuilder: (BuildContext context, int index) {
-                        // setCurrentPost(feedPosts[index].id,feedPosts[index].userHandle, feedPosts[index].imageurl, feedPosts[index].caption, feedPosts[index].comments, feedPosts[index].likes, feedPosts[index].whoLiked);
                         return ListTile(
                             title: Row(
                                 mainAxisAlignment: MainAxisAlignment.start,
