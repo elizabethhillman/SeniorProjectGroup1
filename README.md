@@ -1,5 +1,5 @@
 # FitLife
-- [Build/Setup Instructions](#build/setup-instructions)
+- [Build/Setup Instructions](#buildsetup-instructions)
 - [Code Structure](#code-structure)
 
 ## Build/Setup Instructions
