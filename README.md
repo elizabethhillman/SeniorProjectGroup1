@@ -71,7 +71,6 @@ Fitlife offers a wide range of functionality that users utilize to improve their
 - addExercise.dart: Allows a user to add a specific workout to the database they want to add to their workout plan
 - createAccount.dart: Allows a user to create an account to the database
 - createPost.dart: Allows a user to create a new post to add to the database with an image from their device's gallery along with a caption
-- editCalorie.dart: ???????????????????????
 - enterWeight.dart: Allows a user to input their weight for the day and add that to the database
 - updateAccount.dart: Allows a user to change their account information in the database
 - updateCaption.dart: Allows a user to change a caption in the database for any of their uploaded pictures
