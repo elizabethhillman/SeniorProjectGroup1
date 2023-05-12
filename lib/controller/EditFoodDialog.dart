@@ -36,7 +36,7 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Edit Exercise'),
+      title: const Text('Edit Quantity Size'),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -47,7 +47,7 @@ class _EditFoodDialogState extends State<EditFoodDialog> {
               controller: _quantityController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(
-                labelText: 'Edit Quantity Size',
+                labelText: 'Quantity Size',
               ),
             ),
             const SizedBox(height: 8.0),
