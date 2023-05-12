@@ -6,7 +6,7 @@ import 'package:fitlife/view/calorie.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:fitlife/view/homePage.dart';
 import 'package:fitlife/model/User.dart';
-import 'package:fitlife/controller/searchFriends.dart';
+import 'package:fitlife/view/searchFriends.dart';
 import 'package:fitlife/controller/updateComment.dart';
 
 import '../model/Post.dart';

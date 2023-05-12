@@ -7,7 +7,7 @@ import 'package:fitlife/view/workouts.dart';
 import 'package:fitlife/view/homePage.dart';
 
 import '../model/User.dart';
-import '../view/searchedFriend.dart';
+import 'searchedFriend.dart';
 
 class SearchTrainers extends StatefulWidget {
   const SearchTrainers({Key? key}) : super(key: key);
