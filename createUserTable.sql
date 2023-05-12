@@ -11,6 +11,7 @@
 
 CREATE SCHEMA `fitlife`;
 
+---THIS TABLE IS NOT UP TO DATE --> UPDATED USER TABLE AT THE BOTTOM
 CREATE TABLE `user` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
@@ -101,3 +102,31 @@ INSERT INTO `food` (`id`,`foodName`,`calorie`,`quantity`,`protein`,`carbs`,`fat`
 INSERT INTO `food` (`id`,`foodName`,`calorie`,`quantity`,`protein`,`carbs`,`fat`) VALUES (18,'Honeydew melon',64,0,0,0,0);
 INSERT INTO `food` (`id`,`foodName`,`calorie`,`quantity`,`protein`,`carbs`,`fat`) VALUES (19,'Grapefruit',52,0,0,0,0);
 INSERT INTO `food` (`id`,`foodName`,`calorie`,`quantity`,`protein`,`carbs`,`fat`) VALUES (20,'Pineapple slices',42,0,0,0,0);
+
+-- UPDATED TABLE FOR USERS --
+CREATE TABLE `user` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `email` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  `handle` varchar(45) NOT NULL,
+  `bio` varchar(45) NOT NULL,
+  `followers` varchar(500) NOT NULL,
+  `following` varchar(500) NOT NULL,
+  `profilePic` varchar(500) DEFAULT NULL,
+  `trainer` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+-- TABLE FOR SOCIAL MEDIA POSTS
+CREATE TABLE `posts` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `handle` varchar(45) NOT NULL,
+  `imageURL` varchar(500) NOT NULL,
+  `caption` varchar(45) DEFAULT NULL,
+  `likes` int DEFAULT NULL,
+  `whoLiked` varchar(100) DEFAULT NULL,
+  `comments` varchar(500) DEFAULT NULL,
+  `userTrainer` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
