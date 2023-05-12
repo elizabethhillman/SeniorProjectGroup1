@@ -2,6 +2,8 @@
 - [Build/Setup Instructions](#buildsetup-instructions)
 - [Code Structure](#code-structure)
 
+Fitlife offers a wide range of functionality that users utilize to improve their health and lifestyle. A few of these tools include calorie tracking, planning workouts, and tracking their weight. Not only are there helpful tools and tips to assist users in reaching their fitness goals, but the social media aspect provides individuals with a dedicated platform to engage with fellow fitness advocates.
+
 ## Build/Setup Instructions
 - Project Code
   - Flutter v. 3.7.5 (Dart and DevTools are typically downloaded after installing Flutter)
