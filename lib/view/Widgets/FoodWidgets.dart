@@ -8,19 +8,19 @@ class CalorieTile extends StatelessWidget {
   final int? tileCarbs;
   final int? tileProtein;
   final int? tileFat;
-
-  //TODO final int tileProtein
-  //TODO final int tileCarbs
-  final void Function(BuildContext)? editTap; //TODO implement method
+  final Color? containerColor;
+  final void Function(BuildContext)? editTap;
   final void Function(BuildContext)? deleteTap;
+
   const CalorieTile({
     Key? key,
     required this.tileFoodName,
     required this.tileCalorie,
     required this.tileQuantity,
     this.tileCarbs,  this.tileProtein, this.tileFat,
+
     this.editTap,
-    this.deleteTap
+    this.deleteTap, this.containerColor
   }) : super(key: key);
 
   @override
@@ -53,7 +53,7 @@ class CalorieTile extends StatelessWidget {
             right: 15.0,
           ),
           decoration: BoxDecoration(
-            color: Colors.grey[300],
+            color: containerColor ?? Colors.grey[300],
             borderRadius: BorderRadius.circular(12),
           ),
           child:  Column(
@@ -62,12 +62,31 @@ class CalorieTile extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    '$tileFoodName x $tileQuantity',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 14,
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '$tileFoodName ',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const TextSpan(
+                          text: '×',
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 14,
+                          ),
+                        ),
+                        TextSpan(
+                          text: ' $tileQuantity',
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(

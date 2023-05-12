@@ -24,26 +24,70 @@ class _CalorieState extends State<Calorie> {
   num totalCarbs = 0;
   num totalProtein = 0;
   num totalFat = 0;
+  bool _isToday = true;
   final List<Food> _currentUserFoodListFromDB = [];
   DateTime _selectedDate = DateTime.now();
+  DateTime currentDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
-  //TODO implement edit method
+
 
   @override
   void initState() {
     super.initState();
+    _isToday = isToday(_selectedDate);
     _getSelectedFoodFromDB();
   }
 
-  Future<void> _getSelectedFoodFromDB() async {
-    //idk how to add to model
+  bool isToday(DateTime date) {
+    final now = DateTime.now();
+    return date.year == now.year && date.month == now.month && date.day == now.day;
+  }
+
+  /* Future<void> _getSelectedFoodFromDB() async {
+    _currentUserFoodListFromDB.clear();
+    totalCalories = 0;
+    totalCarbs = 0;
+    totalProtein = 0;
+    totalFat = 0;
     try {
       Database db = Database();
       var conn = await db.getSettings();
       var id = await conn.query(
           "SELECT * from fitlife.userfoodlog WHERE user_id = ${currentUser.id}");
       var result = await conn.query(
-          'SELECT id,user_id,foodName, calorie, quantity,carbs, protein, fat,grams, created_at FROM fitlife.userfoodlog WHERE user_id = ${currentUser.id} AND created_at = ${_selectedDate.toIso8601String().substring(0, 10)}');
+          'SELECT id,user_id,foodName, calorie, quantity,carbs, protein, fat,grams, created_at FROM fitlife.userfoodlog WHERE user_id = ${currentUser.id} AND DATE created_at = ${_selectedDate.toIso8601String().substring(0, 10)}');
+      setState(() {
+        for (var row in result) {
+          {
+            _currentUserFoodListFromDB.add(Food(row[0], row[3].toString(),
+                row[4], row[5], row[6], row[7], row[8],row[9]));
+          }
+          totalCalories += row[4];
+          totalCarbs += row[6] ?? 0;
+          totalProtein += row[7] ?? 0;
+          totalFat += row[8] ?? 0;
+        }
+      });
+      await conn.close();
+    } catch (e) {
+      print("Error Occurred: $e");
+    }
+  }*/
+
+  Future<void> _getSelectedFoodFromDB() async {
+    _currentUserFoodListFromDB.clear();
+    totalCalories = 0;
+    totalCarbs = 0;
+    totalProtein = 0;
+    totalFat = 0;
+    try {
+      Database db = Database();
+      var conn = await db.getSettings();
+      var id = await conn.query(
+          "SELECT * from fitlife.userfoodlog WHERE user_id = ${currentUser.id}");
+      var result = await conn.query(
+          'SELECT * FROM fitlife.userfoodlog WHERE user_id = ${currentUser.id} AND DATE(created_at) = ?',
+          [DateTime(_selectedDate.year, _selectedDate.month, _selectedDate.day).toIso8601String().substring(0, 10)]);
       setState(() {
         for (var row in result) {
           {
@@ -72,11 +116,13 @@ class _CalorieState extends State<Calorie> {
 
     if (picked != null && picked != _selectedDate) {
       setState(() {
-        _selectedDate = picked;
+        _selectedDate = DateTime(picked.year, picked.month, picked.day);
+        _isToday = isToday(_selectedDate); // Add this line
       });
       _getSelectedFoodFromDB(); // Refresh the food data after changing the date
     }
   }
+
 
   Future<void> deleteRowFromTable(int index) async {
     try {
@@ -207,133 +253,142 @@ class _CalorieState extends State<Calorie> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (_currentUserFoodListFromDB.isEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 155),
-                child: Text(
-                  "No meals logged for today",
-                  style: TextStyle(
-                    color: Colors.grey[600], //fontWeight: FontWeight.bold,
-                    fontSize: 24.0,
-                  ),
-                ),
-              ),
+
             const SizedBox(
               height: 20,
             ),
-            if (_currentUserFoodListFromDB.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(top: 30.0),
-                child: Text(
-                  'Todays Meals',
-                  style: TextStyle(
-                      //  color: Colors.white,
-                      // fontWeight: FontWeight.bold,
-                      fontSize: 25.0,
-                      color: Colors.grey[700]),
+            Padding(
+              padding: const EdgeInsets.only(top: 30.0),
+              child: Text(
+                _isToday ? 'Today\'s Meals' : 'Meals from ${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}',
+                style: TextStyle(
+                  fontSize: 25.0,
+                  color: _isToday ? Colors.grey[700] : Colors.blueAccent[400],
                 ),
               ),
+            ),
+
             const SizedBox(
               height: 16,
             ),
-            if (_currentUserFoodListFromDB.isNotEmpty)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Total calories for the day:',
-                    style: TextStyle(
-                      color: Colors.grey[600], //   fontWeight: FontWeight.bold,
-                      fontSize: 14.0,
-                    ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Total calories for the day:',
+                  style: TextStyle(
+                    color: _isToday ? Colors.grey[600] : Colors.blueAccent[400],
+                    fontSize: 14.0,
                   ),
-                  Text(
-                    ' $totalCalories',
-                    style: TextStyle(
-                      color: Colors.green[200],
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
+                ),
+                Text(
+                  ' $totalCalories',
+                  style: TextStyle(
+                    color:totalCalories==0 ? Colors.red[300] : Colors.green[200] ,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
             const SizedBox(
               height: 6,
             ),
-            if (_currentUserFoodListFromDB.isNotEmpty)
-              Text(
-                'Total macros:',
-                style: TextStyle(
-                  color: Colors.grey[500], //  fontWeight: FontWeight.bold,
-                  fontSize: 13.5,
-                ),
+            Text(
+              'Total macros:',
+              style: TextStyle(
+                color: _isToday ? Colors.grey[500] : Colors.blueAccent[200],
+                fontSize: 13.5,
               ),
-            if (_currentUserFoodListFromDB.isNotEmpty)
-              Row(
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Chip(
+                  backgroundColor: totalCarbs==0 ?  Colors.red[200] : Colors.orange[100],
+                  label: Text(
+                    "$totalCarbs" "g carb",
+                    style: TextStyle(
+                      color: Colors.grey[800] ,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+                Chip(
+                  backgroundColor: totalProtein==0 ? Colors.red[200] : Colors.brown[100],
+                  label: Text(
+                    "$totalProtein" "g protein",
+                    style: TextStyle(
+                      color: Colors.grey[800] ,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+                Chip(
+                  backgroundColor: totalCarbs==0 ?  Colors.red[200] : Colors.yellow[400],
+                  label: Text(
+                    "$totalFat" "g fat",
+                    style: TextStyle(
+                      color: Colors.grey[800] ,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            GestureDetector(
+              onTap: () => _selectDate(context),
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Chip(
-                    backgroundColor: Colors.orange[100],
-                    label: Text(
-                      "$totalCarbs" "g carb",
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 10,
-                      ),
-                    ),
+                  Icon(
+                    Icons.calendar_month,
+                    color: _isToday ? Colors.grey[600] : Colors.blueAccent[400],
                   ),
-                  Chip(
-                    backgroundColor: Colors.brown[100],
-                    label: Text(
-                      "$totalProtein" "g protein",
-                      style: TextStyle(
-                        color: Colors.grey[800], // fontWeight: FontWeight.bold,
-                        fontSize: 10,
-                      ),
-                    ),
+                  const SizedBox(
+                    width: 5,
                   ),
-                  Chip(
-                    backgroundColor: Colors.yellow[400],
-                    label: Text(
-                      "$totalFat" "g fat",
-                      style: TextStyle(
-                        color: Colors.grey[800],
-                        fontSize: 10,
-                      ),
+                  Text(
+                    '${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}:',
+                    style: TextStyle(
+                      color: _isToday ? Colors.grey[600] : Colors.blueAccent[400],
+                      fontSize: 13.5,
                     ),
                   ),
                 ],
               ),
-            const SizedBox(
-              height: 25,
             ),
-            if (_currentUserFoodListFromDB.isNotEmpty)
-              GestureDetector(
-                onTap: () => _selectDate(context),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.calendar_month,
-                      color: Colors.grey[700],
-                    ),
-                    const SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      '${_selectedDate.month}/${_selectedDate.day}/${_selectedDate.year}:',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 13.5,
-                      ),
-                    ),
-                  ],
+
+            if (_currentUserFoodListFromDB.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 100),
+                child: Text(
+                  "No meals logged for the day",
+                  style: TextStyle(
+                    color: Colors.grey[600], //fontWeight: FontWeight.bold,
+                    fontSize: 22.0,
+                  ),
+                ),
+              ),
+
+            if (_currentUserFoodListFromDB.isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: Text(
+                  "Select another date to view previous logs",
+                  style: TextStyle(
+                    color: Colors.grey[500], //fontWeight: FontWeight.bold,
+                    fontSize: 16.0,
+                  ),
                 ),
               ),
             Expanded(
               child: ListView.builder(
                 itemCount:
-                    _currentUserFoodListFromDB.length, //list after selected
+                _currentUserFoodListFromDB.length, //list after selected
                 itemBuilder: (context, index) {
                   return CalorieTile(
                     // add current food's calorie count to totalCalories
@@ -345,6 +400,7 @@ class _CalorieState extends State<Calorie> {
                     tileFat: _currentUserFoodListFromDB[index].fat,
                     editTap: (context) => _handleEditTap(index),
                     deleteTap: (context) => _handleDeleteTap(index),
+                    containerColor: _isToday ?  Colors.grey[300] : Colors.blue[50],
                   );
                 },
               ),
@@ -363,13 +419,13 @@ class _CalorieState extends State<Calorie> {
                       (context, animation, secondaryAnimation, child) {
                     //page transition animation
                     var begin =
-                        const Offset(0.0, 2.0); //page transition animation
+                    const Offset(0.0, 2.0); //page transition animation
                     var end = Offset.zero; //page transition animation
                     var curve = Curves.ease; //page transition animation
                     var tween = Tween(begin: begin, end: end).chain(
                         CurveTween(curve: curve)); //page transition animation
                     var offsetAnimation =
-                        animation.drive(tween); //page transition animation
+                    animation.drive(tween); //page transition animation
                     return SlideTransition(
                       //page transition animation
                       position: offsetAnimation, //page transition animation
@@ -387,12 +443,12 @@ class _CalorieState extends State<Calorie> {
                   padding: const EdgeInsets.all(25),
                   child: Center(
                       child: Text(
-                    'Log Foods',
-                    style: TextStyle(
-                      color: Colors.grey[200],
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ))),
+                        'Log Foods',
+                        style: TextStyle(
+                          color: Colors.grey[200],
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ))),
             ),
             const SizedBox(
               height: 125,
