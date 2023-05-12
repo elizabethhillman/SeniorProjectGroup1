@@ -2,7 +2,7 @@ import 'package:fitlife/model/Post.dart';
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/post_database.dart';
 import 'package:flutter/material.dart';
-import 'Feed.dart';
+import '../view/Feed.dart';
 
 
 class Comment extends StatefulWidget {

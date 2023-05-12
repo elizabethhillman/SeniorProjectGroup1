@@ -1,7 +1,7 @@
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/post_database.dart';
 import 'package:fitlife/model/user_database.dart';
-import 'package:fitlife/view/comment.dart';
+import 'package:fitlife/controller/updateComment.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:fitlife/view/workouts.dart';
 import 'package:flutter/material.dart';

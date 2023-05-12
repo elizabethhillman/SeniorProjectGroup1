@@ -3,7 +3,7 @@ import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/post_database.dart';
 import 'package:fitlife/view/socialMedia.dart';
 import 'package:flutter/material.dart';
-import 'Feed.dart';
+import '../view/Feed.dart';
 
 
 class CommentFromSocial extends StatefulWidget {

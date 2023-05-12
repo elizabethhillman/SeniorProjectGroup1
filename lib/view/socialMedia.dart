@@ -10,9 +10,9 @@ import 'package:fitlife/controller/searchFriends.dart';
 import 'package:fitlife/controller/searchTrainers.dart';
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/model/Post.dart';
-import 'package:fitlife/view/comment.dart';
+import 'package:fitlife/controller/updateComment.dart';
 import '../model/post_database.dart';
-import 'commentFromSocial.dart';
+import '../controller/updateCommentFromSocial.dart';
 import '../controller/createPost.dart';
 
 

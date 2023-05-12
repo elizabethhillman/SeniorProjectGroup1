@@ -7,7 +7,7 @@ import 'package:fitlife/view/workouts.dart';
 import 'package:fitlife/view/homePage.dart';
 import 'package:fitlife/model/User.dart';
 import 'package:fitlife/controller/searchFriends.dart';
-import 'package:fitlife/view/comment.dart';
+import 'package:fitlife/controller/updateComment.dart';
 
 import '../model/Post.dart';
 import '../model/post_database.dart';
